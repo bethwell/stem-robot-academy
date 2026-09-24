@@ -134,30 +134,63 @@
 <script>
 /* ================= DATA ================= */
 var LESSONS = [
-  { emoji:"🤖", title:"What is a Robot?", age:"5+", color:"linear-gradient(90deg,#38bdf8,#0066cc)",
+  { emoji:"🤖", title:"What is a Robot?", age:"5+", track:"Mini-makers Track", color:"linear-gradient(90deg,#38bdf8,#0066cc)",
     content:["A robot is a machine that can SENSE, THINK, and ACT! 🦾","👀 SENSE: Robots use sensors like cameras and touch buttons to see and feel the world.","🧠 THINK: A computer brain decides what to do.","🏃 ACT: Motors move wheels, arms, or legs to do the action!","You are a robot expert already — your body senses (eyes!), thinks (brain!), and acts (muscles!) the same way!"],
     quiz:{ q:"Which part helps a robot 'think'?", options:["Its wheels","Its computer brain","Its battery"], answer:1,
     fun:"Just like your brain tells your legs to run, a robot's computer tells its motors to spin!" } },
-  { emoji:"👁️", title:"Super Sensors", age:"7+", color:"linear-gradient(90deg,#0d9488,#0f766e)",
+  { emoji:"👁️", title:"Super Sensors", age:"7+", track:"Mega-makers Track", color:"linear-gradient(90deg,#0d9488,#0f766e)",
     content:["Sensors are a robot's superpowers! 🦸","📷 Camera → helps robots see shapes, faces and colors.","📏 Distance (ultrasonic) sensor → works like bat echo! It bounces sound to measure how far a wall is.","🎛️ Touch sensor → feels bumps, like when you touch something hot and pull back!","🧭 Compass / gyroscope → tells the robot which way it is facing.","Robots use MANY sensors together, just like you use your eyes AND ears at the same time."],
     quiz:{ q:"A bat-like sensor that measures distance is called…", options:["Ultrasonic sensor","Color sensor","Sound sensor"], answer:0,
     fun:"Bats send out squeaks and listen for the echo. Ultrasonic sensors do exactly the same with sound waves!" } },
-  { emoji:"🔁", title:"Loops & Code Blocks", age:"8+", color:"linear-gradient(90deg,#ffb466,#ff8c00)",
+  { emoji:"🔁", title:"Loops & Code Blocks", age:"8+", track:"Mega-makers & Sumo-makers", color:"linear-gradient(90deg,#ffb466,#ff8c00)",
     content:["Computers follow instructions STEP BY STEP, like a recipe! 📝","A LOOP tells the computer: 'do this again and again!' 🔁","Instead of writing 'move forward' 4 times, we can say: repeat 4 [move forward].","This is how kid coders use Scratch and Blockly — colorful blocks that snap together like LEGO!","Try the Robot Coder zone to use REAL loops and drive a robot!"],
     quiz:{ q:"How do you make code repeat 4 times the smart way?", options:["Write it 4 times","Use a repeat loop","Shout louder at the robot"], answer:1,
     fun:"Programmers say: 'Don't Repeat Yourself!' Loops make code short, tidy and smart." } },
-  { emoji:"⚡", title:"Electricity Power!", age:"6+", color:"linear-gradient(90deg,#facc15,#f59e0b)",
+  { emoji:"⚡", title:"Electricity Power!", age:"6+", track:"Mega-makers Track", color:"linear-gradient(90deg,#facc15,#f59e0b)",
     content:["Robots need ENERGY to move. Where does it come from? Electricity! ⚡","A circuit is a loop that electricity travels around, like a race track! 🏁","Battery ⚡ → wire → motor → wire → back to battery. If the loop breaks, the robot stops!","A SWITCH is like a drawbridge on the road — open it and cars (electrons) stop!","Motors turn electricity into SPINNING motion. That's how robot wheels turn!"],
     quiz:{ q:"What happens if you break the loop in a circuit?", options:["Electricity flows faster","Electricity stops flowing","The robot dances"], answer:1,
     fun:"Electricity always needs a complete path from + to −. No loop, no power!" } },
-  { emoji:"⚙️", title:"Gears & Simple Machines", age:"8+", color:"linear-gradient(90deg,#4f9cf9,#123a6b)",
+  { emoji:"⚙️", title:"Gears & Simple Machines", age:"8+", track:"Mini-makers Track", color:"linear-gradient(90deg,#4f9cf9,#123a6b)",
     content:["Robots are built from simple machines — the same ones the ancient Egyptians used! 🏗️","⚙️ GEAR: a spiky wheel. Big gear + small gear = speed or power!","🔩 SCREW, 🪜 ramp, ⚖️ LEVER, 🔧 WHEEL & AXLE, ⚓ PULLEY.","Robotic arms use levers. Robotic grippers use gears and pulleys.","Fun fact: a bicycle is a simple machine robot you power with your legs!"],
     quiz:{ q:"Which simple machine is a spiky wheel?", options:["A pulley","A lever","A gear"], answer:2,
     fun:"Gears mesh like teeth! When one turns clockwise, its neighbor turns the opposite way!" } },
-  { emoji:"🏗️", title:"Think Like an Engineer", age:"9+", color:"linear-gradient(90deg,#f472b6,#db2777)",
+  { emoji:"🏗️", title:"Think Like an Engineer", age:"9+", track:"Sumo-makers Track", color:"linear-gradient(90deg,#f472b6,#db2777)",
     content:["Engineers solve problems with the DESIGN CYCLE: 🔁","1️⃣ ASK: What is the problem? 2️⃣ IMAGINE: brainstorm wild ideas!","3️⃣ PLAN: sketch the best idea. 4️⃣ CREATE: build it!","5️⃣ TEST: does it work? 6️⃣ IMPROVE: fix what failed and try again!","Failing is FINE — every real robot failed MANY times before it worked. Engineers say: fail, learn, improve! 💪"],
     quiz:{ q:"What should you do after a test fails?", options:["Give up","Improve and try again","Hide the robot"], answer:1,
-    fun:"NASA's Mars rovers were tested for YEARS on Earth before launch. Failing is part of the plan!" } }
+    fun:"NASA's Mars rovers were tested for YEARS on Earth before launch. Failing is part of the plan!" } },
+
+  { emoji:"🧪", title:"What is STEM?", age:"5+", track:"Mini-makers Track", color:"linear-gradient(90deg,#34d399,#22c55e)",
+    content:["STEM = Science, Technology, Engineering, Math — the superpowers behind every robot! 🚀","🔬 Science asks WHY things happen. 💻 Technology builds tools that help people.","🏗️ Engineering solves problems by designing and building. 🔢 Math measures and counts it all.","Technology helps people every day: wheelchairs, hearing aids, phones, even farming tools!","Try it: invent your own robot game or build challenge — you are the engineer today!"],
+    quiz:{ q:"What does the 'E' in STEM stand for?", options:["Electricity","Engineering","Energy"], answer:1,
+    fun:"Engineers designed the water filter, the bicycle, and even your pencil. Engineering is everywhere!" } },
+  { emoji:"🎈", title:"Energy, Motion & Machines", age:"5+", track:"Mini-makers Track", color:"linear-gradient(90deg,#f472b6,#ec4899)",
+    content:["Everything that moves needs ENERGY — pushes and pulls are called FORCES! 💪","Air power is real energy: a balloon car zooms because escaping air pushes it forward!","Stored energy waits to be used — like a stretched rubber band or a wound-up spring.","Wheels reduce friction, so things roll further than they slide. That's why cars have wheels!","Wiggle bots and push cars show how energy becomes MOTION. Try racing yours with a friend!"],
+    quiz:{ q:"Why does a balloon car move forward?", options:["Magic air fairies","Air rushes out backward and pushes the car forward","The balloon gets scared and runs"], answer:1,
+    fun:"It's Newton's 3rd law: every push has an equal push back. Real rockets launch with the same rule!" } },
+  { emoji:"🏗️", title:"Strong Structures", age:"5+", track:"Mini-makers Track", color:"linear-gradient(90deg,#60a5fa,#3b82f6)",
+    content:["Engineers build with SHAPES — and the triangle is the strongest of all! 🔺","A wide, heavy base makes towers stable. That's why tall towers are wider at the bottom.","Bridges carry weight across gaps using strong shapes and support columns.","Clay and skewers can become amazing towers — if you test, fail, and improve!","Stability means not falling over. Test yours: can it survive a gentle table shake?"],
+    quiz:{ q:"Which shape makes the strongest frame?", options:["Square","Triangle","Circle"], answer:1,
+    fun:"The Eiffel Tower is made of thousands of triangles — that's why it has stood for over 130 years!" } },
+  { emoji:"🔌", title:"Electronics: Circuits & LEDs", age:"7+", track:"Mega-makers Track", color:"linear-gradient(90deg,#fbbf24,#f59e0b)",
+    content:["Electronics is about controlling electricity to do useful jobs — like lighting an LED! 💡","Every circuit needs a POWER SOURCE (battery) and a complete loop for current to flow.","INPUTS sense (a button), OUTPUTS act (a light or buzzer). Input → brain → output!","Conductors let electricity pass (metals). Insulators block it (plastic, wood, rubber).","Cardboard circuits and breadboards let you build real light-up projects safely!"],
+    quiz:{ q:"Which material lets electricity pass through it?", options:["Plastic ruler","Metal spoon","Wooden stick"], answer:1,
+    fun:"The copper inside wires is a great conductor — that's why nearly all wires use copper!" } },
+  { emoji:"👀", title:"Sensors & Smart Systems", age:"7+", track:"Mega-makers Track", color:"linear-gradient(90deg,#2dd4bf,#0d9488)",
+    content:["A SMART SYSTEM senses something, then reacts automatically — no human needed! 🤖","Robots 'see' with sensors: touch (a bump), light (bright/dark), and distance (how far).","Obstacle detection: a distance sensor tells the robot 'wall ahead!' so it can turn away.","It works like IF-THEN thinking: IF something is close, THEN turn. Sensors + rules = automation!","Automatic doors and street lights use the same idea: sense → decide → act."],
+    quiz:{ q:"How does an automatic door 'know' to open?", options:["It hears your voice","A sensor detects you approaching","It opens every 5 seconds"], answer:1,
+    fun:"Self-driving cars use dozens of sensors doing exactly this — millions of IF-THEN decisions every second!" } },
+  { emoji:"💻", title:"Coding & Computational Thinking", age:"8+", track:"Mega-makers & Sumo-makers", color:"linear-gradient(90deg,#818cf8,#6366f1)",
+    content:["An ALGORITHM is a step-by-step recipe for a computer. Computers follow it exactly! 📝","SEQUENCING matters: brush teeth → apply paste is very different from paste → brush!","EVENTS make programs interactive: 'when flag clicked' or 'when space key pressed'.","Scratch lets you snap colorful blocks together to move sprites and build games.","When code doesn't work, you DEBUG it — read carefully, find the bug, fix it, test again!"],
+    quiz:{ q:"Finding and fixing an error in your code is called…", options:["Debugging","Deleting","Doodling"], answer:0,
+    fun:"In 1947, engineers found a real moth stuck in a computer — they taped it in the logbook and called it a 'bug'!" } },
+  { emoji:"🤖", title:"Robotics & Automation", age:"10+", track:"Sumo-makers Track", color:"linear-gradient(90deg,#f97316,#ea580c)",
+    content:["A TRUE robot combines SENSORS (sense) + a BRAIN (decide) + ACTUATORS (act) in one system!","Motors are actuators — they turn electricity into spinning wheels and moving arms.","AUTOMATION means machines do repetitive jobs by themselves: sorting, packing, welding.","Sumo robots use distance sensors to FIND an opponent and motors to PUSH it out of the ring! 🥋","Build a simple robotic system: a touch sensor that stops the motor the moment it bumps a wall."],
+    quiz:{ q:"What makes a machine a TRUE robot?", options:["Sensors + brain + actuators working together","It looks like a human","It just has wheels"], answer:0,
+    fun:"Car factory arms repeat their exact movement thousands of times a day — automation at work!" } },
+  { emoji:"🎨", title:"Invent & Innovate", age:"10+", track:"Sumo-makers Track", color:"linear-gradient(90deg,#c084fc,#a855f7)",
+    content:["Inventors start with a PROBLEM, not a product: what annoys people? What could be easier?","Innovation = taking an idea, prototyping it fast, testing it, and improving it again and again.","Great inventions come from TEAMS — sharing ideas, dividing jobs, building together.","Every project ends with a SHOWCASE: present your build, explain your choices, celebrate! 🎤","Your first version should be rough and quick. Real inventors call this a MVP — Minimum Viable Product!"],
+    quiz:{ q:"What is the best FIRST step when inventing something new?", options:["Buy the most expensive parts","Ask what problem you are solving","Keep the idea secret"], answer:1,
+    fun:"The Wright brothers built a wind tunnel out of a box to test 200+ wing shapes before their first flight!" } }
 ];
 
 var CHALLENGES = [
@@ -237,7 +270,7 @@ function renderLearn(){
   var html = '<div class="page"><h2 class="page-title">📚 STEM Lessons</h2><div class="lesson-pills">';
   LESSONS.forEach(function(_,i){ html += '<button class="pill'+(i===S.lesson?" active":"")+'" data-l="'+i+'">'+LESSONS[i].emoji+' '+(i+1)+'</button>'; });
   html += '</div><div class="lesson-card"><div class="lesson-head" style="background:'+l.color+'">'
-    + '<div class="big">'+l.emoji+'</div><h3>'+l.title+'</h3><span class="age-tag">Ages '+l.age+'</span></div>'
+    + '<div class="big">'+l.emoji+'</div><h3>'+l.title+'</h3><span class="age-tag">Ages '+l.age+'</span>'+(l.track?' <span class="age-tag">🚩 '+l.track+'</span>':'')+'</div>'
     + '<div class="lesson-body">';
   l.content.forEach(function(p,i){ html += '<p style="animation-delay:'+(i*0.06)+'s">'+p+'</p>'; });
   html += '<div class="quiz"><div class="q">🧠 Quick Quiz: '+l.quiz.q+'</div>';
