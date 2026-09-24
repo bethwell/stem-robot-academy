@@ -203,9 +203,19 @@ var CHALLENGES = [
 ];
 
 var TABS = [ {id:"home",label:"🏠 Home"},{id:"learn",label:"📚 Learn"},{id:"coder",label:"🤖 Robot Coder"},{id:"lab",label:"⚡ Circuit Lab"},{id:"game",label:"🎮 Catch Game"} ];
+var TRACKS = [
+  { id:"mini", name:"Mini-makers", emoji:"🐣", ages:"Ages 5–6", grad:"g-teal", desc:"Discover STEM through play — energy, motion, structures and first robots!" },
+  { id:"mega", name:"Mega-makers", emoji:"🚀", ages:"Ages 7–9", grad:"g-sky", desc:"Dive into electronics, sensors and coding with Scratch!" },
+  { id:"sumo", name:"Sumo-makers", emoji:"🥇", ages:"Ages 10–12", grad:"g-orange", desc:"Build real robotic systems — automation, innovation and sumo battles!" }
+];
+function trackIdOf(l){
+  if (l.track.indexOf("Mini-makers") >= 0) return "mini";
+  if (l.track.indexOf("Mega-makers") >= 0) return "mega";
+  return "sumo";
+}
 
 /* ================= STATE ================= */
-var S = { tab:"home", stars:0, lesson:0, picked:null, challenge:0, program:[], robot:null, collected:[], running:false, coderMsg:null, switchOn:false, wire:false };
+var S = { tab:"home", stars:0, lesson:0, track:null, picked:null, challenge:0, program:[], robot:null, collected:[], running:false, coderMsg:null, switchOn:false, wire:false };
 var BEST = { score:0 };
 
 function save(){ try { localStorage.setItem("miniMakersAcademy", JSON.stringify({stars:S.stars,best:BEST.score})); } catch(e){} }
@@ -243,7 +253,7 @@ function renderTabs(){
 /* ================= HOME ================= */
 function renderHome(){
   var cards = [
-    {id:"learn",e:"📚",t:"STEM Lessons",d:LESSONS.length+" fun lessons with quizzes",c:"g-sky"},
+    {id:"learn",e:"📚",t:"STEM Lessons",d:"Pick your track — Mini, Mega or Sumo!",c:"g-sky"},
     {id:"coder",e:"🤖",t:"Robot Coder",d:"Build block programs, drive a real robot!",c:"g-orange"},
     {id:"lab",e:"⚡",t:"Circuit Lab",d:"Build circuits and light it up!",c:"g-teal"},
     {id:"game",e:"🎮",t:"Robot Catch",d:"Play and sharpen reflexes!",c:"g-blue"}
@@ -266,9 +276,32 @@ function renderHome(){
 
 /* ================= LEARN ================= */
 function renderLearn(){
-  var l = LESSONS[S.lesson];
-  var html = '<div class="page"><h2 class="page-title">📚 STEM Lessons</h2><div class="lesson-pills">';
-  LESSONS.forEach(function(_,i){ html += '<button class="pill'+(i===S.lesson?" active":"")+'" data-l="'+i+'">'+LESSONS[i].emoji+' '+(i+1)+'</button>'; });
+  // track picker view (no track chosen yet)
+  if (!S.track){
+    var html = '<div class="page"><h2 class="page-title">📚 STEM Lessons</h2>'
+      + '<p class="page-sub">Pick your track to start learning! 🚩</p><div class="card-grid">';
+    TRACKS.forEach(function(t){
+      html += '<button class="card '+t.grad+'" data-track="'+t.id+'"><div class="big">'+t.emoji+'</div>'
+        + '<h3>'+t.name+'</h3><p><b>'+t.ages+'</b> — '+t.desc+'</p>'
+        + '<span class="go">'+LESSONS.filter(function(l){ return trackIdOf(l)===t.id; }).length+' lessons →</span></button>';
+    });
+    html += '</div></div>';
+    var app = el("app"); app.innerHTML = html;
+    app.querySelectorAll("[data-track]").forEach(function(b){
+      b.onclick = function(){ S.track = b.getAttribute("data-track"); S.lesson = 0; S.picked = null; render(); };
+    });
+    return;
+  }
+  // track chosen: show its lessons
+  var track = TRACKS.filter(function(t){ return t.id===S.track; })[0];
+  var trackLessons = LESSONS.map(function(l,i){ return {l:l,i:i}; }).filter(function(o){ return trackIdOf(o.l)===S.track; });
+  if (S.lesson >= trackLessons.length) S.lesson = 0;
+  var l = trackLessons[S.lesson].l;
+  var html = '<div class="page"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px">'
+    + '<h2 class="page-title">'+track.emoji+' '+track.name+' Lessons</h2>'
+    + '<button class="btn-primary" id="back-tracks" style="background:#123a6b">← All tracks</button></div>'
+    + '<p class="page-sub">'+track.ages+' — '+track.desc+'</p><div class="lesson-pills">';
+  trackLessons.forEach(function(o,i){ html += '<button class="pill'+(i===S.lesson?" active":"")+'" data-l="'+i+'">'+o.l.emoji+' '+(i+1)+'</button>'; });
   html += '</div><div class="lesson-card"><div class="lesson-head" style="background:'+l.color+'">'
     + '<div class="big">'+l.emoji+'</div><h3>'+l.title+'</h3><span class="age-tag">Ages '+l.age+'</span>'+(l.track?' <span class="age-tag">🚩 '+l.track+'</span>':'')+'</div>'
     + '<div class="lesson-body">';
@@ -282,9 +315,10 @@ function renderLearn(){
   if (S.picked !== null){
     html += '<div class="fun-fact">'+((S.picked===l.quiz.answer)?"🎉 Correct! ":"Almost! The green answer is correct. ")+l.quiz.fun+'</div>';
   }
-  html += '</div><div class="lesson-foot"><span class="lesson-count">Lesson '+(S.lesson+1)+' of '+LESSONS.length+'</span>'
+  html += '</div><div class="lesson-foot"><span class="lesson-count">Lesson '+(S.lesson+1)+' of '+trackLessons.length+'</span>'
     + '<button class="btn-primary" id="next-lesson">Next lesson →</button></div></div></div></div>';
   var app = el("app"); app.innerHTML = html;
+  el("back-tracks").onclick = function(){ S.track = null; S.picked = null; render(); };
   app.querySelectorAll("[data-l]").forEach(function(b){
     b.onclick = function(){ S.lesson = +b.getAttribute("data-l"); S.picked = null; render(); };
   });
@@ -296,7 +330,7 @@ function renderLearn(){
       render();
     };
   });
-  el("next-lesson").onclick = function(){ S.picked = null; S.lesson = (S.lesson+1)%LESSONS.length; render(); };
+  el("next-lesson").onclick = function(){ S.picked = null; S.lesson = (S.lesson+1)%trackLessons.length; render(); };
 }
 
 /* ================= CODER ================= */
