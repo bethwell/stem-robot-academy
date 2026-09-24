@@ -1,0 +1,504 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<title>Play &amp; Learn — MiniMakers Robotics Academy</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Poppins', Arial, sans-serif; background: #f5f8fc; min-height: 100vh; padding-bottom: 40px; color: #333; line-height: 1.6; }
+  button { font-family: inherit; cursor: pointer; border: none; }
+  .header { position: sticky; top: 0; z-index: 30; background: linear-gradient(90deg,#071b33,#123a6b); box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+  .header-top { max-width: 960px; margin: 0 auto; padding: 10px 14px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .back-link { color: #fff; font-weight: 600; font-size: .85rem; text-decoration: none; background: rgba(255,255,255,.15); padding: 6px 14px; border-radius: 999px; transition:.3s; }
+  .back-link:hover { background: #ff8c00; }
+  .logo { font-weight: 800; color: #fff; font-size: 1.1rem; letter-spacing: -.02em; }
+  .logo span { color: #ff8c00; }
+  .star-pill { margin-left: auto; background: rgba(255,140,0,.25); border-radius: 999px; padding: 5px 14px; color: #fff; font-weight: 700; font-size: .9rem; }
+  .tabs { max-width: 960px; margin: 0 auto; padding: 0 10px 10px; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { flex-shrink: 0; padding: 8px 14px; border-radius: 999px; font-size: .85rem; font-weight: 700; background: rgba(255,255,255,.12); color: #fff; transition: .2s; }
+  .tab.active { background: #ff8c00; color: #fff; transform: scale(1.05); box-shadow: 0 2px 8px rgba(255,140,0,.5); }
+  .page { max-width: 960px; margin: 0 auto; padding: 16px; animation: fadeUp .25s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  .hero { border-radius: 26px; background: linear-gradient(135deg,#0066cc,#0a4a8f); padding: 40px 24px; color: #fff; text-align: center; box-shadow: 0 10px 30px rgba(0,102,204,.3); margin-bottom: 20px; }
+  .hero .emojis { font-size: 3.2rem; }
+  .hero h1 { font-size: clamp(1.4rem, 5vw, 2.2rem); font-weight: 800; margin: 10px 0 6px; }
+  .hero h1 span { color: #ffb466; }
+  .hero p { opacity: .92; font-weight: 500; font-size: .95rem; }
+  .hero .stats { margin-top: 18px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; font-size: .85rem; font-weight: 700; }
+  .hero .stats span { background: rgba(255,255,255,.18); border-radius: 999px; padding: 6px 14px; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .card { text-align: left; border-radius: 26px; padding: 22px; color: #fff; box-shadow: 0 8px 22px rgba(0,0,0,.14); transition: transform .2s; }
+  .card:hover { transform: scale(1.03) translateY(-3px); } .card:active { transform: scale(.97); }
+  .card .big { font-size: 2.6rem; margin-bottom: 6px; }
+  .card h3 { font-size: 1.25rem; font-weight: 800; }
+  .card p { opacity: .9; font-size: .85rem; font-weight: 500; }
+  .card .go { display: inline-block; margin-top: 12px; background: #fff; color: #071b33; border-radius: 999px; padding: 7px 16px; font-size: .82rem; font-weight: 800; }
+  .g-sky { background: linear-gradient(135deg,#38bdf8,#0066cc); } .g-orange { background: linear-gradient(135deg,#ffb466,#ff8c00); }
+  .g-blue { background: linear-gradient(135deg,#4f9cf9,#123a6b); } .g-teal { background: linear-gradient(135deg,#2dd4bf,#0d9488); }
+  .note { margin-top: 20px; background: #fff; border: 2px solid #ffd9a0; border-radius: 18px; padding: 14px 16px; font-size: .85rem; font-weight: 500; color: #555; box-shadow: 0 4px 15px rgba(0,0,0,.05); }
+
+  h2.page-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; color:#123; }
+  .page-sub { font-size: .85rem; color: #666; font-weight: 500; margin-bottom: 14px; }
+  .lesson-pills, .ch-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .pill { padding: 6px 13px; border-radius: 999px; font-size: .8rem; font-weight: 700; background: #fff3e0; color: #b45309; border: 1px solid #ffd9a0; }
+  .pill.active { background: #ff8c00; color: #fff; transform: scale(1.06); box-shadow: 0 2px 8px rgba(255,140,0,.4); }
+  .lesson-card { border-radius: 26px; background: #fff; box-shadow: 0 8px 26px rgba(0,0,0,.08); overflow: hidden; border: 2px solid #eef2f7; }
+  .lesson-head { padding: 22px; color: #fff; }
+  .lesson-head .big { font-size: 2.2rem; } .lesson-head h3 { font-size: 1.4rem; font-weight: 800; margin-top: 4px; }
+  .age-tag { display: inline-block; margin-top: 8px; background: rgba(255,255,255,.25); border-radius: 999px; padding: 3px 12px; font-size: .72rem; font-weight: 800; }
+  .lesson-body { padding: 22px; }
+  .lesson-body p { line-height: 1.65; font-weight: 500; color: #444; margin-bottom: 10px; font-size: .95rem; animation: fadeUp .3s ease backwards; }
+  .quiz { border-top: 2px dashed #ffe0b0; padding-top: 16px; margin-top: 6px; }
+  .quiz .q { font-weight: 800; font-size: 1rem; margin-bottom: 12px; color:#123; }
+  .opt { display: block; width: 100%; text-align: left; border: 2px solid #e5e7eb; background: #f9fafb; border-radius: 16px; padding: 12px 16px; font-weight: 700; color: #374151; font-size: .92rem; margin-bottom: 8px; transition: .15s; }
+  .opt:hover { border-color: #ff8c00; }
+  .opt.correct { background: #dcfce7; border-color: #4ade80; }
+  .opt.wrong { background: #fee2e2; border-color: #f87171; }
+  .opt.dim { opacity: .55; }
+  .fun-fact { margin-top: 12px; background: #fff3e0; border: 2px solid #ffb466; border-radius: 16px; padding: 12px 14px; font-size: .82rem; font-weight: 500; color: #7c3a00; animation: fadeUp .3s ease; }
+  .lesson-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
+  .lesson-count { font-size: .8rem; font-weight: 800; color: #ff8c00; }
+  .btn-primary { background: #ff8c00; color: #fff; font-weight: 800; border-radius: 999px; padding: 10px 20px; font-size: .88rem; box-shadow: 0 4px 12px rgba(255,140,0,.35); transition:.3s; }
+  .btn-primary:active { transform: scale(.95); } .btn-primary:hover { opacity:.9; }
+
+  .coder-grid-2 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 768px) { .coder-grid-2 { grid-template-columns: 1fr 1fr; } }
+  .panel { border-radius: 26px; background: #fff; box-shadow: 0 8px 26px rgba(0,0,0,.08); padding: 18px; border: 2px solid #eef2f7; }
+  .panel h3 { font-weight: 800; margin-bottom: 10px; font-size: .95rem; color:#123; }
+  .palette { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .blk-btn { color: #fff; font-weight: 800; border-radius: 12px; padding: 10px 14px; font-size: .85rem; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+  .blk-btn:active { transform: scale(.93); }
+  .b-fwd { background: #0d9488; } .b-turn { background: #0066cc; } .b-loop { background: #ff8c00; }
+  .program { min-height: 84px; border-radius: 16px; background: #f9fafb; border: 2px dashed #d1d5db; padding: 8px; }
+  .program .empty { color: #9ca3af; font-size: .82rem; font-weight: 500; padding: 8px; }
+  .blk-row { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+  .blk-count { width: 46px; border: 2px solid #ffd9a0; border-radius: 8px; padding: 4px 2px; font-weight: 800; font-size: .82rem; text-align: center; background: #fff; }
+  .blk { flex: 1; display: flex; justify-content: space-between; align-items: center; border-radius: 12px; padding: 9px 12px; font-weight: 800; font-size: .85rem; color: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+  .blk.end { color: #374151; }
+  .blk-del { background: rgba(0,0,0,.18); border-radius: 999px; width: 24px; height: 24px; font-weight: 900; color: inherit; font-size: .9rem; line-height: 1; }
+  .run-row { display: flex; gap: 8px; margin-top: 12px; }
+  .btn-run { flex: 1; background: #ff8c00; color: #fff; font-weight: 900; border-radius: 16px; padding: 12px; font-size: .95rem; box-shadow: 0 4px 12px rgba(255,140,0,.35); }
+  .btn-run:disabled { opacity: .4; cursor: default; }
+  .btn-clear { background: #e5e7eb; border-radius: 16px; padding: 12px 16px; font-size: 1rem; }
+  .grid-wrap { display: flex; flex-direction: column; align-items: center; }
+  .robot-grid { display: grid; border-radius: 16px; overflow: hidden; border: 4px solid #99d6f0; background: #ecfdf5; }
+  .cell { border: 1px solid #cce9f5; display: flex; align-items: center; justify-content: center; position: relative; font-size: 1.6rem; }
+  .cell .robot { font-size: 1.7rem; transition: transform .35s ease; filter: drop-shadow(0 2px 4px rgba(0,0,0,.3)); }
+  .msg-ok { margin-top: 12px; width: 100%; border-radius: 16px; padding: 11px; font-weight: 800; font-size: .82rem; background: #dcfce7; border: 2px solid #4ade80; color: #166534; animation: fadeUp .3s; }
+  .msg-no { margin-top: 12px; width: 100%; border-radius: 16px; padding: 11px; font-weight: 800; font-size: .82rem; background: #fff3e0; border: 2px solid #ffb466; color: #92400e; animation: fadeUp .3s; }
+  .tiny-tip { font-size: .72rem; color: #9ca3af; font-weight: 500; margin-top: 10px; text-align: center; }
+
+  .circuit-panel { border-radius: 26px; background: #fff; box-shadow: 0 8px 26px rgba(0,0,0,.08); border: 2px solid #ffd9a0; padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .bulb { font-size: 4.2rem; opacity: .35; transition: .3s; }
+  .bulb.on { opacity: 1; filter: drop-shadow(0 0 22px rgba(255,140,0,.95)); animation: pulse 1.2s infinite; }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+  .wire-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .wire-row .big { font-size: 2rem; }
+  .toggle { font-weight: 900; border-radius: 16px; padding: 12px 24px; font-size: .9rem; box-shadow: 0 3px 10px rgba(0,0,0,.12); background: #e5e7eb; color: #4b5563; }
+  .toggle.on-amber { background: #ff8c00; color: #fff; } .toggle.on-green { background: #0d9488; color: #fff; }
+  .toggle:active { transform: scale(.95); }
+  .success-box { background: #dcfce7; border: 2px solid #4ade80; border-radius: 16px; padding: 14px; font-weight: 800; color: #166534; font-size: .88rem; animation: fadeUp .3s; text-align: center; }
+  .info-grid { margin-top: 16px; display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .info-card { border-radius: 18px; padding: 16px; font-size: .85rem; font-weight: 500; color: #374151; line-height: 1.6; }
+
+  .game-stats { display: flex; gap: 8px; font-weight: 800; font-size: .82rem; margin-bottom: 12px; flex-wrap: wrap; }
+  .game-stats span { background: #fff3e0; border-radius: 999px; padding: 5px 12px; }
+  #game-area { position: relative; height: 320px; border: 4px solid #ffb466; border-radius: 26px; overflow: hidden; background: linear-gradient(#e0ecff, #faf5ff); touch-action: none; user-select: none; }
+  .falling { position: absolute; font-size: 1.8rem; transform: translateX(-50%); pointer-events: none; }
+  #basket { position: absolute; font-size: 2.2rem; transform: translateX(-50%); pointer-events: none; }
+  .game-overlay { position: absolute; inset: 0; background: rgba(7,27,51,.4); backdrop-filter: blur(3px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+  .game-overlay .t { color: #fff; font-weight: 900; font-size: 1.2rem; text-align: center; padding: 0 16px; }
+  .game-overlay .start { background: #ff8c00; color: #fff; font-weight: 900; border-radius: 999px; padding: 12px 32px; font-size: 1rem; box-shadow: 0 6px 18px rgba(0,0,0,.3); }
+
+  #toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: #071b33; color: #fff; font-weight: 900; border-radius: 999px; padding: 12px 26px; box-shadow: 0 8px 24px rgba(0,0,0,.3); font-size: .85rem; z-index: 50; display: none; animation: fadeUp .3s; }
+  .confetti { position: fixed; top: -10%; font-size: 1.5rem; z-index: 49; pointer-events: none; animation: fall linear forwards; }
+  @keyframes fall { to { top: 110%; transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-top">
+    <a class="back-link" href="index.html">← Back to MiniMakers</a>
+    <div class="logo">MiniMakers <span>Play &amp; Learn</span> 🤖</div>
+    <div class="star-pill">⭐ <span id="star-count">0</span></div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+</div>
+<div id="app"></div>
+<div id="toast"></div>
+
+<script>
+/* ================= DATA ================= */
+var LESSONS = [
+  { emoji:"🤖", title:"What is a Robot?", age:"5+", color:"linear-gradient(90deg,#38bdf8,#0066cc)",
+    content:["A robot is a machine that can SENSE, THINK, and ACT! 🦾","👀 SENSE: Robots use sensors like cameras and touch buttons to see and feel the world.","🧠 THINK: A computer brain decides what to do.","🏃 ACT: Motors move wheels, arms, or legs to do the action!","You are a robot expert already — your body senses (eyes!), thinks (brain!), and acts (muscles!) the same way!"],
+    quiz:{ q:"Which part helps a robot 'think'?", options:["Its wheels","Its computer brain","Its battery"], answer:1,
+    fun:"Just like your brain tells your legs to run, a robot's computer tells its motors to spin!" } },
+  { emoji:"👁️", title:"Super Sensors", age:"7+", color:"linear-gradient(90deg,#0d9488,#0f766e)",
+    content:["Sensors are a robot's superpowers! 🦸","📷 Camera → helps robots see shapes, faces and colors.","📏 Distance (ultrasonic) sensor → works like bat echo! It bounces sound to measure how far a wall is.","🎛️ Touch sensor → feels bumps, like when you touch something hot and pull back!","🧭 Compass / gyroscope → tells the robot which way it is facing.","Robots use MANY sensors together, just like you use your eyes AND ears at the same time."],
+    quiz:{ q:"A bat-like sensor that measures distance is called…", options:["Ultrasonic sensor","Color sensor","Sound sensor"], answer:0,
+    fun:"Bats send out squeaks and listen for the echo. Ultrasonic sensors do exactly the same with sound waves!" } },
+  { emoji:"🔁", title:"Loops & Code Blocks", age:"8+", color:"linear-gradient(90deg,#ffb466,#ff8c00)",
+    content:["Computers follow instructions STEP BY STEP, like a recipe! 📝","A LOOP tells the computer: 'do this again and again!' 🔁","Instead of writing 'move forward' 4 times, we can say: repeat 4 [move forward].","This is how kid coders use Scratch and Blockly — colorful blocks that snap together like LEGO!","Try the Robot Coder zone to use REAL loops and drive a robot!"],
+    quiz:{ q:"How do you make code repeat 4 times the smart way?", options:["Write it 4 times","Use a repeat loop","Shout louder at the robot"], answer:1,
+    fun:"Programmers say: 'Don't Repeat Yourself!' Loops make code short, tidy and smart." } },
+  { emoji:"⚡", title:"Electricity Power!", age:"6+", color:"linear-gradient(90deg,#facc15,#f59e0b)",
+    content:["Robots need ENERGY to move. Where does it come from? Electricity! ⚡","A circuit is a loop that electricity travels around, like a race track! 🏁","Battery ⚡ → wire → motor → wire → back to battery. If the loop breaks, the robot stops!","A SWITCH is like a drawbridge on the road — open it and cars (electrons) stop!","Motors turn electricity into SPINNING motion. That's how robot wheels turn!"],
+    quiz:{ q:"What happens if you break the loop in a circuit?", options:["Electricity flows faster","Electricity stops flowing","The robot dances"], answer:1,
+    fun:"Electricity always needs a complete path from + to −. No loop, no power!" } },
+  { emoji:"⚙️", title:"Gears & Simple Machines", age:"8+", color:"linear-gradient(90deg,#4f9cf9,#123a6b)",
+    content:["Robots are built from simple machines — the same ones the ancient Egyptians used! 🏗️","⚙️ GEAR: a spiky wheel. Big gear + small gear = speed or power!","🔩 SCREW, 🪜 ramp, ⚖️ LEVER, 🔧 WHEEL & AXLE, ⚓ PULLEY.","Robotic arms use levers. Robotic grippers use gears and pulleys.","Fun fact: a bicycle is a simple machine robot you power with your legs!"],
+    quiz:{ q:"Which simple machine is a spiky wheel?", options:["A pulley","A lever","A gear"], answer:2,
+    fun:"Gears mesh like teeth! When one turns clockwise, its neighbor turns the opposite way!" } },
+  { emoji:"🏗️", title:"Think Like an Engineer", age:"9+", color:"linear-gradient(90deg,#f472b6,#db2777)",
+    content:["Engineers solve problems with the DESIGN CYCLE: 🔁","1️⃣ ASK: What is the problem? 2️⃣ IMAGINE: brainstorm wild ideas!","3️⃣ PLAN: sketch the best idea. 4️⃣ CREATE: build it!","5️⃣ TEST: does it work? 6️⃣ IMPROVE: fix what failed and try again!","Failing is FINE — every real robot failed MANY times before it worked. Engineers say: fail, learn, improve! 💪"],
+    quiz:{ q:"What should you do after a test fails?", options:["Give up","Improve and try again","Hide the robot"], answer:1,
+    fun:"NASA's Mars rovers were tested for YEARS on Earth before launch. Failing is part of the plan!" } }
+];
+
+var CHALLENGES = [
+  { name:"Reach the Star", hint:"Drive to the star ⭐", grid:5, start:{x:0,y:4}, goal:{x:4,y:0},
+    stars:[{x:4,y:0}], walls:[] },
+  { name:"Zigzag Master", hint:"Go around the walls to the star ⭐", grid:5, start:{x:0,y:4}, goal:{x:4,y:4},
+    stars:[{x:4,y:4}], walls:[{x:1,y:4},{x:1,y:3},{x:3,y:2},{x:3,y:1},{x:2,y:0}] },
+  { name:"Collect the Stars", hint:"Grab ALL the stars, then reach the flag 🏁", grid:5, start:{x:0,y:4}, goal:{x:4,y:0},
+    stars:[{x:2,y:4},{x:2,y:1},{x:4,y:0}], walls:[{x:1,y:2},{x:3,y:3}] }
+];
+
+var TABS = [ {id:"home",label:"🏠 Home"},{id:"learn",label:"📚 Learn"},{id:"coder",label:"🤖 Robot Coder"},{id:"lab",label:"⚡ Circuit Lab"},{id:"game",label:"🎮 Catch Game"} ];
+
+/* ================= STATE ================= */
+var S = { tab:"home", stars:0, lesson:0, picked:null, challenge:0, program:[], robot:null, collected:[], running:false, coderMsg:null, switchOn:false, wire:false };
+var BEST = { score:0 };
+
+function save(){ try { localStorage.setItem("miniMakersAcademy", JSON.stringify({stars:S.stars,best:BEST.score})); } catch(e){} }
+function load(){ try { var d = JSON.parse(localStorage.getItem("miniMakersAcademy")); if(d){ S.stars=d.stars||0; BEST.score=d.best||0; } } catch(e){} }
+
+function award(n, text){
+  S.stars += n; document.getElementById("star-count").textContent = S.stars; save();
+  var t = document.getElementById("toast"); t.textContent = "+⭐ " + text; t.style.display = "block";
+  clearTimeout(t._tm); t._tm = setTimeout(function(){ t.style.display="none"; }, 2600);
+  confetti();
+}
+function confetti(){
+  var em = ["🎉","⭐","🎊","🤖","✨"];
+  for (var i=0;i<18;i++){
+    (function(i){
+      var c = document.createElement("div"); c.className="confetti"; c.textContent = em[i%5];
+      c.style.left = ((i*41)%100)+"%"; c.style.animationDuration = (1.4+(i%5)*0.3)+"s"; c.style.animationDelay=((i%8)*0.08)+"s";
+      document.body.appendChild(c); setTimeout(function(){ c.remove(); }, 2600);
+    })(i);
+  }
+}
+
+function el(id){ return document.getElementById(id); }
+
+/* ================= NAV ================= */
+function renderTabs(){
+  var t = el("tabs"); t.innerHTML = "";
+  TABS.forEach(function(tb){
+    var b = document.createElement("button"); b.className = "tab"+(S.tab===tb.id?" active":""); b.textContent = tb.label;
+    b.onclick = function(){ S.tab = tb.id; render(); };
+    t.appendChild(b);
+  });
+}
+
+/* ================= HOME ================= */
+function renderHome(){
+  var cards = [
+    {id:"learn",e:"📚",t:"STEM Lessons",d:LESSONS.length+" fun lessons with quizzes",c:"g-sky"},
+    {id:"coder",e:"🤖",t:"Robot Coder",d:"Build block programs, drive a real robot!",c:"g-orange"},
+    {id:"lab",e:"⚡",t:"Circuit Lab",d:"Build circuits and light it up!",c:"g-teal"},
+    {id:"game",e:"🎮",t:"Robot Catch",d:"Play and sharpen reflexes!",c:"g-blue"}
+  ];
+  var html = '<div class="page">'
+    + '<div class="hero"><div class="emojis">🤖🧪⚙️🚀</div>'
+    + '<h1>Welcome to the <span>MiniMakers</span> Playground!</h1>'
+    + '<p>The same hands-on STEM fun from our classes — free, right here. Learn science, build robots, write code!</p>'
+    + '<div class="stats"><span>⭐ '+S.stars+' stars earned</span><span>🏆 Best catch: '+BEST.score+'</span></div></div>'
+    + '<div class="card-grid">';
+  cards.forEach(function(c){
+    html += '<button class="card '+c.c+'" data-go="'+c.id+'"><div class="big">'+c.e+'</div><h3>'+c.t+'</h3><p>'+c.d+'</p><span class="go">Let\'s play! →</span></button>';
+  });
+  html += '</div><div class="note">👨‍👩‍👧 <b>For parents &amp; teachers:</b> This free playground matches our Mini-makers (5–6), Mega-makers (7–9) and Sumo-makers (10–12) tracks. Kids earn ⭐ stars as they play. Progress saves on this device — no account needed. Ready for the real thing? <a href="index.html#contact" style="color:#ff8c00;font-weight:700;">Book a class!</a></div></div>';
+  var app = el("app"); app.innerHTML = html;
+  app.querySelectorAll("[data-go]").forEach(function(b){
+    b.onclick = function(){ S.tab = b.getAttribute("data-go"); render(); };
+  });
+}
+
+/* ================= LEARN ================= */
+function renderLearn(){
+  var l = LESSONS[S.lesson];
+  var html = '<div class="page"><h2 class="page-title">📚 STEM Lessons</h2><div class="lesson-pills">';
+  LESSONS.forEach(function(_,i){ html += '<button class="pill'+(i===S.lesson?" active":"")+'" data-l="'+i+'">'+LESSONS[i].emoji+' '+(i+1)+'</button>'; });
+  html += '</div><div class="lesson-card"><div class="lesson-head" style="background:'+l.color+'">'
+    + '<div class="big">'+l.emoji+'</div><h3>'+l.title+'</h3><span class="age-tag">Ages '+l.age+'</span></div>'
+    + '<div class="lesson-body">';
+  l.content.forEach(function(p,i){ html += '<p style="animation-delay:'+(i*0.06)+'s">'+p+'</p>'; });
+  html += '<div class="quiz"><div class="q">🧠 Quick Quiz: '+l.quiz.q+'</div>';
+  l.quiz.options.forEach(function(o,i){
+    var cls = "opt";
+    if (S.picked !== null){ if (i===l.quiz.answer) cls += " correct"; else if (i===S.picked) cls += " wrong"; else cls += " dim"; }
+    html += '<button class="'+cls+'" data-q="'+i+'">'+((S.picked!==null&&i===l.quiz.answer)?"✅ ":((S.picked===i)?"❌ ":""))+o+'</button>';
+  });
+  if (S.picked !== null){
+    html += '<div class="fun-fact">'+((S.picked===l.quiz.answer)?"🎉 Correct! ":"Almost! The green answer is correct. ")+l.quiz.fun+'</div>';
+  }
+  html += '</div><div class="lesson-foot"><span class="lesson-count">Lesson '+(S.lesson+1)+' of '+LESSONS.length+'</span>'
+    + '<button class="btn-primary" id="next-lesson">Next lesson →</button></div></div></div></div>';
+  var app = el("app"); app.innerHTML = html;
+  app.querySelectorAll("[data-l]").forEach(function(b){
+    b.onclick = function(){ S.lesson = +b.getAttribute("data-l"); S.picked = null; render(); };
+  });
+  app.querySelectorAll("[data-q]").forEach(function(b){
+    b.onclick = function(){
+      if (S.picked !== null) return;
+      var i = +b.getAttribute("data-q"); S.picked = i;
+      if (i === l.quiz.answer) award(3, "Quiz whiz! 🌟");
+      render();
+    };
+  });
+  el("next-lesson").onclick = function(){ S.picked = null; S.lesson = (S.lesson+1)%LESSONS.length; render(); };
+}
+
+/* ================= CODER ================= */
+var BLOCKS = { fwd:{label:"Move ⬆️"}, left:{label:"Turn ↰"}, right:{label:"Turn ↱"}, loopStart:{label:"Repeat ×"}, loopEnd:{label:"End repeat"} };
+var DIRS = [{dx:0,dy:-1},{dx:1,dy:0},{dx:0,dy:1},{dx:-1,dy:0}];
+
+function renderCoder(){
+  var ch = CHALLENGES[S.challenge];
+  if (S.robot === null) S.robot = { x:ch.start.x, y:ch.start.y, dir:0 };
+  var html = '<div class="page"><h2 class="page-title">🤖 Robot Coder</h2>'
+    + '<p class="page-sub">Challenge '+(S.challenge+1)+': <b>'+ch.name+'</b> — '+ch.hint+'</p><div class="ch-pills">';
+  CHALLENGES.forEach(function(c,i){ html += '<button class="pill'+(i===S.challenge?" active":"")+'" data-c="'+i+'">'+(i+1)+'. '+c.name+'</button>'; });
+  html += '</div><div class="coder-grid-2"><div class="panel"><h3>🧩 Tap blocks to build your program:</h3><div class="palette">'
+    + '<button class="blk-btn b-fwd" data-add="fwd">⬆️ Move</button>'
+    + '<button class="blk-btn b-turn" data-add="left">↰ Turn left</button>'
+    + '<button class="blk-btn b-turn" data-add="right">↱ Turn right</button>'
+    + '<button class="blk-btn b-loop" data-add="loopStart">🔁 Repeat</button>'
+    + '<button class="blk-btn b-loop" data-add="loopEnd">⏹ End repeat</button></div>'
+    + '<h3>📝 Your program:</h3><div class="program" id="program">';
+  if (S.program.length === 0) html += '<div class="empty">Tap blocks above to build your program…</div>';
+  S.program.forEach(function(b,i){
+    var t = BLOCKS[b.type];
+    var bg = b.type==="fwd" ? "#0d9488" : (b.type==="loopStart"||b.type==="loopEnd") ? (b.type==="loopEnd"?"#ffd9a0":"#ff8c00") : "#0066cc";
+    html += '<div class="blk-row">';
+    if (b.type === "loopStart") html += '<input type="number" min="1" max="5" value="'+b.count+'" class="blk-count" data-cnt="'+i+'">';
+    html += '<div class="blk'+(b.type==="loopEnd"?" end":"")+'" style="background:'+bg+'">'
+      + '<span>'+t.label+'</span><button class="blk-del" data-del="'+i+'">×</button></div></div>';
+  });
+  html += '</div><div class="run-row"><button class="btn-run" id="run-btn" '+(S.running||S.program.length===0?"disabled":"")+'>'
+    + (S.running?"▶ Running…":"▶ Run Program!")+'</button>'
+    + '<button class="btn-clear" id="clear-btn">🗑️</button></div></div>'
+    + '<div class="panel grid-wrap"><h3>🌍 Robot World</h3><div class="robot-grid" id="robot-grid" style="grid-template-columns:repeat('+ch.grid+', 52px)"></div>';
+  if (S.coderMsg) html += '<div class="'+(S.coderMsg.ok?"msg-ok":"msg-no")+'">'+S.coderMsg.text+'</div>';
+  html += '<p class="tiny-tip">🤖 arrow shows the direction. Turns rotate the robot in place.</p></div></div></div>';
+  var app = el("app"); app.innerHTML = html;
+  app.querySelectorAll("[data-c]").forEach(function(b){ b.onclick = function(){ var i=+b.getAttribute("data-c"); S.challenge=i; var c=CHALLENGES[i]; S.robot={x:c.start.x,y:c.start.y,dir:0}; S.program=[]; S.collected=[]; S.coderMsg=null; render(); }; });
+  app.querySelectorAll("[data-add]").forEach(function(b){
+    b.onclick = function(){
+      if (S.running) return;
+      var t = b.getAttribute("data-add");
+      S.program.push(t==="loopStart" ? {type:t,count:2} : {type:t});
+      S.coderMsg = null; render();
+    };
+  });
+  app.querySelectorAll("[data-del]").forEach(function(b){ b.onclick = function(){ if(!S.running){ S.program.splice(+b.getAttribute("data-del"),1); render(); } }; });
+  app.querySelectorAll("[data-cnt]").forEach(function(inp){
+    inp.onchange = function(){ var i=+inp.getAttribute("data-cnt"); S.program[i].count = Math.max(1, Math.min(5, +inp.value||1)); render(); };
+  });
+  el("clear-btn").onclick = function(){ if(!S.running){ S.program=[]; S.robot={x:ch.start.x,y:ch.start.y,dir:0}; S.collected=[]; S.coderMsg=null; render(); } };
+  el("run-btn").onclick = runProgram;
+  drawGrid();
+}
+
+function drawGrid(){
+  var ch = CHALLENGES[S.challenge]; var g = el("robot-grid"); if(!g) return;
+  g.innerHTML = "";
+  for (var y=0; y<ch.grid; y++){
+    for (var x=0; x<ch.grid; x++){
+      var c = document.createElement("div"); c.className = "cell"; c.style.width="52px"; c.style.height="52px";
+      var isWall = ch.walls.some(function(w){ return w.x===x&&w.y===y; });
+      var starIdx = ch.stars.findIndex(function(s){ return s.x===x&&s.y===y; });
+      var hasStar = starIdx>=0 && S.collected.indexOf(starIdx)<0;
+      var isGoal = ch.goal.x===x && ch.goal.y===y;
+      var isRobot = S.robot.x===x && S.robot.y===y;
+      if (isWall) c.textContent = "🧱";
+      else if (hasStar) c.textContent = "⭐";
+      else if (isGoal) c.textContent = "🏁";
+      if (isRobot){
+        var r = document.createElement("div"); r.className = "robot"; r.textContent = "🤖";
+        r.style.transform = "rotate("+(S.robot.dir*90)+"deg)";
+        c.appendChild(r);
+      }
+      g.appendChild(c);
+    }
+  }
+}
+
+function sleep(ms){ return new Promise(function(res){ setTimeout(res, ms); }); }
+
+async function runProgram(){
+  if (S.running || S.program.length===0) return;
+  var ch = CHALLENGES[S.challenge];
+  S.running = true; S.coderMsg = null; S.collected = [];
+  S.robot = { x:ch.start.x, y:ch.start.y, dir:0 };
+  render();
+  await sleep(350);
+  var state = S.robot, got = [];
+
+  async function runBlock(b){
+    if (b.type==="left") state = { x:state.x, y:state.y, dir:(state.dir+3)%4 };
+    else if (b.type==="right") state = { x:state.x, y:state.y, dir:(state.dir+1)%4 };
+    else if (b.type==="fwd"){
+      var d = DIRS[state.dir]; var nx = state.x+d.dx, ny = state.y+d.dy;
+      if (nx>=0 && ny>=0 && nx<ch.grid && ny<ch.grid && !ch.walls.some(function(w){ return w.x===nx&&w.y===ny; }))
+        state = { x:nx, y:ny, dir:state.dir };
+    }
+    S.robot = state;
+    var hit = ch.stars.findIndex(function(s){ return s.x===state.x && s.y===state.y; });
+    if (hit>=0 && got.indexOf(hit)<0){ got.push(hit); S.collected = got.slice(); }
+    drawGrid();
+    await sleep(420);
+  }
+
+  var i = 0;
+  outer: while (i < S.program.length){
+    var b = S.program[i];
+    if (b.type === "loopStart"){
+      var j = i+1, depth = 1;
+      while (j < S.program.length){
+        if (S.program[j].type==="loopStart") depth++;
+        if (S.program[j].type==="loopEnd"){ depth--; if (depth===0) break; }
+        j++;
+      }
+      if (depth===0){
+        var body = S.program.slice(i+1, j);
+        for (var k=0; k<(b.count||2); k++)
+          for (var m=0; m<body.length; m++) await runBlock(body[m]);
+        i = j+1; continue outer;
+      }
+    }
+    if (b.type !== "loopEnd") await runBlock(b);
+    i++;
+  }
+
+  if (state.x===ch.goal.x && state.y===ch.goal.y && got.length===ch.stars.length){
+    S.coderMsg = { ok:true, text:"🎉 Challenge complete in "+S.program.length+" blocks! Just like our Mega-makers class." };
+    award(5, "Coding challenge complete! 🤖⭐");
+  } else if (state.x===ch.goal.x && state.y===ch.goal.y){
+    S.coderMsg = { ok:false, text:"You reached the flag, but missed some stars! ⭐ Try collecting ALL of them." };
+  } else {
+    S.coderMsg = { ok:false, text:"Hmm, the robot didn't reach the flag 🏁. Adjust your blocks and try again!" };
+  }
+  S.running = false;
+  render();
+}
+
+/* ================= CIRCUIT ================= */
+function renderLab(){
+  var on = S.switchOn && S.wire;
+  var html = '<div class="page"><h2 class="page-title">⚡ Circuit Lab</h2>'
+    + '<p class="page-sub">Build a circuit to light the bulb. Flip the switch and connect the wire!</p>'
+    + '<div class="circuit-panel"><div class="bulb'+(on?" on":"")+'">'+(on?"💡":"🔌")+'</div>'
+    + '<div class="wire-row"><span class="big">🔋</span>'
+    + '<svg width="180" height="40"><line x1="0" y1="20" x2="180" y2="20" stroke="'+(on?"#ff8c00":"#d1d5db")+'" stroke-width="5" stroke-linecap="round"/>'
+    + (on?'<circle r="5" fill="#ff8c00"><animate attributeName="cx" values="0;180" dur="1.5s" repeatCount="indefinite"/></circle>':"")+'</svg>'
+    + '<span class="big'+(on?"":" opacity:.5")+'">⚡</span></div>'
+    + '<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">'
+    + '<button class="toggle'+(S.switchOn?" on-amber":"")+'" id="sw">'+(S.switchOn?"🔌 Switch: ON":"🔌 Switch: OFF")+'</button>'
+    + '<button class="toggle'+(S.wire?" on-green":"")+'" id="wr">'+(S.wire?"🧵 Wire: Connected":"🧵 Wire: Loose")+'</button></div>'
+    + (on?'<div class="success-box">🎉 Circuit complete! Electricity flows in a LOOP and the bulb shines!</div>':"")
+    + '</div><div class="info-grid">'
+    + '<div class="info-card" style="background:#f0f9ff;border:2px solid #bae6fd"><h4 style="color:#0369a1;margin-bottom:6px">🔍 What\'s happening?</h4>Electrons flow from the battery\'s <b>−</b> side, through the wire, through the bulb (making it glow!), and back to <b>+</b>. It\'s a loop — break it anywhere and everything stops!</div>'
+    + '<div class="info-card" style="background:#fff3e0;border:2px solid #ffd9a0"><h4 style="color:#b45309;margin-bottom:6px">🤔 Think about it</h4>What happens if the wire is connected but the switch is OFF?<br><button class="btn-primary" id="try-exp" style="margin-top:10px">Try it!</button></div>'
+    + '</div></div>';
+  var app = el("app"); app.innerHTML = html;
+  el("sw").onclick = function(){ S.switchOn = !S.switchOn; render(); };
+  el("wr").onclick = function(){ S.wire = !S.wire; render(); };
+  var t = el("try-exp"); if (t) t.onclick = function(){ S.switchOn = false; S.wire = true; render(); award(1, "Great experimenting! 🔬"); };
+}
+
+/* ================= GAME ================= */
+var G = { playing:false, score:0, lives:3, items:[], basket:50, tm1:null, tm2:null, _ten:false };
+
+function renderGame(){
+  var html = '<div class="page"><h2 class="page-title">🎮 Robot Catch</h2>'
+    + '<p class="page-sub">Catch ⭐ stars and 🔋 batteries with your robot. Miss the good ones or catch a 🧱 and you lose a life!</p>'
+    + '<div class="game-stats"><span>🏆 '+G.score+'</span><span>🥇 Best '+BEST.score+'</span><span>'+"❤️".repeat(Math.max(0,G.lives))+'</span></div>'
+    + '<div id="game-area"><div id="basket" style="left:'+G.basket+'%;top:86%">🤖</div>'
+    + (G.playing?"":'<div class="game-overlay"><div class="t">'+(G.lives<=0?("💥 Game over! Score: "+G.score):"🎮 Robot Catch")+'</div><button class="start" id="game-start">'+(G.lives<=0?"Play again!":"Start!")+'</button></div>')
+    + '</div><p class="tiny-tip">Move your finger or mouse across the game area to steer 🤖.</p></div>';
+  el("app").innerHTML = html;
+  var area = el("game-area");
+  function move(clientX){
+    var r = area.getBoundingClientRect();
+    var pct = ((clientX - r.left) / r.width) * 100;
+    G.basket = Math.max(5, Math.min(95, pct));
+    el("basket").style.left = G.basket + "%";
+  }
+  area.addEventListener("pointermove", function(e){ if (G.playing) move(e.clientX); });
+  area.addEventListener("pointerdown", function(e){ if (G.playing) move(e.clientX); });
+  var st = el("game-start"); if (st) st.onclick = startGame;
+  drawItems();
+}
+
+function drawItems(){
+  var area = el("game-area"); if (!area) return;
+  area.querySelectorAll(".falling").forEach(function(f){ f.remove(); });
+  G.items.forEach(function(it){
+    var d = document.createElement("div"); d.className="falling";
+    d.textContent = it.good ? it.kind : "🧱";
+    d.style.left = it.x+"%"; d.style.top = it.y+"%";
+    area.insertBefore(d, el("basket"));
+  });
+}
+
+function startGame(){
+  G.playing = true; G.score = 0; G.lives = 3; G.items = []; render();
+  clearInterval(G.tm1); clearInterval(G.tm2);
+  G.tm1 = setInterval(function(){
+    G.items.push({ id:Math.random(), x: 10+Math.random()*80, y:-5, good: Math.random()>0.25, kind: Math.random()>0.5?"⭐":"🔋" });
+  }, 900);
+  G.tm2 = setInterval(function(){
+    var next = [];
+    for (var i=0; i<G.items.length; i++){
+      var it = G.items[i]; var y = it.y + 4;
+      if (y >= 88){
+        var caught = Math.abs(it.x - G.basket) < 12;
+        if (caught && it.good) G.score++;
+        else if (caught && !it.good) G.lives--;
+        else if (!caught && it.good) G.lives--;
+        continue;
+      }
+      next.push({ x:it.x, y:y, good:it.good, kind:it.kind });
+    }
+    G.items = next;
+    if (G.score > BEST.score) { BEST.score = G.score; save(); }
+    if (G.score > 0 && G.score % 10 === 0 && !G._ten) { G._ten = true; award(2, "10 catches! ⭐⭐"); }
+    if (G.score % 10 !== 0) G._ten = false;
+    if (G.lives <= 0){ clearInterval(G.tm1); clearInterval(G.tm2); G.playing = false; }
+    render();
+  }, 300);
+}
+
+/* ================= ROUTER ================= */
+function render(){
+  renderTabs();
+  el("star-count").textContent = S.stars;
+  if (S.tab==="home") renderHome();
+  else if (S.tab==="learn") renderLearn();
+  else if (S.tab==="coder") renderCoder();
+  else if (S.tab==="lab") renderLab();
+  else if (S.tab==="game") renderGame();
+}
+load();
+render();
+</script>
+</body>
+</html>
