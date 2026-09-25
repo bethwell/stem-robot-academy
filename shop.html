@@ -24,7 +24,10 @@
   .hero h1 { font-size: clamp(1.3rem, 5vw, 2rem); font-weight: 800; margin: 8px 0 6px; }
   .hero h1 span { color: #ffb466; }
   .hero p { opacity: .92; font-weight: 500; font-size: .92rem; }
-  .cats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .cats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .search-row { margin-bottom: 16px; }
+  #search { width: 100%; max-width: 420px; padding: 12px 18px; border-radius: 999px; border: 2px solid #e3e9f2; font-family: inherit; font-size: .9rem; font-weight: 600; outline: none; background: #fff; }
+  #search:focus { border-color: #ff8c00; }
   .cat { padding: 8px 16px; border-radius: 999px; font-size: .82rem; font-weight: 700; background: #fff; color: #555; border: 2px solid #e3e9f2; transition:.15s; }
   .cat.active { background: #ff8c00; color: #fff; border-color: #ff8c00; transform: scale(1.05); box-shadow: 0 2px 8px rgba(255,140,0,.4); }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
@@ -89,6 +92,7 @@
     <p>The same kits and components we use in class — delivered to you. Order via WhatsApp, pay with MTN MoMo or Airtel Money.</p>
   </div>
   <div class="cats" id="cats"></div>
+  <div class="search-row"><input type="text" id="search" placeholder="🔍 Search products…" autocomplete="off"></div>
   <div class="grid" id="grid"></div>
 </div>
 
@@ -117,29 +121,33 @@ var MANUAL_PRODUCTS = [
   { id:"kit-mini",  cat:"starter",  emoji:"🧰", name:"Mini-makers Starter Kit",  price:85000,  desc:"First robotics kit for ages 5–6: gears, wheels, blocks + activity cards.", bestseller:true },
   { id:"kit-mega",  cat:"starter",  emoji:"🤖", name:"Mega-makers Builder Kit",  price:150000, desc:"Ages 7–9: motor pack, sensors, breadboard + 10 guided builds.", bestseller:true },
   { id:"kit-sumo",  cat:"starter",  emoji:"🥇", name:"Sumo-makers Robot Kit",    price:275000, desc:"Ages 10–12: build & battle a sumo robot. Sensors, motors, frame + controller.", new:true },
-  { id:"motors",    cat:"parts",    emoji:"⚙️", name:"Motor Pack (5 pcs)",       price:45000,  desc:"5 x geared DC motors with wheels — replacement or expansion." },
-  { id:"leds",      cat:"parts",    emoji:"💡", name:"LED & Resistor Bundle",    price:20000,  desc:"Assorted LEDs, resistors, jumper wires — light up everything." },
-  { id:"sensors",   cat:"parts",    emoji:"👁️", name:"Sensor Set (ultrasonic + touch + light)", price:60000, desc:"3 sensors with mounts. Make your robot see and feel." },
-  { id:"battery",   cat:"parts",    emoji:"🔋", name:"Battery Pack + Holder",   price:35000,  desc:"Rechargeable battery pack with switch and holder." },
-  { id:"bboard",    cat:"parts",    emoji:"🔌", name:"Breadboard + Jumper Set",  price:30000,  desc:"No-solder circuit building — 400-point board + 40 wires." },
+  { id:"motors",    cat:"motors",   emoji:"⚙️", name:"Motor Pack (5 pcs)",       price:45000,  desc:"5 x geared DC motors with wheels — replacement or expansion." },
+  { id:"leds",      cat:"components", emoji:"💡", name:"LED & Resistor Bundle",  price:20000,  desc:"Assorted LEDs, resistors, jumper wires — light up everything." },
+  { id:"sensors",   cat:"sensors",  emoji:"👁️", name:"Sensor Set (ultrasonic + touch + light)", price:60000, desc:"3 sensors with mounts. Make your robot see and feel." },
+  { id:"battery",   cat:"power",    emoji:"🔋", name:"Battery Pack + Holder",   price:35000,  desc:"Rechargeable battery pack with switch and holder." },
+  { id:"bboard",    cat:"components", emoji:"🔌", name:"Breadboard + Jumper Set",  price:30000,  desc:"No-solder circuit building — 400-point board + 40 wires." },
   { id:"tools",     cat:"tools",    emoji:"🧰", name:"Young Engineer Tool Set",  price:55000,  desc:"Kid-safe screwdrivers, pliers, tape + project box." },
-  { id:"book",      cat:"tools",    emoji:"📘", name:"STEM Activity Book (Vol. 1)", price:25000, desc:"40 offline activities: structures, energy, circuits. Ages 5–12.", new:true },
-  { id:"merch",     cat:"tools",    emoji:"👕", name:"MiniMakers T-shirt",       price:30000,  desc:"Official club tee. Ages 4–14 sizes while stock lasts." },
-  { id:"spare",     cat:"parts",    emoji:"🔧", name:"Spare Parts Grab Bag",      price:40000,  desc:"Random assorted components for repairs & experiments." }
+  { id:"book",      cat:"tools2",   emoji:"📘", name:"STEM Activity Book (Vol. 1)", price:25000, desc:"40 offline activities: structures, energy, circuits. Ages 5–12.", new:true },
+  { id:"merch",     cat:"tools2",   emoji:"👕", name:"MiniMakers T-shirt",       price:30000,  desc:"Official club tee. Ages 4–14 sizes while stock lasts." },
+  { id:"spare",     cat:"components", emoji:"🔧", name:"Spare Parts Grab Bag",      price:40000,  desc:"Random assorted components for repairs & experiments." }
 ];
 
 var CATS = [
   { id:"all", label:"All" },
-  { id:"starter", label:"🧰 Kits" },
-  { id:"parts", label:"⚙️ Components" },
-  { id:"tools", label:"🛠️ Tools & Extras" },
-  { id:"scraped", label:"📦 Supplier Stock" }
+  { id:"starter", label:"🧰 MiniMakers Kits" },
+  { id:"boards", label:"🤖 Boards & Robots" },
+  { id:"sensors", label:"👁️ Sensors" },
+  { id:"motors", label:"⚙️ Motors & Drives" },
+  { id:"components", label:"🔌 Components" },
+  { id:"power", label:"🔋 Power & Cables" },
+  { id:"tools", label:"🛠️ Tools" },
+  { id:"tools2", label:"📚 Books & Merch" }
 ];
 
 /* Merge manual + scraped products */
 var SCRAPED = (typeof SCRAPED_PRODUCTS !== "undefined") ? SCRAPED_PRODUCTS : [];
 SCRAPED.forEach(function(p){
-  p.cat = p.cat || "scraped";
+  p.cat = p.cat || "components";
   p.emoji = p.emoji || "🧩";
   p.desc = p.desc || ("Sourced from " + (p.source || "our supplier") + ".");
 });
@@ -157,17 +165,30 @@ function fmt(n){ return "UGX " + n.toLocaleString(); }
 function renderCats(active){
   var c = document.getElementById("cats"); c.innerHTML = "";
   CATS.forEach(function(cat){
+    var count = PRODUCTS.filter(function(p){ return cat.id==="all" || p.cat===cat.id; }).length;
+    if (cat.id !== "all" && count === 0) return; // hide empty categories
     var b = document.createElement("button");
     b.className = "cat" + (cat.id===active ? " active" : "");
-    b.textContent = cat.label;
-    b.onclick = function(){ renderGrid(cat.id); renderCats(cat.id); };
+    b.textContent = cat.label + " (" + count + ")";
+    b.onclick = function(){ S.cat = cat.id; renderGrid(); renderCats(cat.id); };
     c.appendChild(b);
   });
 }
+var S = { cat: "all", q: "" };
 
-function renderGrid(cat){
+function renderGrid(){
   var g = document.getElementById("grid"); g.innerHTML = "";
-  PRODUCTS.filter(function(p){ return cat==="all" || p.cat===cat; }).forEach(function(p){
+  var q = S.q.toLowerCase();
+  var list = PRODUCTS.filter(function(p){
+    var catOk = S.cat==="all" || p.cat===S.cat;
+    var qOk = !q || (p.name + " " + p.desc).toLowerCase().indexOf(q) >= 0;
+    return catOk && qOk;
+  });
+  if (list.length === 0){
+    g.innerHTML = '<div class="cart-empty" style="grid-column:1/-1">No products found 😕<br>Try another category or search term.</div>';
+    return;
+  }
+  list.forEach(function(p){
     var d = document.createElement("div"); d.className = "prod";
     var badge = p.bestseller ? '<span class="badge">BESTSELLER</span>' : (p.new ? '<span class="badge" style="background:#e0ecff;color:#0369a1;border-color:#7cb3e8">NEW</span>' : "");
     d.innerHTML = '<div class="prod-img">'+p.emoji+'</div><div class="prod-body">'
@@ -230,8 +251,11 @@ function toast(msg){
   clearTimeout(t._tm); t._tm = setTimeout(function(){ t.style.display = "none"; }, 1800);
 }
 
+document.getElementById("search").addEventListener("input", function(e){
+  S.q = e.target.value; renderGrid();
+});
 renderCats("all");
-renderGrid("all");
+renderGrid();
 renderCart();
 </script>
 </body>

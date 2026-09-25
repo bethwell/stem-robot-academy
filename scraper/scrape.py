@@ -1,16 +1,11 @@
 #!/usr/bin/env python3
 """
 MiniMakers Kit Shop — Supplier Scraper (Proof of Concept)
-=========================================================
-Scrapes products from Ugandan electronics suppliers, adds a markup,
-and writes products.js for the shop page (shop.html).
+Scrapes Ugandan electronics suppliers, adds markup, writes products.js.
 
-Suppliers:
-  - Neriko Electronics  (nerikoelectronics.com)   — robots, Arduino, Raspberry Pi
-  - Bbiri Centre        (bbiri-centre.com)         — electronics components
-
-Output: products.js  (variable SCRAPED_PRODUCTS)
-Run:    python3 scraper/scrape.py   (from repo root, writes ./products.js)
+Suppliers: Neriko Electronics + Bbiri Centre
+Output: products.js (variable SCRAPED_PRODUCTS)
+Run:    python3 scraper/scrape.py   (from repo root)
 """
 
 import json
@@ -19,9 +14,9 @@ import time
 import urllib.request
 from html import unescape
 
-MARKUP = 5000          # UGX added to every supplier price
-ROUND_TO = 500         # round final price to nearest 500
-MAX_PAGES_NERIKO = 8    # how many product pages to scrape per run
+MARKUP = 5000
+ROUND_TO = 500
+MAX_PAGES_NERIKO = 8
 TIMEOUT = 25
 
 HEADERS = {
@@ -37,7 +32,6 @@ def fetch(url):
 
 
 def text_of(html):
-    """Strip tags to plain text (no external deps needed)."""
     html = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", html, flags=re.S | re.I)
     txt = re.sub(r"<[^>]+>", "\n", html)
     txt = unescape(txt)
@@ -55,10 +49,6 @@ def parse_price(s):
     return int(float(m.group(1))) if m else None
 
 
-# ---------------------------------------------------------------
-# Neriko Electronics  —  /products?page=N
-# Text layout:  [Out of stock]  <Product Name>  UGX<price>
-# ---------------------------------------------------------------
 def scrape_neriko():
     items = []
     for page in range(1, MAX_PAGES_NERIKO + 1):
@@ -78,11 +68,9 @@ def scrape_neriko():
             name = None
             out_of_stock = "out of stock" in line.lower()
             candidate = line if not out_of_stock else (lines[i - 1] if i > 0 else "")
-            # pattern A: name line then UGX price line
             if nxt.upper().startswith("UGX") and not line.upper().startswith("UGX"):
                 price = parse_price(nxt)
                 name = candidate
-            # pattern B: price on same line "Name UGX 55,000"
             m = re.match(r"^(.+?)\s+UGX\s?([\d,\.]+)\s*$", line)
             if price is None and m:
                 name, price_s = m.group(1), "UGX" + m.group(2)
@@ -103,7 +91,7 @@ def scrape_neriko():
         print(f"  neriko page {page}: {found} items")
         if found == 0:
             break
-        time.sleep(1)  # be polite
+        time.sleep(1)
     seen, deduped = set(), []
     for it in items:
         key = it["name"].lower()
@@ -113,10 +101,6 @@ def scrape_neriko():
     return deduped
 
 
-# ---------------------------------------------------------------
-# Bbiri Centre  —  /shop/ pages
-# Text layout:  <Product Name>  PriceUGX 30,000
-# ---------------------------------------------------------------
 def scrape_bbiri():
     items = []
     urls = ["https://www.bbiri-centre.com/shop/"]
@@ -158,12 +142,23 @@ def scrape_bbiri():
 
 def categorize(name):
     n = name.lower()
-    if any(k in n for k in ["kit", "bundle", "arduino", "raspberry", "pi ", "robot", "starter"]):
-        return "starter"
-    if any(k in n for k in ["motor", "sensor", "led", "battery", "batteries", "breadboard",
-                            "resistor", "jumper", "cable", "wire", "servo", "display", "relay"]):
-        return "parts"
-    return "tools"
+    if any(k in n for k in ["motor", "servo", "solenoid", "driver board", "l298", "l293",
+                            "stepper", "pump", "esc "]):
+        return "motors"
+    if any(k in n for k in ["sensor", "ultrasonic", "pir", "temperature", "humidity",
+                            "moisture", "gas", "mq-", "fingerprint", "gps", "rfid",
+                            "line tr", "current sens", "water level", "flow sensor", "camera"]):
+        return "sensors"
+    if any(k in n for k in ["arduino", "raspberry", "pi ", "esp32", "esp8266", "nodemcu",
+                            "msp430", "atmega", "pic18", "microcontrol", "rp2040", "pico"]):
+        return "boards"
+    if any(k in n for k in ["battery", "charger", "adapter", "cable", "wire", "jumper",
+                            "header", "solar", "power supply", "psu", "lm2596", "dc-dc"]):
+        return "power"
+    if any(k in n for k in ["multimeter", "screwdriver", "solder", "tool", "plier",
+                            "oscilloscope"]):
+        return "tools"
+    return "components"
 
 
 def main():
@@ -180,7 +175,8 @@ def main():
 
     for it in all_items:
         it["cat"] = categorize(it["name"])
-        it["emoji"] = "🧩" if it["cat"] == "parts" else ("🤖" if it["cat"] == "starter" else "🔧")
+        it["emoji"] = {"motors": "⚙️", "sensors": "👁️", "boards": "🤖", "power": "🔋",
+                       "tools": "🛠️", "components": "🔌"}.get(it["cat"], "🔧")
         it["desc"] = f"Sourced from {it['source']}. Delivery arranged via MiniMakers."
         it["id"] = "sc-" + re.sub(r"[^a-z0-9]+", "-", it["name"].lower())[:40]
 
