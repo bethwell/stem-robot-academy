@@ -6,9 +6,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi 4B 4GB",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 625000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -16,9 +14,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi 4B 8GB",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 645000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -26,9 +22,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi 4B 2GB",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 485000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -36,9 +30,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi 3B+",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 325000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -46,9 +38,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi Compute Mo...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 390000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -56,9 +46,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi Pico WH",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 45000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -66,9 +54,9 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi Pico H",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
+  "desc": "Sou
+rced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 35000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -76,9 +64,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi 400 Kit",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 590000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -86,9 +72,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Arduino Nano 33 IoT",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 185000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -96,9 +80,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Arduino Nano Every (Ori...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 85000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -106,9 +88,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Arduino nano",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 40000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -116,9 +96,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "Texas Instrument's MSP4...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 125000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -126,19 +104,16 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "SIM800L GSM Modem (Impr...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 55000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
   "id": "sc-gy-neo6mv2-gps-modem",
-  "cat": "sensors",
+  "c
+at": "sensors",
   "emoji": "👁️",
   "name": "GY-NEO6MV2 GPS Modem",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 35000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -146,9 +121,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "NRF24L01",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 15000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -156,9 +129,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "power",
   "emoji": "🔋",
   "name": "LM2596 DC-DC 3-35V ADJU...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 15000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -166,9 +137,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "16x2 LCD module white/b...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 25000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -176,9 +145,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "E32-433T30D Lora (433MH...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 85000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -186,9 +153,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "E22-900T22D 868MHz Lora...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 55000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -196,19 +161,16 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "DHT11 sensor Module",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 15000,
-  "source": "Neriko Electronics",
-  "link": "https://nerikoelectronics.com/products"
+  "link
+": "https://nerikoelectronics.com/products"
  },
  {
   "id": "sc-tmp36gt9z-temperature-s-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "TMP36GT9Z Temperature s...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 20000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -216,9 +178,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "Submersible Temperature...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 17000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -226,9 +186,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "Arduino soil moisture s...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 15000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -236,9 +194,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "LM35 Analog temperature...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 20000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -246,9 +202,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "BME280 Atmospheric Pres...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 20000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -256,9 +210,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "BMP180 Barometric Press...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 20000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -266,9 +218,9 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi RP2040",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
+  "desc
+": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 9000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -276,9 +228,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Case for Raspberry Pi 4...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 35000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -286,9 +236,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "Raspberry Pi Camera Mod...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 185000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -296,9 +244,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi 5 - 8GB",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 865000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -306,9 +252,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Official Raspberry Pi 4...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 60000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -316,9 +260,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "Infrared Temperature Se...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 55000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -326,19 +268,16 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "PIR Motion sensor modul...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 20000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
- {
+ 
+{
   "id": "sc-mq-4-methane-biogas-sen-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "MQ-4 Methane/Biogas sen...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 20000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -346,9 +285,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "MQ-5 gas sensor (LPG, n...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 20000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -356,9 +293,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "Color Sensor Module TSC...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 50000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -366,9 +301,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "Infrared Receiver VS183...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 7000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -376,9 +309,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "SN74LS47 Common Anode 7...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 8000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -386,9 +317,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi 5 4GB RAM",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 555000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -396,9 +325,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "Water Flow Sensor / Flo...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 55000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -406,9 +333,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Atmega328P microcontrol...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 22000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -416,9 +341,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "PIC18F4550 microcontr...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 45000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -426,9 +349,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "ATMEGA32A Microcontroll...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 35000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -436,9 +357,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "MSP430G553 Microcontrol...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 25000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -446,9 +365,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi 5 Official...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 55000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -456,19 +373,16 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "16MHz crystal oscillato...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 7500,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
   "id": "sc-esp32-wifi-cam-with-ov2-",
-  "cat": "boards",
+  "
+cat": "boards",
   "emoji": "🤖",
   "name": "ESP32 wifi CAM with OV2...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 55000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -476,9 +390,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "SSD1306 0.96\" OLED Blue",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 30000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -486,9 +398,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "FT232RL FT232 FTDI USB...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 20000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -496,9 +406,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "power",
   "emoji": "🔋",
   "name": "Male header 2.54mm pitc...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 6000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -506,9 +414,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "power",
   "emoji": "🔋",
   "name": "Female header 2.54mm pi...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 6500,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -516,9 +422,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "3.3V/5V Graphic Display...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 55000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -526,9 +430,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "LCD 20x4 Character Modu...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 35000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -536,9 +438,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "Blue 3-Pin Screw Termin...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 7500,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -546,9 +446,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "ESP32 ESP-32 WROOM WiFi...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 65000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -556,9 +454,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "NodeMCU ESP8266 ESP-12E...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 55000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -566,9 +462,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "PCF8574 I2C LCD MODULE",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 11000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -576,9 +470,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "ACS712T 5A Current Sens...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 25000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -586,19 +478,16 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "ACS712 20A current sens...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 25000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
   "id": "sc-as608-fingerprint-reade-",
   "cat": "sensors",
   "emoji": "👁️",
-  "name": "AS608 Fingerprint reade...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
+  "
+name": "AS608 Fingerprint reade...",
   "price": 85000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -606,9 +495,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "HC-SR04 ultrasonic dist...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 17000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -616,9 +503,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "MQ-2 LPG/Smoke sensor",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 20000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -626,9 +511,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "MQ-3 Alcohol Sensor Mod...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 20000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -636,9 +519,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "MQ-7 Carbon Monoxide Ga...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 20000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -646,9 +527,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "MQ-135 Air Quality sens...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 20000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -656,19 +535,16 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "MQ6 Gas sensor",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 20000,
-  "source": "Neriko Electronics",
-  "link": "https://nerikoelectronics.com/products"
+  "link": "https://neriko
+electronics.com/products"
  },
  {
   "id": "sc-ky-033-infrared-line-tr-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "KY-033 Infrared line tr...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 13000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -676,9 +552,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "MC38 door close sensor",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 15000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -686,9 +560,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "Water level Sensor – Fl...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 40000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -696,9 +568,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "MG811 Carbon Dioxide CO...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 255000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -706,9 +576,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "22pF ceramic capacitor",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 5500,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -716,9 +584,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "sensors",
   "emoji": "👁️",
   "name": "MFRC-522 RC522 RFID + S...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 25000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -726,9 +592,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Arduino Mega2560 Develo...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 85000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  },
  {
@@ -736,9 +600,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "components",
   "emoji": "🔌",
   "name": "HDC 3-24V High Decibel...",
-  "desc": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "price": 9000,
-  "source": "Neriko Electronics",
   "link": "https://nerikoelectronics.com/products"
  }
 ];
