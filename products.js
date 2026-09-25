@@ -54,8 +54,7 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi Pico H",
-  "desc": "Sou
-rced from Neriko Electronics. Delivery arranged via MiniMakers.",
+  "desc": __REMOVE__,
   "price": 35000,
   "link": "https://nerikoelectronics.com/products"
  },
@@ -82,6 +81,7 @@ rced from Neriko Electronics. Delivery arranged via MiniMakers.",
   "name": "Arduino Nano Every (Ori...",
   "price": 85000,
   "link": "https://nerikoelectronics.com/products"
+
  },
  {
   "id": "sc-arduino-nano",
@@ -171,7 +171,8 @@ at": "sensors",
   "emoji": "👁️",
   "name": "TMP36GT9Z Temperature s...",
   "price": 20000,
-  "link": "https://nerikoelectronics.com/products"
+  "link": "h
+ttps://nerikoelectronics.com/products"
  },
  {
   "id": "sc-submersible-temperature-",
@@ -253,7 +254,8 @@ at": "sensors",
   "emoji": "🤖",
   "name": "Official Raspberry Pi 4...",
   "price": 60000,
-  "link": "https://nerikoelectronics.com/products"
+  "link": "https://nerikoelectronics.c
+om/products"
  },
  {
   "id": "sc-infrared-temperature-se-",
@@ -339,7 +341,8 @@ at": "sensors",
  {
   "id": "sc-pic18f4550-microcontr-",
   "cat": "boards",
-  "emoji": "🤖",
+  "emoji": "🤖"
+,
   "name": "PIC18F4550 microcontr...",
   "price": 45000,
   "link": "https://nerikoelectronics.com/products"
@@ -389,7 +392,7 @@ cat": "boards",
   "id": "sc-ssd1306-0-96-oled-blue",
   "cat": "components",
   "emoji": "🔌",
-  "name": "SSD1306 0.96\" OLED Blue",
+  "name": "SSD1306 0.96" OLED Blue",
   "price": 30000,
   "link": "https://nerikoelectronics.com/products"
  },
@@ -423,7 +426,8 @@ cat": "boards",
   "emoji": "🔌",
   "name": "3.3V/5V Graphic Display...",
   "price": 55000,
-  "link": "https://nerikoelectronics.com/products"
+  "link": "https://nerikoelectronics
+.com/products"
  },
  {
   "id": "sc-lcd-20x4-character-modu-",
@@ -509,7 +513,8 @@ name": "AS608 Fingerprint reade...",
  {
   "id": "sc-mq-3-alcohol-sensor-mod-",
   "cat": "sensors",
-  "emoji": "👁️",
+  "emoji": 
+"👁️",
   "name": "MQ-3 Alcohol Sensor Mod...",
   "price": 20000,
   "link": "https://nerikoelectronics.com/products"
@@ -594,6 +599,7 @@ electronics.com/products"
   "name": "Arduino Mega2560 Develo...",
   "price": 85000,
   "link": "https://nerikoelectronics.com/products"
+
  },
  {
   "id": "sc-hdc-3-24v-high-decibel-",
