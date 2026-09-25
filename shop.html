@@ -26,8 +26,7 @@
   .hero p { opacity: .92; font-weight: 500; font-size: .92rem; }
   .cats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
   .search-row { margin-bottom: 16px; }
-  #search { width: 100%; max-wi
-dth: 420px; padding: 12px 18px; border-radius: 999px; border: 2px solid #e3e9f2; font-family: inherit; font-size: .9rem; font-weight: 600; outline: none; background: #fff; }
+  #search { width: 100%; max-width: 420px; padding: 12px 18px; border-radius: 999px; border: 2px solid #e3e9f2; font-family: inherit; font-size: .9rem; font-weight: 600; outline: none; background: #fff; }
   #search:focus { border-color: #ff8c00; }
   .cat { padding: 8px 16px; border-radius: 999px; font-size: .82rem; font-weight: 700; background: #fff; color: #555; border: 2px solid #e3e9f2; transition:.15s; }
   .cat.active { background: #ff8c00; color: #fff; border-color: #ff8c00; transform: scale(1.05); box-shadow: 0 2px 8px rgba(255,140,0,.4); }
@@ -43,8 +42,7 @@ dth: 420px; padding: 12px 18px; border-radius: 999px; border: 2px solid #e3e9f2;
   .price { font-weight: 800; color: #0066cc; font-size: 1.02rem; }
   .add-btn { background: #ff8c00; color: #fff; font-weight: 800; border-radius: 999px; padding: 8px 16px; font-size: .78rem; box-shadow: 0 2px 8px rgba(255,140,0,.35); transition:.15s; }
   .add-btn:active { transform: scale(.93); }
-  .badge { display: inline-block; background: #dcfce7; color: #166534; border: 1px solid #4ade80; font-size: .65rem; font-weight: 800; border-radius: 999px; padding: 2px 8px; margin-left: 6px; vertical-align: mid
-dle; }
+  .badge { display: inline-block; background: #dcfce7; color: #166534; border: 1px solid #4ade80; font-size: .65rem; font-weight: 800; border-radius: 999px; padding: 2px 8px; margin-left: 6px; vertical-align: middle; }
 
   /* Cart drawer */
   #cart-overlay { position: fixed; inset: 0; background: rgba(7,27,51,.5); z-index: 90; display: none; }
@@ -66,8 +64,7 @@ dle; }
   .cart-empty { text-align: center; color: #999; padding: 40px 10px; font-weight: 600; }
   .cart-foot { padding: 16px 18px; border-top: 2px solid #eef2f7; }
   .cart-total { display: flex; justify-content: space-between; font-weight: 900; margin-bottom: 12px; font-size: 1rem; color: #123; }
-  .wa-btn { display: block; width: 100%; background: #25d366; color: #fff; font-weight: 900; text-align: center; bord
-er-radius: 999px; padding: 14px; font-size: .95rem; box-shadow: 0 4px 14px rgba(37,211,102,.4); margin-bottom: 10px; }
+  .wa-btn { display: block; width: 100%; background: #25d366; color: #fff; font-weight: 900; text-align: center; border-radius: 999px; padding: 14px; font-size: .95rem; box-shadow: 0 4px 14px rgba(37,211,102,.4); margin-bottom: 10px; }
   .mm-note { font-size: .72rem; color: #888; text-align: center; font-weight: 600; }
 
   /* Toast */
@@ -114,7 +111,6 @@ er-radius: 999px; padding: 14px; font-size: .95rem; box-shadow: 0 4px 14px rgba(
 </div>
 <div id="toast"></div>
 
-
 <script src="products.js"></script>
 <script>
 /* ============ EDIT ME ============
@@ -131,8 +127,7 @@ var MANUAL_PRODUCTS = [
   { id:"battery",   cat:"power",    emoji:"🔋", name:"Battery Pack + Holder",   price:35000,  desc:"Rechargeable battery pack with switch and holder." },
   { id:"bboard",    cat:"components", emoji:"🔌", name:"Breadboard + Jumper Set",  price:30000,  desc:"No-solder circuit building — 400-point board + 40 wires." },
   { id:"tools",     cat:"tools",    emoji:"🧰", name:"Young Engineer Tool Set",  price:55000,  desc:"Kid-safe screwdrivers, pliers, tape + project box." },
-  { id:"book",      cat:"tools2",   emoji:"📘", name:"STEM Activity Book (Vol. 1)", price:25000, desc:"40 offline activities: structures, energy, circuits. Ages 5–12.",
- new:true },
+  { id:"book",      cat:"tools2",   emoji:"📘", name:"STEM Activity Book (Vol. 1)", price:25000, desc:"40 offline activities: structures, energy, circuits. Ages 5–12.", new:true },
   { id:"merch",     cat:"tools2",   emoji:"👕", name:"MiniMakers T-shirt",       price:30000,  desc:"Official club tee. Ages 4–14 sizes while stock lasts." },
   { id:"spare",     cat:"components", emoji:"🔧", name:"Spare Parts Grab Bag",      price:40000,  desc:"Random assorted components for repairs & experiments." }
 ];
@@ -154,6 +149,7 @@ var SCRAPED = (typeof SCRAPED_PRODUCTS !== "undefined") ? SCRAPED_PRODUCTS : [];
 SCRAPED.forEach(function(p){
   p.cat = p.cat || "components";
   p.emoji = p.emoji || "🧩";
+  if (!p.desc) p.desc = "";
 });
 var PRODUCTS = MANUAL_PRODUCTS.concat(SCRAPED);
 
@@ -175,8 +171,7 @@ function renderCats(active){
     b.className = "cat" + (cat.id===active ? " active" : "");
     b.textContent = cat.label + " (" + count + ")";
     b.onclick = function(){ S.cat = cat.id; renderGrid(); renderCats(cat.id); };
-    c.appendChil
-d(b);
+    c.appendChild(b);
   });
 }
 var S = { cat: "all", q: "" };
@@ -197,7 +192,7 @@ function renderGrid(){
     var d = document.createElement("div"); d.className = "prod";
     var badge = p.bestseller ? '<span class="badge">BESTSELLER</span>' : (p.new ? '<span class="badge" style="background:#e0ecff;color:#0369a1;border-color:#7cb3e8">NEW</span>' : "");
     d.innerHTML = '<div class="prod-img">'+p.emoji+'</div><div class="prod-body">'
-      + '<h3>'+p.name+badge+'</h3><p>'+p.desc+'</p>'
+      + '<h3>'+p.name+badge+'</h3>'+(p.desc?'<p>'+p.desc+'</p>':'')
       + '<div class="prod-row"><span class="price">'+fmt(p.price)+'</span>'
       + '<button class="add-btn" data-id="'+p.id+'">Add to cart</button></div></div>';
     g.appendChild(d);
@@ -222,8 +217,7 @@ function renderCart(){
     if (!p) return;
     count += cart[id]; total += p.price * cart[id];
     var d = document.createElement("div"); d.className = "cart-item";
-    d.innerHTML = '<div class="ci-emoji">'+p.emoji+'</div><div class="ci-info"><h4>'+p.name+'</h4><span>'+
-fmt(p.price)+'</span></div>'
+    d.innerHTML = '<div class="ci-emoji">'+p.emoji+'</div><div class="ci-info"><h4>'+p.name+'</h4><span>'+fmt(p.price)+'</span></div>'
       + '<div class="ci-qty"><button data-minus="'+id+'">−</button><span class="q">'+cart[id]+'</span><button data-plus="'+id+'">+</button></div>';
     items.appendChild(d);
   });
@@ -256,8 +250,7 @@ function toast(msg){
   clearTimeout(t._tm); t._tm = setTimeout(function(){ t.style.display = "none"; }, 1800);
 }
 
-document.getElementById("search"
-).addEventListener("input", function(e){
+document.getElementById("search").addEventListener("input", function(e){
   S.q = e.target.value; renderGrid();
 });
 renderCats("all");
