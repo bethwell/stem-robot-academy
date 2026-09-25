@@ -67,7 +67,8 @@ def scrape_neriko():
             price = None
             name = None
             out_of_stock = "out of stock" in line.lower()
-            candidate = line if not out_of_stock else (lines[i - 1] if i > 0 else "")
+            candidate = line if not out_of_stoc
+k else (lines[i - 1] if i > 0 else "")
             if nxt.upper().startswith("UGX") and not line.upper().startswith("UGX"):
                 price = parse_price(nxt)
                 name = candidate
@@ -119,7 +120,8 @@ def scrape_bbiri():
             price = parse_price("UGX" + m.group(2))
             if not price or price < 500 or len(name) < 4:
                 continue
-            if re.match(r"^(home|shop now|price|read more|add to cart|sale|ugx)$", name, re.I):
+            if re.match(r"^(home|shop now|price|read more|a
+dd to cart|sale|ugx)$", name, re.I):
                 continue
             items.append({
                 "name": name,
@@ -173,11 +175,11 @@ def main():
     except Exception as e:
         print("Bbiri failed entirely:", e)
 
-    for it in all_items:
+    for it 
+in all_items:
         it["cat"] = categorize(it["name"])
         it["emoji"] = {"motors": "⚙️", "sensors": "👁️", "boards": "🤖", "power": "🔋",
                        "tools": "🛠️", "components": "🔌"}.get(it["cat"], "🔧")
-        it["desc"] = f"Sourced from {it['source']}. Delivery arranged via MiniMakers."
         it["id"] = "sc-" + re.sub(r"[^a-z0-9]+", "-", it["name"].lower())[:40]
 
     in_stock = [it for it in all_items if it["stock"]]

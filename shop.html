@@ -154,7 +154,6 @@ var SCRAPED = (typeof SCRAPED_PRODUCTS !== "undefined") ? SCRAPED_PRODUCTS : [];
 SCRAPED.forEach(function(p){
   p.cat = p.cat || "components";
   p.emoji = p.emoji || "🧩";
-  if (!p.desc) delete p.desc;
 });
 var PRODUCTS = MANUAL_PRODUCTS.concat(SCRAPED);
 
@@ -199,7 +198,6 @@ function renderGrid(){
     var badge = p.bestseller ? '<span class="badge">BESTSELLER</span>' : (p.new ? '<span class="badge" style="background:#e0ecff;color:#0369a1;border-color:#7cb3e8">NEW</span>' : "");
     d.innerHTML = '<div class="prod-img">'+p.emoji+'</div><div class="prod-body">'
       + '<h3>'+p.name+badge+'</h3><p>'+p.desc+'</p>'
-      + (p.source ? '<span style="font-size:.68rem;color:#888;font-weight:600">📦 via '+p.source+'</span>' : '')
       + '<div class="prod-row"><span class="price">'+fmt(p.price)+'</span>'
       + '<button class="add-btn" data-id="'+p.id+'">Add to cart</button></div></div>';
     g.appendChild(d);
