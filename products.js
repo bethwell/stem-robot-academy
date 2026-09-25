@@ -6,607 +6,510 @@ var SCRAPED_PRODUCTS = [
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi 4B 4GB",
-  "price": 625000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 625000
  },
  {
   "id": "sc-raspberry-pi-4b-8gb",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi 4B 8GB",
-  "price": 645000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 645000
  },
  {
   "id": "sc-raspberry-pi-4b-2gb",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi 4B 2GB",
-  "price": 485000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 485000
  },
  {
   "id": "sc-raspberry-pi-3b-",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi 3B+",
-  "price": 325000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 325000
  },
  {
   "id": "sc-raspberry-pi-compute-mo-",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi Compute Mo...",
-  "price": 390000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 390000
  },
  {
   "id": "sc-raspberry-pi-pico-wh",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi Pico WH",
-  "price": 45000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 45000
  },
  {
   "id": "sc-raspberry-pi-pico-h",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi Pico H",
-  "desc": __REMOVE__,
-  "price": 35000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 35000
  },
  {
   "id": "sc-raspberry-pi-400-kit",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi 400 Kit",
-  "price": 590000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 590000
  },
  {
   "id": "sc-arduino-nano-33-iot",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Arduino Nano 33 IoT",
-  "price": 185000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 185000
  },
  {
   "id": "sc-arduino-nano-every-ori-",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Arduino Nano Every (Ori...",
-  "price": 85000,
-  "link": "https://nerikoelectronics.com/products"
-
+  "price": 85000
  },
  {
   "id": "sc-arduino-nano",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Arduino nano",
-  "price": 40000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 40000
  },
  {
   "id": "sc-texas-instrument-s-msp4-",
   "cat": "components",
   "emoji": "🔌",
   "name": "Texas Instrument's MSP4...",
-  "price": 125000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 125000
  },
  {
   "id": "sc-sim800l-gsm-modem-impr-",
   "cat": "components",
   "emoji": "🔌",
   "name": "SIM800L GSM Modem (Impr...",
-  "price": 55000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 55000
  },
  {
   "id": "sc-gy-neo6mv2-gps-modem",
-  "c
-at": "sensors",
+  "cat": "components",
   "emoji": "👁️",
   "name": "GY-NEO6MV2 GPS Modem",
-  "price": 35000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 35000
  },
  {
   "id": "sc-nrf24l01",
   "cat": "components",
   "emoji": "🔌",
   "name": "NRF24L01",
-  "price": 15000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 15000
  },
  {
   "id": "sc-lm2596-dc-dc-3-35v-adju-",
   "cat": "power",
   "emoji": "🔋",
   "name": "LM2596 DC-DC 3-35V ADJU...",
-  "price": 15000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 15000
  },
  {
   "id": "sc-16x2-lcd-module-white-b-",
   "cat": "components",
   "emoji": "🔌",
   "name": "16x2 LCD module white/b...",
-  "price": 25000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 25000
  },
  {
   "id": "sc-e32-433t30d-lora-433mh-",
   "cat": "components",
   "emoji": "🔌",
   "name": "E32-433T30D Lora (433MH...",
-  "price": 85000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 85000
  },
  {
   "id": "sc-e22-900t22d-868mhz-lora-",
   "cat": "components",
   "emoji": "🔌",
   "name": "E22-900T22D 868MHz Lora...",
-  "price": 55000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 55000
  },
  {
   "id": "sc-dht11-sensor-module",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "DHT11 sensor Module",
-  "price": 15000,
-  "link
-": "https://nerikoelectronics.com/products"
+  "price": 15000
  },
  {
   "id": "sc-tmp36gt9z-temperature-s-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "TMP36GT9Z Temperature s...",
-  "price": 20000,
-  "link": "h
-ttps://nerikoelectronics.com/products"
+  "price": 20000
  },
  {
   "id": "sc-submersible-temperature-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "Submersible Temperature...",
-  "price": 17000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 17000
  },
  {
   "id": "sc-arduino-soil-moisture-s-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "Arduino soil moisture s...",
-  "price": 15000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 15000
  },
  {
   "id": "sc-lm35-analog-temperature-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "LM35 Analog temperature...",
-  "price": 20000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 20000
  },
  {
   "id": "sc-bme280-atmospheric-pres-",
   "cat": "components",
   "emoji": "🔌",
   "name": "BME280 Atmospheric Pres...",
-  "price": 20000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 20000
  },
  {
   "id": "sc-bmp180-barometric-press-",
   "cat": "components",
   "emoji": "🔌",
   "name": "BMP180 Barometric Press...",
-  "price": 20000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 20000
  },
  {
   "id": "sc-raspberry-pi-rp2040",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi RP2040",
-  "desc
-": "Sourced from Neriko Electronics. Delivery arranged via MiniMakers.",
-  "price": 9000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 9000
  },
  {
   "id": "sc-case-for-raspberry-pi-4-",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Case for Raspberry Pi 4...",
-  "price": 35000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 35000
  },
  {
   "id": "sc-raspberry-pi-camera-mod-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "Raspberry Pi Camera Mod...",
-  "price": 185000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 185000
  },
  {
   "id": "sc-raspberry-pi-5-8gb",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi 5 - 8GB",
-  "price": 865000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 865000
  },
  {
   "id": "sc-official-raspberry-pi-4-",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Official Raspberry Pi 4...",
-  "price": 60000,
-  "link": "https://nerikoelectronics.c
-om/products"
+  "price": 60000
  },
  {
   "id": "sc-infrared-temperature-se-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "Infrared Temperature Se...",
-  "price": 55000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 55000
  },
  {
   "id": "sc-pir-motion-sensor-modul-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "PIR Motion sensor modul...",
-  "price": 20000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 20000
  },
- 
-{
+ {
   "id": "sc-mq-4-methane-biogas-sen-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "MQ-4 Methane/Biogas sen...",
-  "price": 20000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 20000
  },
  {
   "id": "sc-mq-5-gas-sensor-lpg-n-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "MQ-5 gas sensor (LPG, n...",
-  "price": 20000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 20000
  },
  {
   "id": "sc-color-sensor-module-tsc-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "Color Sensor Module TSC...",
-  "price": 50000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 50000
  },
  {
   "id": "sc-infrared-receiver-vs183-",
   "cat": "components",
   "emoji": "🔌",
   "name": "Infrared Receiver VS183...",
-  "price": 7000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 7000
  },
  {
   "id": "sc-sn74ls47-common-anode-7-",
   "cat": "components",
   "emoji": "🔌",
   "name": "SN74LS47 Common Anode 7...",
-  "price": 8000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 8000
  },
  {
   "id": "sc-raspberry-pi-5-4gb-ram",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi 5 4GB RAM",
-  "price": 555000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 555000
  },
  {
   "id": "sc-water-flow-sensor-flo-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "Water Flow Sensor / Flo...",
-  "price": 55000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 55000
  },
  {
   "id": "sc-atmega328p-microcontrol-",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Atmega328P microcontrol...",
-  "price": 22000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 22000
  },
  {
   "id": "sc-pic18f4550-microcontr-",
   "cat": "boards",
-  "emoji": "🤖"
-,
+  "emoji": "🤖",
   "name": "PIC18F4550 microcontr...",
-  "price": 45000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 45000
  },
  {
   "id": "sc-atmega32a-microcontroll-",
   "cat": "boards",
   "emoji": "🤖",
   "name": "ATMEGA32A Microcontroll...",
-  "price": 35000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 35000
  },
  {
   "id": "sc-msp430g553-microcontrol-",
   "cat": "boards",
   "emoji": "🤖",
   "name": "MSP430G553 Microcontrol...",
-  "price": 25000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 25000
  },
  {
   "id": "sc-raspberry-pi-5-official-",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Raspberry Pi 5 Official...",
-  "price": 55000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 55000
  },
  {
   "id": "sc-16mhz-crystal-oscillato-",
   "cat": "components",
   "emoji": "🔌",
   "name": "16MHz crystal oscillato...",
-  "price": 7500,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 7500
  },
  {
   "id": "sc-esp32-wifi-cam-with-ov2-",
-  "
-cat": "boards",
+  "cat": "components",
   "emoji": "🤖",
   "name": "ESP32 wifi CAM with OV2...",
-  "price": 55000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 55000
  },
  {
   "id": "sc-ssd1306-0-96-oled-blue",
   "cat": "components",
   "emoji": "🔌",
-  "name": "SSD1306 0.96" OLED Blue",
-  "price": 30000,
-  "link": "https://nerikoelectronics.com/products"
+  "name": "SSD1306 0.96",
+  "price": 30000
  },
  {
   "id": "sc-ft232rl-ft232-ftdi-usb-",
   "cat": "components",
   "emoji": "🔌",
   "name": "FT232RL FT232 FTDI USB...",
-  "price": 20000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 20000
  },
  {
   "id": "sc-male-header-2-54mm-pitc-",
   "cat": "power",
   "emoji": "🔋",
   "name": "Male header 2.54mm pitc...",
-  "price": 6000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 6000
  },
  {
   "id": "sc-female-header-2-54mm-pi-",
   "cat": "power",
   "emoji": "🔋",
   "name": "Female header 2.54mm pi...",
-  "price": 6500,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 6500
  },
  {
   "id": "sc-3-3v-5v-graphic-display-",
   "cat": "components",
   "emoji": "🔌",
   "name": "3.3V/5V Graphic Display...",
-  "price": 55000,
-  "link": "https://nerikoelectronics
-.com/products"
+  "price": 55000
  },
  {
   "id": "sc-lcd-20x4-character-modu-",
   "cat": "components",
   "emoji": "🔌",
   "name": "LCD 20x4 Character Modu...",
-  "price": 35000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 35000
  },
  {
   "id": "sc-blue-3-pin-screw-termin-",
   "cat": "components",
   "emoji": "🔌",
   "name": "Blue 3-Pin Screw Termin...",
-  "price": 7500,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 7500
  },
  {
   "id": "sc-esp32-esp-32-wroom-wifi-",
   "cat": "boards",
   "emoji": "🤖",
   "name": "ESP32 ESP-32 WROOM WiFi...",
-  "price": 65000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 65000
  },
  {
   "id": "sc-nodemcu-esp8266-esp-12e-",
   "cat": "boards",
   "emoji": "🤖",
   "name": "NodeMCU ESP8266 ESP-12E...",
-  "price": 55000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 55000
  },
  {
   "id": "sc-pcf8574-i2c-lcd-module",
   "cat": "components",
   "emoji": "🔌",
   "name": "PCF8574 I2C LCD MODULE",
-  "price": 11000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 11000
  },
  {
   "id": "sc-acs712t-5a-current-sens-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "ACS712T 5A Current Sens...",
-  "price": 25000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 25000
  },
  {
   "id": "sc-acs712-20a-current-sens-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "ACS712 20A current sens...",
-  "price": 25000,
-  "link": "https://nerikoelectronics.com/products"
- },
- {
-  "id": "sc-as608-fingerprint-reade-",
-  "cat": "sensors",
-  "emoji": "👁️",
-  "
-name": "AS608 Fingerprint reade...",
-  "price": 85000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 25000
  },
  {
   "id": "sc-hc-sr04-ultrasonic-dist-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "HC-SR04 ultrasonic dist...",
-  "price": 17000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 17000
  },
  {
   "id": "sc-mq-2-lpg-smoke-sensor",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "MQ-2 LPG/Smoke sensor",
-  "price": 20000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 20000
  },
  {
   "id": "sc-mq-3-alcohol-sensor-mod-",
   "cat": "sensors",
-  "emoji": 
-"👁️",
+  "emoji": "🔧",
   "name": "MQ-3 Alcohol Sensor Mod...",
-  "price": 20000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 20000
  },
  {
   "id": "sc-mq-7-carbon-monoxide-ga-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "MQ-7 Carbon Monoxide Ga...",
-  "price": 20000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 20000
  },
  {
   "id": "sc-mq-135-air-quality-sens-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "MQ-135 Air Quality sens...",
-  "price": 20000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 20000
  },
  {
   "id": "sc-mq6-gas-sensor",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "MQ6 Gas sensor",
-  "price": 20000,
-  "link": "https://neriko
-electronics.com/products"
+  "price": 20000
  },
  {
   "id": "sc-ky-033-infrared-line-tr-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "KY-033 Infrared line tr...",
-  "price": 13000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 13000
  },
  {
   "id": "sc-mc38-door-close-sensor",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "MC38 door close sensor",
-  "price": 15000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 15000
  },
  {
   "id": "sc-water-level-sensor-fl-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "Water level Sensor – Fl...",
-  "price": 40000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 40000
  },
  {
   "id": "sc-mg811-carbon-dioxide-co-",
   "cat": "components",
   "emoji": "🔌",
   "name": "MG811 Carbon Dioxide CO...",
-  "price": 255000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 255000
  },
  {
   "id": "sc-22pf-ceramic-capacitor",
   "cat": "components",
   "emoji": "🔌",
   "name": "22pF ceramic capacitor",
-  "price": 5500,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 5500
  },
  {
   "id": "sc-mfrc-522-rc522-rfid-s-",
   "cat": "sensors",
   "emoji": "👁️",
   "name": "MFRC-522 RC522 RFID + S...",
-  "price": 25000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 25000
  },
  {
   "id": "sc-arduino-mega2560-develo-",
   "cat": "boards",
   "emoji": "🤖",
   "name": "Arduino Mega2560 Develo...",
-  "price": 85000,
-  "link": "https://nerikoelectronics.com/products"
-
+  "price": 85000
  },
  {
   "id": "sc-hdc-3-24v-high-decibel-",
   "cat": "components",
   "emoji": "🔌",
   "name": "HDC 3-24V High Decibel...",
-  "price": 9000,
-  "link": "https://nerikoelectronics.com/products"
+  "price": 9000
  }
 ];
