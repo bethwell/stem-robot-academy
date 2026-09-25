@@ -207,7 +207,8 @@ header .container {
 
     display:flex;
 
-    align-items:center;
+    align-ite
+ms:center;
 
     background:
 
@@ -233,6 +234,10 @@ header .container {
 .hero-content {
 
     max-width:600px;
+
+    text-align:center;
+
+    margin:0 auto;
 
 }
 
@@ -409,7 +414,8 @@ header .container {
 
     background:white;
 
-    box-shadow:0 10px 30px rgba(0,0,0,.1);
+    box-shadow:0 10px 30px rgba(0,0,0,.1)
+;
 
     transition:.3s;
 
@@ -613,7 +619,8 @@ header .container {
 
 /* ==========================================
    FOOTER
-========================================== */
+==========================
+================ */
 
 
 footer {
@@ -836,7 +843,8 @@ header.scrolled{
 
 /* Program Card Flex Adjustments */
 .program-card {
-    display: flex;
+    display: f
+lex;
     flex-direction: column;
     justify-content: space-between;
 }
@@ -848,3 +856,6 @@ header.scrolled{
 .program-action {
     margin-top: auto; /* Pushes the join button to stay flush at the bottom */
 }
+
+/* Hero buttons centered */
+.hero-content .btn, .hero-content a.btn { display:inline-block; margin:5px; }
