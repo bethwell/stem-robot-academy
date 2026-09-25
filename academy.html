@@ -51,6 +51,10 @@
   .lesson-head .big { font-size: 2.2rem; } .lesson-head h3 { font-size: 1.4rem; font-weight: 800; margin-top: 4px; }
   .age-tag { display: inline-block; margin-top: 8px; background: rgba(255,255,255,.25); border-radius: 999px; padding: 3px 12px; font-size: .72rem; font-weight: 800; }
   .lesson-body { padding: 22px; }
+  .video-wrap { position: relative; width: 100%; padding-bottom: 56.25%; margin-bottom: 16px; border-radius: 16px; overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,.15); background: #071b33; }
+  .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .video-badge { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; margin-left: 6px; background: #ff0033; border-radius: 999px; padding: 3px 12px; font-size: .72rem; font-weight: 800; color: #fff; }
+  .video-note { display: flex; align-items: center; gap: 8px; background: #f0f9ff; border: 2px solid #bae6fd; border-radius: 14px; padding: 10px 14px; font-size: .78rem; font-weight: 600; color: #0369a1; margin-bottom: 14px; }
   .lesson-body p { line-height: 1.65; font-weight: 500; color: #444; margin-bottom: 10px; font-size: .95rem; animation: fadeUp .3s ease backwards; }
   .quiz { border-top: 2px dashed #ffe0b0; padding-top: 16px; margin-top: 6px; }
   .quiz .q { font-weight: 800; font-size: 1rem; margin-bottom: 12px; color:#123; }
@@ -134,7 +138,7 @@
 <script>
 /* ================= DATA ================= */
 var LESSONS = [
-  { emoji:"🤖", title:"What is a Robot?", age:"5+", level:1, track:"Mini-makers Track", color:"linear-gradient(90deg,#38bdf8,#0066cc)",
+  { emoji:"🤖", title:"What is a Robot?", age:"5+", level:1, video:"zBmWU-qEJBQ", track:"Mini-makers Track", color:"linear-gradient(90deg,#38bdf8,#0066cc)",
     content:["A robot is a machine that can SENSE, THINK, and ACT! 🦾","👀 SENSE: Robots use sensors like cameras and touch buttons to see and feel the world.","🧠 THINK: A computer brain decides what to do.","🏃 ACT: Motors move wheels, arms, or legs to do the action!","You are a robot expert already — your body senses (eyes!), thinks (brain!), and acts (muscles!) the same way!"],
     quiz:{ q:"Which part helps a robot 'think'?", options:["Its wheels","Its computer brain","Its battery"], answer:1,
     fun:"Just like your brain tells your legs to run, a robot's computer tells its motors to spin!" } },
@@ -332,8 +336,12 @@ function renderLearn(){
   var l = trackLessons[S.lesson] ? trackLessons[S.lesson].l : trackLessons[0].l;
   if (l && (!l.level || l.level===1 || S.unlocked)){
     html += '<div class="lesson-card"><div class="lesson-head" style="background:'+l.color+'">'
-    + '<div class="big">'+l.emoji+'</div><h3>'+l.title+'</h3><span class="age-tag">Ages '+l.age+'</span>'+(l.track?' <span class="age-tag">🚩 '+l.track+'</span>':'')+'</div>'
+    + '<div class="big">'+l.emoji+'</div><h3>'+l.title+'</h3><span class="age-tag">Ages '+l.age+'</span>'+(l.track?' <span class="age-tag">🚩 '+l.track+'</span>':'')+(l.video?'<span class="video-badge">▶ VIDEO</span>':'')+'</div>'
     + '<div class="lesson-body">';
+  if (l.video){
+    html += '<div class="video-wrap"><iframe src="https://www.youtube-nocookie.com/embed/'+l.video+'" title="MiniMakers lesson video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>'
+      + '<div class="video-note"><span>📶</span><span>Video uses data — watch on WiFi if you can!</span></div>';
+  }
   l.content.forEach(function(p,i){ html += '<p style="animation-delay:'+(i*0.06)+'s">'+p+'</p>'; });
   html += '<div class="quiz"><div class="q">🧠 Quick Quiz: '+l.quiz.q+'</div>';
   l.quiz.options.forEach(function(o,i){
