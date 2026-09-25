@@ -232,13 +232,9 @@ ms:center;
 
 
 .hero-content {
-
     max-width:600px;
-
-    text-align:center;
-
     margin:0 auto;
-
+    text-align:center;
 }
 
 
@@ -858,4 +854,5 @@ lex;
 }
 
 /* Hero buttons centered */
-.hero-content .btn, .hero-content a.btn { display:inline-block; margin:5px; }
+.hero-content .btn { display:inline-block; margin:8px; }
+.hero-content a.btn[style*="margin-left"] { margin-left:8px !important; }
