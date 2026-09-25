@@ -1,0 +1,225 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shop — MiniMakers Robotics Academy</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Poppins', Arial, sans-serif; background: #f5f8fc; color: #333; line-height: 1.6; }
+  a { text-decoration: none; color: inherit; }
+  button { font-family: inherit; cursor: pointer; border: none; }
+  .header { position: sticky; top: 0; z-index: 30; background: linear-gradient(90deg,#071b33,#123a6b); box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+  .header-top { max-width: 1100px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .back-link { color: #fff; font-weight: 600; font-size: .85rem; background: rgba(255,255,255,.15); padding: 6px 14px; border-radius: 999px; transition:.3s; }
+  .back-link:hover { background: #ff8c00; }
+  .logo { font-weight: 800; color: #fff; font-size: 1.1rem; }
+  .logo span { color: #ff8c00; }
+  .cart-btn { margin-left: auto; background: #ff8c00; color: #fff; font-weight: 800; border-radius: 999px; padding: 9px 18px; font-size: .88rem; box-shadow: 0 3px 10px rgba(255,140,0,.4); transition:.2s; }
+  .cart-btn:active { transform: scale(.95); }
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px 16px 60px; }
+  .hero { border-radius: 26px; background: linear-gradient(135deg,#0066cc,#0a4a8f); padding: 34px 24px; color: #fff; text-align: center; box-shadow: 0 10px 30px rgba(0,102,204,.3); margin-bottom: 22px; }
+  .hero .emojis { font-size: 2.8rem; }
+  .hero h1 { font-size: clamp(1.3rem, 5vw, 2rem); font-weight: 800; margin: 8px 0 6px; }
+  .hero h1 span { color: #ffb466; }
+  .hero p { opacity: .92; font-weight: 500; font-size: .92rem; }
+  .cats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .cat { padding: 8px 16px; border-radius: 999px; font-size: .82rem; font-weight: 700; background: #fff; color: #555; border: 2px solid #e3e9f2; transition:.15s; }
+  .cat.active { background: #ff8c00; color: #fff; border-color: #ff8c00; transform: scale(1.05); box-shadow: 0 2px 8px rgba(255,140,0,.4); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+  .prod { background: #fff; border-radius: 22px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,.08); border: 2px solid #eef2f7; transition: .2s; display: flex; flex-direction: column; }
+  .prod:hover { transform: translateY(-4px); }
+  .prod-img { height: 140px; display: flex; align-items: center; justify-content: center; font-size: 3.4rem; background: linear-gradient(135deg,#e0ecff,#faf5ff); }
+  .prod-body { padding: 16px; flex-grow: 1; display: flex; flex-direction: column; }
+  .prod-tag { font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #ff8c00; }
+  .prod h3 { font-size: 1rem; font-weight: 800; color: #123; margin: 4px 0 6px; }
+  .prod p { font-size: .78rem; color: #666; font-weight: 500; flex-grow: 1; }
+  .prod-row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+  .price { font-weight: 800; color: #0066cc; font-size: 1.02rem; }
+  .add-btn { background: #ff8c00; color: #fff; font-weight: 800; border-radius: 999px; padding: 8px 16px; font-size: .78rem; box-shadow: 0 2px 8px rgba(255,140,0,.35); transition:.15s; }
+  .add-btn:active { transform: scale(.93); }
+  .badge { display: inline-block; background: #dcfce7; color: #166534; border: 1px solid #4ade80; font-size: .65rem; font-weight: 800; border-radius: 999px; padding: 2px 8px; margin-left: 6px; vertical-align: middle; }
+
+  /* Cart drawer */
+  #cart-overlay { position: fixed; inset: 0; background: rgba(7,27,51,.5); z-index: 90; display: none; }
+  #cart { position: fixed; top: 0; right: -420px; width: 400px; max-width: 92vw; height: 100%; background: #fff; z-index: 95; transition: right .28s ease; display: flex; flex-direction: column; box-shadow: -8px 0 30px rgba(0,0,0,.2); }
+  #cart.open { right: 0; }
+  #cart-overlay.open { display: block; }
+  .cart-head { background: #071b33; color: #fff; padding: 16px 18px; display: flex; justify-content: space-between; align-items: center; }
+  .cart-head h3 { font-size: 1.05rem; font-weight: 800; }
+  .cart-close { background: rgba(255,255,255,.15); color: #fff; width: 32px; height: 32px; border-radius: 50%; font-size: 1.1rem; font-weight: 900; }
+  .cart-items { flex-grow: 1; overflow-y: auto; padding: 14px 18px; }
+  .cart-item { display: flex; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid #eef2f7; }
+  .ci-emoji { font-size: 1.8rem; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: #f0f6ff; border-radius: 12px; }
+  .ci-info { flex-grow: 1; }
+  .ci-info h4 { font-size: .85rem; font-weight: 800; color: #123; }
+  .ci-info span { font-size: .75rem; color: #0066cc; font-weight: 700; }
+  .ci-qty { display: flex; align-items: center; gap: 6px; }
+  .ci-qty button { width: 26px; height: 26px; border-radius: 8px; background: #eef2f7; font-weight: 900; color: #123; font-size: .9rem; }
+  .ci-qty .q { font-weight: 800; font-size: .9rem; min-width: 16px; text-align: center; }
+  .cart-empty { text-align: center; color: #999; padding: 40px 10px; font-weight: 600; }
+  .cart-foot { padding: 16px 18px; border-top: 2px solid #eef2f7; }
+  .cart-total { display: flex; justify-content: space-between; font-weight: 900; margin-bottom: 12px; font-size: 1rem; color: #123; }
+  .wa-btn { display: block; width: 100%; background: #25d366; color: #fff; font-weight: 900; text-align: center; border-radius: 999px; padding: 14px; font-size: .95rem; box-shadow: 0 4px 14px rgba(37,211,102,.4); margin-bottom: 10px; }
+  .mm-note { font-size: .72rem; color: #888; text-align: center; font-weight: 600; }
+
+  /* Toast */
+  #toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: #071b33; color: #fff; font-weight: 800; border-radius: 999px; padding: 12px 24px; box-shadow: 0 8px 24px rgba(0,0,0,.3); font-size: .84rem; z-index: 100; display: none; }
+
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .prod-img { height: 100px; font-size: 2.6rem; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-top">
+    <a class="back-link" href="index.html">← Back to MiniMakers</a>
+    <div class="logo">MiniMakers <span>Shop</span> 🛒</div>
+    <button class="cart-btn" id="open-cart">🛒 Cart (<span id="cart-count">0</span>)</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <div class="emojis">🤖🔧🔋⚙️</div>
+    <h1>The <span>MiniMakers</span> Kit Shop</h1>
+    <p>The same kits and components we use in class — delivered to you. Order via WhatsApp, pay with MTN MoMo or Airtel Money.</p>
+  </div>
+  <div class="cats" id="cats"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div id="cart-overlay"></div>
+<div id="cart">
+  <div class="cart-head">
+    <h3>🛒 Your Order</h3>
+    <button class="cart-close" id="close-cart">×</button>
+  </div>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-foot">
+    <div class="cart-total"><span>Total</span><span id="cart-total">UGX 0</span></div>
+    <a class="wa-btn" id="wa-order" href="#">Order via WhatsApp</a>
+    <p class="mm-note">💰 Pay with MTN MoMo / Airtel Money on delivery confirmation.<br>Pickup at Galaxy Institute, Bwebajja — or we arrange delivery.</p>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+/* ============ EDIT ME ============
+   Add/edit products here. WhatsApp number at the bottom.
+   Remove the `img:` line and use `photo:"filename.jpg"` if you have photos. */
+var PRODUCTS = [
+  { id:"kit-mini",  cat:"starter",  emoji:"🧰", name:"Mini-makers Starter Kit",  price:85000,  desc:"First robotics kit for ages 5–6: gears, wheels, blocks + activity cards.", bestseller:true },
+  { id:"kit-mega",  cat:"starter",  emoji:"🤖", name:"Mega-makers Builder Kit",  price:150000, desc:"Ages 7–9: motor pack, sensors, breadboard + 10 guided builds.", bestseller:true },
+  { id:"kit-sumo",  cat:"starter",  emoji:"🥇", name:"Sumo-makers Robot Kit",    price:275000, desc:"Ages 10–12: build & battle a sumo robot. Sensors, motors, frame + controller.", new:true },
+  { id:"motors",    cat:"parts",    emoji:"⚙️", name:"Motor Pack (5 pcs)",       price:45000,  desc:"5 x geared DC motors with wheels — replacement or expansion." },
+  { id:"leds",      cat:"parts",    emoji:"💡", name:"LED & Resistor Bundle",    price:20000,  desc:"Assorted LEDs, resistors, jumper wires — light up everything." },
+  { id:"sensors",   cat:"parts",    emoji:"👁️", name:"Sensor Set (ultrasonic + touch + light)", price:60000, desc:"3 sensors with mounts. Make your robot see and feel." },
+  { id:"battery",   cat:"parts",    emoji:"🔋", name:"Battery Pack + Holder",   price:35000,  desc:"Rechargeable battery pack with switch and holder." },
+  { id:"bboard",    cat:"parts",    emoji:"🔌", name:"Breadboard + Jumper Set",  price:30000,  desc:"No-solder circuit building — 400-point board + 40 wires." },
+  { id:"tools",     cat:"tools",    emoji:"🧰", name:"Young Engineer Tool Set",  price:55000,  desc:"Kid-safe screwdrivers, pliers, tape + project box." },
+  { id:"book",      cat:"tools",    emoji:"📘", name:"STEM Activity Book (Vol. 1)", price:25000, desc:"40 offline activities: structures, energy, circuits. Ages 5–12.", new:true },
+  { id:"merch",     cat:"tools",    emoji:"👕", name:"MiniMakers T-shirt",       price:30000,  desc:"Official club tee. Ages 4–14 sizes while stock lasts." },
+  { id:"spare",     cat:"parts",    emoji:"🔧", name:"Spare Parts Grab Bag",      price:40000,  desc:"Random assorted components for repairs & experiments." }
+];
+
+var CATS = [
+  { id:"all", label:"All" },
+  { id:"starter", label:"🧰 Kits" },
+  { id:"parts", label:"⚙️ Components" },
+  { id:"tools", label:"🛠️ Tools & Extras" }
+];
+
+/* ==== WhatsApp order number: CHANGE THIS ==== */
+var WHATSAPP = "256755051101"; // your number, international format, no +
+
+var cart = {};
+try { cart = JSON.parse(localStorage.getItem("mmCart") || "{}"); } catch(e){ cart = {}; }
+function saveCart(){ try { localStorage.setItem("mmCart", JSON.stringify(cart)); } catch(e){} }
+
+function fmt(n){ return "UGX " + n.toLocaleString(); }
+
+function renderCats(active){
+  var c = document.getElementById("cats"); c.innerHTML = "";
+  CATS.forEach(function(cat){
+    var b = document.createElement("button");
+    b.className = "cat" + (cat.id===active ? " active" : "");
+    b.textContent = cat.label;
+    b.onclick = function(){ renderGrid(cat.id); renderCats(cat.id); };
+    c.appendChild(b);
+  });
+}
+
+function renderGrid(cat){
+  var g = document.getElementById("grid"); g.innerHTML = "";
+  PRODUCTS.filter(function(p){ return cat==="all" || p.cat===cat; }).forEach(function(p){
+    var d = document.createElement("div"); d.className = "prod";
+    var badge = p.bestseller ? '<span class="badge">BESTSELLER</span>' : (p.new ? '<span class="badge" style="background:#e0ecff;color:#0369a1;border-color:#7cb3e8">NEW</span>' : "");
+    d.innerHTML = '<div class="prod-img">'+p.emoji+'</div><div class="prod-body">'
+      + '<h3>'+p.name+badge+'</h3><p>'+p.desc+'</p>'
+      + '<div class="prod-row"><span class="price">'+fmt(p.price)+'</span>'
+      + '<button class="add-btn" data-id="'+p.id+'">Add to cart</button></div></div>';
+    g.appendChild(d);
+  });
+  g.querySelectorAll(".add-btn").forEach(function(b){
+    b.onclick = function(){
+      var id = b.getAttribute("data-id");
+      cart[id] = (cart[id]||0) + 1;
+      saveCart(); renderCart();
+      toast("Added to cart ✅");
+    };
+  });
+}
+
+function renderCart(){
+  var items = document.getElementById("cart-items");
+  var count = 0, total = 0;
+  items.innerHTML = "";
+  Object.keys(cart).forEach(function(id){
+    if (!cart[id]) return;
+    var p = PRODUCTS.filter(function(x){ return x.id===id; })[0];
+    if (!p) return;
+    count += cart[id]; total += p.price * cart[id];
+    var d = document.createElement("div"); d.className = "cart-item";
+    d.innerHTML = '<div class="ci-emoji">'+p.emoji+'</div><div class="ci-info"><h4>'+p.name+'</h4><span>'+fmt(p.price)+'</span></div>'
+      + '<div class="ci-qty"><button data-minus="'+id+'">−</button><span class="q">'+cart[id]+'</span><button data-plus="'+id+'">+</button></div>';
+    items.appendChild(d);
+  });
+  items.querySelectorAll("[data-plus]").forEach(function(b){ b.onclick = function(){ cart[b.getAttribute("data-plus")]++; saveCart(); renderCart(); }; });
+  items.querySelectorAll("[data-minus]").forEach(function(b){ b.onclick = function(){ var id=b.getAttribute("data-minus"); cart[id]--; if(cart[id]<=0) delete cart[id]; saveCart(); renderCart(); }; });
+  if (count === 0) items.innerHTML = '<div class="cart-empty">Your cart is empty 🛒<br>Add some kits to get building!</div>';
+  document.getElementById("cart-count").textContent = count;
+  document.getElementById("cart-total").textContent = fmt(total);
+
+  /* WhatsApp order message */
+  var lines = ["Hello MiniMakers! I would like to order:", ""];
+  Object.keys(cart).forEach(function(id){
+    if (!cart[id]) return;
+    var p = PRODUCTS.filter(function(x){ return x.id===id; })[0];
+    if (p) lines.push("• "+p.name+" x"+cart[id]+" — "+fmt(p.price*cart[id]));
+  });
+  lines.push("", "Total: "+fmt(total));
+  document.getElementById("wa-order").href = "https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent(lines.join("\n"));
+}
+
+function openCart(){ document.getElementById("cart").classList.add("open"); document.getElementById("cart-overlay").classList.add("open"); }
+function closeCart(){ document.getElementById("cart").classList.remove("open"); document.getElementById("cart-overlay").classList.remove("open"); }
+document.getElementById("open-cart").onclick = openCart;
+document.getElementById("close-cart").onclick = closeCart;
+document.getElementById("cart-overlay").onclick = closeCart;
+
+function toast(msg){
+  var t = document.getElementById("toast");
+  t.textContent = msg; t.style.display = "block";
+  clearTimeout(t._tm); t._tm = setTimeout(function(){ t.style.display = "none"; }, 1800);
+}
+
+renderCats("all");
+renderGrid("all");
+renderCart();
+</script>
+</body>
+</html>
