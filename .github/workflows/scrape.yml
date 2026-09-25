@@ -1,0 +1,27 @@
+name: Scrape supplier products
+
+on:
+  schedule:
+    - cron: "0 6 * * *"   # daily at 06:00 UTC (09:00 Kampala)
+  workflow_dispatch: {}    # manual run button
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run scraper
+        run: python3 scraper/scrape.py
+
+      - name: Commit updated products
+        run: |
+          git config user.name "MiniMakers Bot"
+          git config user.email "actions@github.com"
+          git add products.js
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "Auto-update scraped products [skip ci]"
+          git push

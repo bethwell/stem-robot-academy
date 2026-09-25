@@ -107,11 +107,13 @@
 </div>
 <div id="toast"></div>
 
+<script src="products.js"></script>
 <script>
 /* ============ EDIT ME ============
-   Add/edit products here. WhatsApp number at the bottom.
-   Remove the `img:` line and use `photo:"filename.jpg"` if you have photos. */
-var PRODUCTS = [
+   Manual products stay here (your own kits). Scraped supplier products
+   are auto-loaded from products.js (SCRAPED_PRODUCTS) and shown below.
+   WhatsApp number at the bottom. */
+var MANUAL_PRODUCTS = [
   { id:"kit-mini",  cat:"starter",  emoji:"🧰", name:"Mini-makers Starter Kit",  price:85000,  desc:"First robotics kit for ages 5–6: gears, wheels, blocks + activity cards.", bestseller:true },
   { id:"kit-mega",  cat:"starter",  emoji:"🤖", name:"Mega-makers Builder Kit",  price:150000, desc:"Ages 7–9: motor pack, sensors, breadboard + 10 guided builds.", bestseller:true },
   { id:"kit-sumo",  cat:"starter",  emoji:"🥇", name:"Sumo-makers Robot Kit",    price:275000, desc:"Ages 10–12: build & battle a sumo robot. Sensors, motors, frame + controller.", new:true },
@@ -130,8 +132,18 @@ var CATS = [
   { id:"all", label:"All" },
   { id:"starter", label:"🧰 Kits" },
   { id:"parts", label:"⚙️ Components" },
-  { id:"tools", label:"🛠️ Tools & Extras" }
+  { id:"tools", label:"🛠️ Tools & Extras" },
+  { id:"scraped", label:"📦 Supplier Stock" }
 ];
+
+/* Merge manual + scraped products */
+var SCRAPED = (typeof SCRAPED_PRODUCTS !== "undefined") ? SCRAPED_PRODUCTS : [];
+SCRAPED.forEach(function(p){
+  p.cat = p.cat || "scraped";
+  p.emoji = p.emoji || "🧩";
+  p.desc = p.desc || ("Sourced from " + (p.source || "our supplier") + ".");
+});
+var PRODUCTS = MANUAL_PRODUCTS.concat(SCRAPED);
 
 /* ==== WhatsApp order number: CHANGE THIS ==== */
 var WHATSAPP = "256755051101"; // your number, international format, no +
@@ -160,6 +172,7 @@ function renderGrid(cat){
     var badge = p.bestseller ? '<span class="badge">BESTSELLER</span>' : (p.new ? '<span class="badge" style="background:#e0ecff;color:#0369a1;border-color:#7cb3e8">NEW</span>' : "");
     d.innerHTML = '<div class="prod-img">'+p.emoji+'</div><div class="prod-body">'
       + '<h3>'+p.name+badge+'</h3><p>'+p.desc+'</p>'
+      + (p.source ? '<span style="font-size:.68rem;color:#888;font-weight:600">📦 via '+p.source+'</span>' : '')
       + '<div class="prod-row"><span class="price">'+fmt(p.price)+'</span>'
       + '<button class="add-btn" data-id="'+p.id+'">Add to cart</button></div></div>';
     g.appendChild(d);
