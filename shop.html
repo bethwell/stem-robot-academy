@@ -27,6 +27,7 @@
   .cats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
   .search-row { margin-bottom: 16px; }
   #search { width: 100%; max-wi
+
 dth: 420px; padding: 12px 18px; border-radius: 999px; border: 2px solid #e3e9f2; font-family: inherit; font-size: .9rem; font-weight: 600; outline: none; background: #fff; }
   #search:focus { border-color: #ff8c00; }
   .cat { padding: 8px 16px; border-radius: 999px; font-size: .82rem; font-weight: 700; background: #fff; color: #555; border: 2px solid #e3e9f2; transition:.15s; }
@@ -43,7 +44,8 @@ dth: 420px; padding: 12px 18px; border-radius: 999px; border: 2px solid #e3e9f2;
   .price { font-weight: 800; color: #0066cc; font-size: 1.02rem; }
   .add-btn { background: #ff8c00; color: #fff; font-weight: 800; border-radius: 999px; padding: 8px 16px; font-size: .78rem; box-shadow: 0 2px 8px rgba(255,140,0,.35); transition:.15s; }
   .add-btn:active { transform: scale(.93); }
-  .badge { display: inline-block; background: #dcfce7; color: #166534; border: 1px solid #4ade80; font-size: .65rem; font-weight: 800; border-radius: 999px; padding: 2px 8px; margin-left: 6px; vertical-align: mid
+  .badge { display: inline-block; background: #dcfce7; color: #166534; border: 1px solid #4ade80; font-size: .65rem; font-weight: 800; border-radius: 999px; padding: 2px 8px; margin-left: 6px; vertical-align: mi
+d
 dle; }
 
   /* Cart drawer */
@@ -66,7 +68,8 @@ dle; }
   .cart-empty { text-align: center; color: #999; padding: 40px 10px; font-weight: 600; }
   .cart-foot { padding: 16px 18px; border-top: 2px solid #eef2f7; }
   .cart-total { display: flex; justify-content: space-between; font-weight: 900; margin-bottom: 12px; font-size: 1rem; color: #123; }
-  .wa-btn { display: block; width: 100%; background: #25d366; color: #fff; font-weight: 900; text-align: center; bord
+  .wa-btn { display: block; width: 100%; background: #25d366; color: #fff; font-weight: 900; text-align: center; bo
+rd
 er-radius: 999px; padding: 14px; font-size: .95rem; box-shadow: 0 4px 14px rgba(37,211,102,.4); margin-bottom: 10px; }
   .mm-note { font-size: .72rem; color: #888; text-align: center; font-weight: 600; }
 
@@ -86,7 +89,7 @@ er-radius: 999px; padding: 14px; font-size: .95rem; box-shadow: 0 4px 14px rgba(
 </head>
 <body>
   <div class="dev-banner" id="devBanner">🛠️ <strong>Coming soon:</strong> this shop is still under development — you can browse, but some features may change. Thanks for your patience!
-    <button class="close-x" onclick="var b=document.getElementById('devBanner'); b.parentNode.removeChild(b); localStorage.setItem('devBannerClosed','1');">&times;</button>
+    <button class="close-x" onclick="var b=document.getElementById('devBanner'); b.parentNode.removeChild(b);">&times;</button>
   </div>
 
 <div class="header">
@@ -101,7 +104,8 @@ er-radius: 999px; padding: 14px; font-size: .95rem; box-shadow: 0 4px 14px rgba(
   <div class="hero">
     <div class="emojis">🤖🔧🔋⚙️</div>
     <h1>The <span>MiniMakers</span> Kit Shop</h1>
-    <p>The same kits and components we use in class — delivered to you. Order via WhatsApp, pay with MTN MoMo or Airtel Money.</p>
+    <p>The same kits and components we use in class — delivered to you. Or
+der via WhatsApp, pay with MTN MoMo or Airtel Money.</p>
   </div>
   <div class="cats" id="cats"></div>
   <div class="search-row"><input type="text" id="search" placeholder="🔍 Search products…" autocomplete="off"></div>
@@ -190,8 +194,7 @@ function renderCats(active){
 }
 var S = { cat: "all", q: "" };
 
-fun
-ction renderGrid(){
+function renderGrid(){
   var g = document.getElementById("grid"); g.innerHTML = "";
   var q = S.q.toLowerCase();
   var list = PRODUCTS.filter(function(p){
@@ -212,7 +215,8 @@ ction renderGrid(){
       + '<button class="add-btn" data-id="'+p.id+'">Add to cart</button></div></div>';
     g.appendChild(d);
   });
-  g.querySelectorAll(".add-btn").forEach(function(b){
+  g.querySelectorAll(".add-btn").forEach(fu
+nction(b){
     b.onclick = function(){
       var id = b.getAttribute("data-id");
       cart[id] = (cart[id]||0) + 1;
@@ -254,6 +258,7 @@ us="'+id+'">+</button></div>';
   document.getElementById("wa-order").href = "https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent(lines.join("\n"));
 }
 
+
 function openCart(){ document.getElementById("cart").classList.add("open"); document.getElementById("cart-overlay").classList.add("open"); }
 function closeCart(){ document.getElementById("cart").classList.remove("open"); document.getElementById("cart-overlay").classList.remove("open"); }
 document.getElementById("open-cart").onclick = openCart;
@@ -277,9 +282,3 @@ renderCart();
 >
 </html>
 
-<script>
-  if (localStorage.getItem('devBannerClosed') === '1') {
-    var b = document.getElementById('devBanner');
-    if (b) b.parentNode.removeChild(b);
-  }
-</script>
