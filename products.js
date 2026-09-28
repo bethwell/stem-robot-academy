@@ -103,7 +103,8 @@ var SCRAPED_PRODUCTS = [
   "id": "sc-nrf24l01",
   "cat": "components",
   "emoji": "🔌",
-  "name": "NRF24L01",
+  
+"name": "NRF24L01",
   "price": 15000
  },
  {
