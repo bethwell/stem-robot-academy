@@ -26,7 +26,8 @@
   .hero p { opacity: .92; font-weight: 500; font-size: .92rem; }
   .cats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
   .search-row { margin-bottom: 16px; }
-  #search { width: 100%; max-width: 420px; padding: 12px 18px; border-radius: 999px; border: 2px solid #e3e9f2; font-family: inherit; font-size: .9rem; font-weight: 600; outline: none; background: #fff; }
+  #search { width: 100%; max-wi
+dth: 420px; padding: 12px 18px; border-radius: 999px; border: 2px solid #e3e9f2; font-family: inherit; font-size: .9rem; font-weight: 600; outline: none; background: #fff; }
   #search:focus { border-color: #ff8c00; }
   .cat { padding: 8px 16px; border-radius: 999px; font-size: .82rem; font-weight: 700; background: #fff; color: #555; border: 2px solid #e3e9f2; transition:.15s; }
   .cat.active { background: #ff8c00; color: #fff; border-color: #ff8c00; transform: scale(1.05); box-shadow: 0 2px 8px rgba(255,140,0,.4); }
@@ -42,7 +43,8 @@
   .price { font-weight: 800; color: #0066cc; font-size: 1.02rem; }
   .add-btn { background: #ff8c00; color: #fff; font-weight: 800; border-radius: 999px; padding: 8px 16px; font-size: .78rem; box-shadow: 0 2px 8px rgba(255,140,0,.35); transition:.15s; }
   .add-btn:active { transform: scale(.93); }
-  .badge { display: inline-block; background: #dcfce7; color: #166534; border: 1px solid #4ade80; font-size: .65rem; font-weight: 800; border-radius: 999px; padding: 2px 8px; margin-left: 6px; vertical-align: middle; }
+  .badge { display: inline-block; background: #dcfce7; color: #166534; border: 1px solid #4ade80; font-size: .65rem; font-weight: 800; border-radius: 999px; padding: 2px 8px; margin-left: 6px; vertical-align: mid
+dle; }
 
   /* Cart drawer */
   #cart-overlay { position: fixed; inset: 0; background: rgba(7,27,51,.5); z-index: 90; display: none; }
@@ -64,7 +66,8 @@
   .cart-empty { text-align: center; color: #999; padding: 40px 10px; font-weight: 600; }
   .cart-foot { padding: 16px 18px; border-top: 2px solid #eef2f7; }
   .cart-total { display: flex; justify-content: space-between; font-weight: 900; margin-bottom: 12px; font-size: 1rem; color: #123; }
-  .wa-btn { display: block; width: 100%; background: #25d366; color: #fff; font-weight: 900; text-align: center; border-radius: 999px; padding: 14px; font-size: .95rem; box-shadow: 0 4px 14px rgba(37,211,102,.4); margin-bottom: 10px; }
+  .wa-btn { display: block; width: 100%; background: #25d366; color: #fff; font-weight: 900; text-align: center; bord
+er-radius: 999px; padding: 14px; font-size: .95rem; box-shadow: 0 4px 14px rgba(37,211,102,.4); margin-bottom: 10px; }
   .mm-note { font-size: .72rem; color: #888; text-align: center; font-weight: 600; }
 
   /* Toast */
@@ -74,9 +77,18 @@
     .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .prod-img { height: 100px; font-size: 2.6rem; }
   }
+
+  /* Dev notice banner */
+  .dev-banner { position: sticky; top: 0; z-index: 999; background: linear-gradient(90deg,#ff8c00,#ff6b00); color: #fff; padding: 10px 44px 10px 16px; text-align: center; font-size: .85rem; font-weight: 600; }
+  .dev-banner a { color: #fff; text-decoration: underline; }
+  .dev-banner .close-x { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; color: #fff; font-size: 1rem; cursor: pointer; padding: 2px 6px; }
 </style>
 </head>
 <body>
+  <div class="dev-banner" id="devBanner">🛠️ <strong>Coming soon:</strong> this shop is still under development — you can browse, but some features may change. Thanks for your patience!
+    <button class="close-x" onclick="var b=document.getElementById('devBanner'); b.parentNode.removeChild(b); localStorage.setItem('devBannerClosed','1');">&times;</button>
+  </div>
+
 <div class="header">
   <div class="header-top">
     <a class="back-link" href="index.html">← Back to MiniMakers</a>
@@ -111,6 +123,7 @@
 </div>
 <div id="toast"></div>
 
+
 <script src="products.js"></script>
 <script>
 /* ============ EDIT ME ============
@@ -127,7 +140,8 @@ var MANUAL_PRODUCTS = [
   { id:"battery",   cat:"power",    emoji:"🔋", name:"Battery Pack + Holder",   price:35000,  desc:"Rechargeable battery pack with switch and holder." },
   { id:"bboard",    cat:"components", emoji:"🔌", name:"Breadboard + Jumper Set",  price:30000,  desc:"No-solder circuit building — 400-point board + 40 wires." },
   { id:"tools",     cat:"tools",    emoji:"🧰", name:"Young Engineer Tool Set",  price:55000,  desc:"Kid-safe screwdrivers, pliers, tape + project box." },
-  { id:"book",      cat:"tools2",   emoji:"📘", name:"STEM Activity Book (Vol. 1)", price:25000, desc:"40 offline activities: structures, energy, circuits. Ages 5–12.", new:true },
+  { id:"book",      cat:"tools2",   emoji:"📘", name:"STEM Activity Book (Vol. 1)", price:25000, desc:"40 offline activities: structures, energy, circuits. Ages 5–12.",
+ new:true },
   { id:"merch",     cat:"tools2",   emoji:"👕", name:"MiniMakers T-shirt",       price:30000,  desc:"Official club tee. Ages 4–14 sizes while stock lasts." },
   { id:"spare",     cat:"components", emoji:"🔧", name:"Spare Parts Grab Bag",      price:40000,  desc:"Random assorted components for repairs & experiments." }
 ];
@@ -176,7 +190,8 @@ function renderCats(active){
 }
 var S = { cat: "all", q: "" };
 
-function renderGrid(){
+fun
+ction renderGrid(){
   var g = document.getElementById("grid"); g.innerHTML = "";
   var q = S.q.toLowerCase();
   var list = PRODUCTS.filter(function(p){
@@ -218,7 +233,8 @@ function renderCart(){
     count += cart[id]; total += p.price * cart[id];
     var d = document.createElement("div"); d.className = "cart-item";
     d.innerHTML = '<div class="ci-emoji">'+p.emoji+'</div><div class="ci-info"><h4>'+p.name+'</h4><span>'+fmt(p.price)+'</span></div>'
-      + '<div class="ci-qty"><button data-minus="'+id+'">−</button><span class="q">'+cart[id]+'</span><button data-plus="'+id+'">+</button></div>';
+      + '<div class="ci-qty"><button data-minus="'+id+'">−</button><span class="q">'+cart[id]+'</span><button data-pl
+us="'+id+'">+</button></div>';
     items.appendChild(d);
   });
   items.querySelectorAll("[data-plus]").forEach(function(b){ b.onclick = function(){ cart[b.getAttribute("data-plus")]++; saveCart(); renderCart(); }; });
@@ -257,5 +273,13 @@ renderCats("all");
 renderGrid();
 renderCart();
 </script>
-</body>
+</body
+>
 </html>
+
+<script>
+  if (localStorage.getItem('devBannerClosed') === '1') {
+    var b = document.getElementById('devBanner');
+    if (b) b.parentNode.removeChild(b);
+  }
+</script>
