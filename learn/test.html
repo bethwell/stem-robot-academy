@@ -577,6 +577,10 @@ var LEVELS = [
     hint:"Put the switch IN the loop: battery → switch → bulb → back to battery.",
     check:function(){ var on = labResults({sw:true}), off = labResults({sw:false});
       return countWhere(on, "bulb", lit) >= 1 && countWhere(off, "bulb", lit) === 0 && anyOn("switch"); },
+    near:function(){ var on = labResults({sw:true}), off = labResults({sw:false});
+      if (countWhere(on, "bulb", lit) >= 1 && countWhere(off, "bulb", lit) === 0 && !anyOn("switch")) return "Your circuit looks right! Now tap the switch to turn it ON 👆";
+      if (countWhere(off, "bulb", lit) >= 1) return "The bulb is on even with the switch OFF — the switch needs to be IN the loop.";
+      return ""; },
     why:"A switch is a gap you can open and close. Closed = the loop is complete. Open = there's a gap, so nothing flows. Every light switch in your house works like this!",
     real:"Battery + switch + bulb tiles, 3 clips." },
   { title:"Doorbell", parts:{battery:1, button:1, buzzer:1},
@@ -598,6 +602,9 @@ var LEVELS = [
     hint:"Give each bulb its own path to the battery: connect both bulbs to the same two battery ends, side by side.",
     check:function(){ var r = labResults(); var b = r.filter(function(x){ return x.type === "bulb"; });
       return b.length === 2 && b[0].bright > 0.6 && b[1].bright > 0.6 && !anyShort(r); },
+    near:function(){ var b = labResults().filter(function(x){ return x.type === "bulb"; });
+      if (b.length === 2 && b[0].bright > 0.12 && b[1].bright > 0.12 && b[0].bright < 0.5) return "Both bulbs are on but dim — that's a line (series). Give each bulb its own path back to the battery.";
+      return ""; },
     why:"This is a PARALLEL circuit. Each bulb gets its own loop and the full push of the battery, so both are bright. Houses are wired in parallel — that's why one broken bulb doesn't switch off the whole house.",
     real:"Battery + 2 bulbs, 4 clips: both bulbs clip to the same battery ends." },
   { title:"Spin the fan", parts:{battery:1, "switch":1, motor:1},
@@ -605,6 +612,9 @@ var LEVELS = [
     hint:"battery → switch → motor → battery. Then flip the switch.",
     check:function(){ var on = labResults({sw:true}), off = labResults({sw:false});
       return countWhere(on, "motor", function(x){ return x.speed > 0.5; }) >= 1 && countWhere(off, "motor", function(x){ return x.speed > 0.05; }) === 0 && anyOn("switch"); },
+    near:function(){ var on = labResults({sw:true}), off = labResults({sw:false});
+      if (countWhere(on, "motor", function(x){ return x.speed > 0.5; }) >= 1 && countWhere(off, "motor", function(x){ return x.speed > 0.05; }) === 0 && !anyOn("switch")) return "Your circuit looks right! Now tap the switch to turn it ON 👆";
+      return ""; },
     why:"A motor turns electricity into MOVEMENT. Robots use motors for wheels, arms and grippers — the same idea as this fan.",
     real:"Battery + switch + motor tile." },
   { title:"Careful with LEDs!", parts:{battery:1, led:1, resistor:1},
@@ -621,12 +631,20 @@ var LEVELS = [
     why:"The sensor is the robot's EYE: it senses light and controls the circuit automatically. Real street lights switch on at night using a light sensor just like this!",
     real:"Battery + light-sensor tile + bulb. Cover the sensor with your hand to make it 'night'." },
   { title:"Alarm: light AND sound", parts:{battery:1, "switch":1, bulb:1, buzzer:1},
-    goal:"One switch should turn on BOTH the bulb and the buzzer.",
-    hint:"Try the switch next to the battery, then give the bulb and buzzer each their own path (parallel).",
+    goal:"Make ONE switch turn on BOTH the bulb and the buzzer — and turn them both off again.",
+    hint:"Easiest way: one big loop — battery → switch → bulb → buzzer → back to battery. Brighter way: put the switch next to the battery, then give the bulb and the buzzer each their own path (parallel).",
     check:function(){ var on = labResults({sw:true}), off = labResults({sw:false});
-      return countWhere(on, "bulb", lit) >= 1 && countWhere(on, "buzzer", function(x){ return x.on; }) >= 1
-        && countWhere(off, "bulb", lit) === 0 && countWhere(off, "buzzer", function(x){ return x.on; }) === 0 && !anyShort(on); },
-    why:"You built a real alarm! One switch controls two outputs. Engineers combine series and parallel parts like this in every machine.",
+      return countWhere(on, "bulb", glowing) >= 1 && countWhere(on, "buzzer", function(x){ return x.on; }) >= 1
+        && countWhere(off, "bulb", glowing) === 0 && countWhere(off, "buzzer", function(x){ return x.on; }) === 0 && !anyShort(on); },
+    near:function(){ var on = labResults({sw:true}), off = labResults({sw:false});
+      var b = countWhere(on, "bulb", glowing) >= 1, z = countWhere(on, "buzzer", function(x){ return x.on; }) >= 1;
+      if (!L.comps.some(function(c){ return c.type === "switch"; })) return "Add the switch from the parts below.";
+      if (b && !z) return "The bulb works — now the buzzer needs to be in a loop too.";
+      if (z && !b) return "The buzzer works — now the bulb needs to be in a loop too.";
+      if (b && z && (countWhere(off, "bulb", glowing) || countWhere(off, "buzzer", function(x){ return x.on; })))
+        return "Nearly! Something still works when the switch is OFF. The switch must control BOTH — try putting it right next to the battery.";
+      return ""; },
+    why:"You built a real alarm! One switch controls two outputs. If you made one big loop (series), the bulb is dim because it shares the battery with the buzzer. Give each its own path (parallel) and the bulb shines brighter — try it!",
     real:"Battery + switch + bulb + buzzer, 5–6 clips." },
   { title:"Free build", parts:null,
     goal:"Build anything you like with every part! Try 2 batteries, 3 bulbs, or invent your own gadget.",
@@ -725,6 +743,7 @@ function gauss(A, b){
 }
 function labResults(over){ return solveCircuit(L.comps, L.wires, over); }
 function lit(x){ return x.bright > 0.15; }
+function glowing(x){ return x.bright > 0.03; }
 function countWhere(r, type, fn){ var n = 0; r.forEach(function(x){ if (x.type === type && fn(x)) n++; }); return n; }
 function anyShort(r){ return r.some(function(x){ return x.short; }); }
 function anyOn(type){ return L.comps.some(function(c){ return c.type === type && c.on; }); }
@@ -979,7 +998,13 @@ function labLoop(now){
     if (lv.check()){ L.okTime += dt; if (L.okTime > 0.5){ L.solved = true;
         if (!L.done[L.level]){ L.done[L.level] = true; labSave(); award(2, "Circuit mission complete!"); } else SFX.fanfare();
         labShowWin(); var chip = document.querySelector('.lv-chip[data-lv="'+L.level+'"]'); if (chip && chip.textContent.indexOf("✅") < 0) chip.textContent = "✅ " + chip.textContent; } }
-    else L.okTime = 0;
+    else {
+      L.okTime = 0; L.nearIn = (L.nearIn || 0) - dt;
+      if (lv.near && L.nearIn <= 0 && !shorted && L.statusKey !== "burnt"){
+        L.nearIn = 0.5; var tip = lv.near();
+        if (tip) labStatus("near:" + tip, "🤔 " + tip); else if (L.statusKey.indexOf("near:") === 0) labStatus("", "");
+      }
+    }
   }
   // smoke particles
   for (var k = L.smoke.length - 1; k >= 0; k--){ var s = L.smoke[k]; s.x += s.vx*dt; s.y += s.vy*dt; s.r += 10*dt; s.life -= dt*0.8; if (s.life <= 0) L.smoke.splice(k, 1); }
@@ -1045,9 +1070,9 @@ function drawPart(c, comp, r){
   var sel = L.sel && L.sel.kind === "comp" && L.sel.c === comp;
   c.save(); c.translate(ctr.x, ctr.y);
   // glow behind lit parts
-  if (comp.type === "bulb" && r.bright > 0.05){
-    var gr = s * (0.6 + Math.min(1.5, r.bright) * 0.9), gg = c.createRadialGradient(0, 0, 4, 0, 0, gr);
-    gg.addColorStop(0, "rgba(253,224,71," + Math.min(0.9, r.bright) + ")"); gg.addColorStop(1, "rgba(253,224,71,0)");
+  if (comp.type === "bulb" && r.bright > 0.02){
+    var vb = Math.pow(r.bright, 0.6), gr = s * (0.6 + Math.min(1.5, vb) * 0.9), gg = c.createRadialGradient(0, 0, 4, 0, 0, gr);
+    gg.addColorStop(0, "rgba(253,224,71," + Math.min(0.9, vb) + ")"); gg.addColorStop(1, "rgba(253,224,71,0)");
     c.fillStyle = gg; c.beginPath(); c.arc(0, 0, gr, 0, 6.28); c.fill();
   }
   if (comp.type === "led" && r.on && !comp.burnt){
@@ -1077,10 +1102,10 @@ function drawPart(c, comp, r){
       break;
     case "bulb":
       c.strokeStyle = "#475569"; c.lineWidth = 2;
-      c.fillStyle = r.bright > 0.05 ? "rgba(253,224,71," + (0.35 + Math.min(1, r.bright)*0.65) + ")" : "rgba(226,232,240,.8)";
+      c.fillStyle = r.bright > 0.02 ? "rgba(253,224,71," + (0.3 + Math.min(1, Math.pow(r.bright, 0.6))*0.7) + ")" : "rgba(226,232,240,.8)";
       c.beginPath(); c.arc(0, -4, 14, 0, 6.28); c.fill(); c.stroke();
       c.fillStyle = "#94a3b8"; c.fillRect(-7, 9, 14, 8);
-      c.strokeStyle = r.bright > 0.05 ? "#ea580c" : "#64748b"; c.beginPath(); c.moveTo(-5, 9); c.lineTo(-4, -4); c.lineTo(-1, -8); c.lineTo(1, -2); c.lineTo(4, -8); c.lineTo(5, 9); c.stroke();
+      c.strokeStyle = r.bright > 0.02 ? "#ea580c" : "#64748b"; c.beginPath(); c.moveTo(-5, 9); c.lineTo(-4, -4); c.lineTo(-1, -8); c.lineTo(1, -2); c.lineTo(4, -8); c.lineTo(5, 9); c.stroke();
       break;
     case "switch":
       c.fillStyle = "#475569"; c.beginPath(); c.arc(-14, 0, 4, 0, 6.28); c.arc(14, 0, 4, 0, 6.28); c.fill();
