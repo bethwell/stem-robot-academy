@@ -147,6 +147,33 @@
   .pal-btn .pe { font-size: 1.4rem; } .pal-btn .pc { color: #ea580c; font-size: .7rem; }
   .pal-btn:disabled { opacity: .35; }
   .pal-btn:active { transform: scale(.95); }
+  /* micro:bit LED Designer */
+  .led-wrap { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 820px){ .led-wrap { grid-template-columns: 1fr 1fr; } }
+  #led-board-wrap { touch-action: none; user-select: none; -webkit-user-select: none; }
+  .led-quest { margin-top: 8px; }
+  .stamps { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .stamp { background: #fff7ed; border: 2px solid #fed7aa; color: #9a3412; font-weight: 800; font-size: .74rem; border-radius: 999px; padding: 6px 10px; }
+  .led-sec-t { font-weight: 900; color: #123; margin-bottom: 6px; }
+  .led-frames { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 8px; }
+  .frame-w { display: flex; flex-direction: column; align-items: center; font-size: .7rem; font-weight: 800; color: #64748b; }
+  .frame-th { width: 56px; height: 56px; border-radius: 10px; border: 3px solid transparent; cursor: pointer; }
+  .frame-th.on { border-color: #ff8c00; }
+  .ld-speed { border-radius: 12px; padding: 8px; font-weight: 800; border: 2px solid #e5e7eb; background: #fff; }
+  .code-tabs { display: flex; gap: 4px; margin-bottom: 6px; }
+  .code-tabs button { background: #e5e7eb; color: #374151; font-weight: 800; font-size: .76rem; border-radius: 10px; padding: 6px 12px; }
+  .code-tabs button.on { background: #1e90ff; color: #fff; }
+  .led-code { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 14px; padding: 10px; max-height: 340px; overflow: auto; }
+  .led-code pre { font-family: Consolas, Menlo, monospace; font-size: .78rem; line-height: 1.35; white-space: pre; color: #0f172a; }
+  .bk-wrap { display: inline-block; font-family: Arial, sans-serif; font-weight: 700; font-size: .8rem; color: #fff; }
+  .bk-hat { background: #1e90ff; border-radius: 14px 14px 0 0; padding: 8px 14px; display: inline-block; min-width: 120px; }
+  .bk-body { border-left: 14px solid #1e90ff; padding: 4px 0; }
+  .bk-foot { background: #1e90ff; height: 12px; width: 120px; border-radius: 0 0 8px 8px; }
+  .bk { background: #1e90ff; border: 1px solid #1873cc; border-radius: 6px; padding: 6px 10px; margin: 3px 0 3px 4px; display: flex; align-items: center; gap: 8px; width: max-content; }
+  .bk-grid { display: grid; grid-template-columns: repeat(5, 10px); gap: 2px; background: #1873cc; padding: 3px; border-radius: 4px; }
+  .bk-grid i { width: 10px; height: 10px; border-radius: 2px; background: #0c3d70; }
+  .bk-grid i.on { background: #fff; }
+  .bk-n { background: #fff; color: #333; border-radius: 999px; padding: 1px 8px; }
 </style>
 </head>
 <body>
@@ -235,7 +262,7 @@ var CHALLENGES = [
     stars:[{x:2,y:4},{x:2,y:1},{x:4,y:0}], walls:[{x:1,y:2},{x:3,y:3}] }
 ];
 
-var TABS = [ {id:"home",label:"🏠 Home"},{id:"learn",label:"📚 Learn"},{id:"coder",label:"🤖 Robot Coder"},{id:"lab",label:"⚡ Circuit Lab"},{id:"game",label:"🎮 Catch Game"} ];
+var TABS = [ {id:"home",label:"🏠 Home"},{id:"learn",label:"📚 Learn"},{id:"coder",label:"🤖 Robot Coder"},{id:"lab",label:"⚡ Circuit Lab"},{id:"game",label:"🎮 Catch Game"},{id:"leds",label:"💡 LED Designer"} ];
 var TRACKS = [
   { id:"mini", name:"Mini-makers", emoji:"🐣", ages:"Ages 5–6", grad:"g-teal", desc:"Discover STEM through play — energy, motion, structures and first robots!" },
   { id:"mega", name:"Mega-makers", emoji:"🚀", ages:"Ages 7–9", grad:"g-sky", desc:"Dive into electronics, sensors and coding with Scratch!" },
@@ -289,7 +316,8 @@ function renderHome(){
     {id:"learn",e:"📚",t:"STEM Lessons",d:"Pick your track — Mini, Mega or Sumo!",c:"g-sky"},
     {id:"coder",e:"🤖",t:"Robot Coder",d:"Build block programs, drive a real robot!",c:"g-orange"},
     {id:"lab",e:"⚡",t:"Circuit Lab",d:"Build circuits and light it up!",c:"g-teal"},
-    {id:"game",e:"🎮",t:"Robot Catch",d:"Play and sharpen reflexes!",c:"g-blue"}
+    {id:"game",e:"🎮",t:"Robot Catch",d:"Play and sharpen reflexes!",c:"g-blue"},
+    {id:"leds",e:"💡",t:"LED Designer",d:"Draw on a micro:bit and get the code!",c:"g-teal"}
   ];
   var html = '<div class="page">'
     + '<div class="hero"><div class="emojis">🤖🧪⚙️🚀</div>'
@@ -1441,6 +1469,314 @@ function drawRobot(c, x, groundY){
   c.restore();
 }
 
+/* ================= micro:bit LED DESIGNER ================= */
+/* Kids draw on a micro:bit drawn in code, build animations frame by frame, and get the
+   matching MakeCode blocks / JavaScript / Python to put on a real micro:bit. */
+
+var STAMPS = {
+  "❤️ Heart": ".#.#." + "#####" + "#####" + ".###." + "..#..",
+  "🙂 Smile": "....." + ".#.#." + "....." + "#...#" + ".###.",
+  "🙁 Sad":   "....." + ".#.#." + "....." + ".###." + "#...#",
+  "➡️ Arrow": "..#.." + "...#." + "#####" + "...#." + "..#..",
+  "✔️ Tick":  "....." + "....#" + "...#." + "#.#.." + ".#...",
+  "🤖 Robot": "#####" + "#.#.#" + "#####" + ".###." + ".#.#.",
+  "⭐ Star":  "..#.." + "#####" + ".###." + ".#.#." + "#...#"
+};
+function blankFrame(){ var f = []; for (var i = 0; i < 25; i++) f.push(false); return f; }
+function stampFrame(s){ var f = []; for (var i = 0; i < 25; i++) f.push(s.charAt(i) === "#"); return f; }
+
+var D = { frames:[stampFrame(STAMPS["❤️ Heart"])], cur:0, playing:false, playIdx:0, playT:0, pause:200,
+          code:"blocks", coords:false, quest:null, paint:null, cv:null, cx:null, w:0, h:0, raf:0, last:0, t:0,
+          copiedOnce:false, questDone:false };
+function ledsLoad(){ try { var d = JSON.parse(localStorage.getItem("miniMakersLeds"));
+  if (d && d.frames && d.frames.length){ D.frames = d.frames; D.pause = d.pause || 200; D.copiedOnce = !!d.copied; D.questDone = !!d.quest; } } catch(e){} }
+function ledsSave(){ try { localStorage.setItem("miniMakersLeds", JSON.stringify({ frames:D.frames, pause:D.pause, copied:D.copiedOnce, quest:D.questDone })); } catch(e){} }
+ledsLoad();
+
+function frameOnScreen(){
+  if (D.quest) return D.quest.grid;
+  if (D.playing) return D.frames[D.playIdx % D.frames.length];
+  return D.frames[D.cur];
+}
+
+/* ---------- Page ---------- */
+function renderLeds(){
+  var speeds = [[0,"🐇 Fast"],[200,"🚶 Medium"],[600,"🐢 Slow"]].map(function(s){
+    return '<option value="'+s[0]+'"'+(D.pause===s[0]?" selected":"")+'>'+s[1]+'</option>'; }).join("");
+  var stamps = Object.keys(STAMPS).map(function(k){ return '<button class="stamp" data-s="'+k+'">'+k+'</button>'; }).join("");
+  var html = '<div class="page"><h2 class="page-title">💡 micro:bit LED Designer</h2>'
+    + '<p class="page-sub">Tap or drag on the LEDs to draw. Add frames to make an animation, then copy the code onto a real micro:bit!</p>'
+    + '<div class="led-wrap"><div class="led-left">'
+    + '<div id="led-board-wrap"><canvas id="led-canvas" style="display:block;width:100%;height:100%"></canvas></div>'
+    + '<div id="led-quest" class="led-quest"></div>'
+    + '<div class="lab-tools" style="margin-top:8px">'
+    + '<button class="tool" id="ld-clear">🧹 Clear</button><button class="tool" id="ld-inv">🔄 Flip on/off</button>'
+    + '<button class="tool" data-shift="L">⬅️</button><button class="tool" data-shift="R">➡️</button><button class="tool" data-shift="U">⬆️</button><button class="tool" data-shift="D">⬇️</button>'
+    + '<button class="tool" id="ld-xy">'+(D.coords?"📍 Hide x,y":"📍 Show x,y")+'</button></div>'
+    + '<div class="stamps">'+stamps+'</div>'
+    + '</div><div class="led-right">'
+    + '<div class="led-sec-t">🎞️ Animation frames</div>'
+    + '<div id="led-frames" class="led-frames"></div>'
+    + '<div class="lab-tools"><button class="tool" id="ld-add">➕ New frame</button><button class="tool" id="ld-dup">⧉ Copy frame</button><button class="tool" id="ld-del">🗑 Delete frame</button></div>'
+    + '<div class="lab-tools"><button class="btn-primary" id="ld-play">'+(D.playing?"⏹ Stop":"▶ Play")+'</button>'
+    + '<select id="ld-speed" class="ld-speed">'+speeds+'</select>'
+    + '<button class="tool" id="ld-quest" style="margin-left:auto">🎯 Coordinate Quest</button></div>'
+    + '<div class="led-sec-t" style="margin-top:12px">🧩 Your code</div>'
+    + '<div class="code-tabs"><button data-code="blocks">Blocks</button><button data-code="js">JavaScript</button><button data-code="py">Python</button></div>'
+    + '<div id="led-code" class="led-code"></div>'
+    + '<div class="lab-tools" style="margin-top:8px"><button class="btn-primary" id="ld-copy">📋 Copy code</button>'
+    + '<a class="tool" href="https://makecode.microbit.org/" target="_blank" rel="noopener" style="text-decoration:none">🚀 Open MakeCode</a></div>'
+    + '<div class="info-card" style="background:#f0f9ff;border:2px solid #bae6fd;margin-top:10px"><h4 style="color:#0369a1;margin-bottom:6px">🔌 Put it on your micro:bit</h4>'
+    + '1. Tap <b>Copy code</b>.<br>2. Open MakeCode and start a <b>New Project</b>.<br>3. Click <b>JavaScript</b> at the top, select everything and paste.<br>4. Click <b>Blocks</b> — there are your blocks!<br>5. Plug in the micro:bit and press <b>Download</b>.</div>'
+    + '</div></div></div>';
+  el("app").innerHTML = html;
+  D.cv = el("led-canvas"); D.cx = D.cv.getContext("2d"); ledsSize();
+  D.cv.addEventListener("pointerdown", ledsDown);
+  D.cv.addEventListener("pointermove", ledsMove);
+  D.cv.addEventListener("pointerup", function(){ D.paint = null; ledsSave(); });
+  D.cv.addEventListener("pointercancel", function(){ D.paint = null; });
+  el("ld-clear").onclick = function(){ ledsEdit(function(f){ for (var i = 0; i < 25; i++) f[i] = false; }); };
+  el("ld-inv").onclick = function(){ ledsEdit(function(f){ for (var i = 0; i < 25; i++) f[i] = !f[i]; }); };
+  document.querySelectorAll("[data-shift]").forEach(function(b){ b.onclick = function(){ ledsShift(b.getAttribute("data-shift")); }; });
+  el("ld-xy").onclick = function(){ D.coords = !D.coords; this.textContent = D.coords ? "📍 Hide x,y" : "📍 Show x,y"; };
+  document.querySelectorAll(".stamp").forEach(function(b){ b.onclick = function(){ var s = stampFrame(STAMPS[b.getAttribute("data-s")]); ledsEdit(function(f){ for (var i = 0; i < 25; i++) f[i] = s[i]; }); }; });
+  el("ld-add").onclick = function(){ if (D.frames.length >= 12) return; D.frames.splice(D.cur + 1, 0, blankFrame()); D.cur++; ledsAfter(); };
+  el("ld-dup").onclick = function(){ if (D.frames.length >= 12) return; D.frames.splice(D.cur + 1, 0, D.frames[D.cur].slice()); D.cur++; ledsAfter(); };
+  el("ld-del").onclick = function(){ if (D.frames.length <= 1){ ledsEdit(function(f){ for (var i = 0; i < 25; i++) f[i] = false; }); return; } D.frames.splice(D.cur, 1); D.cur = Math.max(0, D.cur - 1); ledsAfter(); };
+  el("ld-play").onclick = function(){ ledsPlay(!D.playing); };
+  el("ld-speed").onchange = function(){ D.pause = +this.value; ledsAfter(); };
+  el("ld-quest").onclick = function(){ D.quest ? questEnd(false) : questStart(); };
+  document.querySelectorAll("[data-code]").forEach(function(b){ b.onclick = function(){ D.code = b.getAttribute("data-code"); ledsCode(); }; });
+  el("ld-copy").onclick = ledsCopy;
+  ledsFrames(); ledsCode(); questUi();
+  if (!D.raf){ D.last = performance.now(); D.raf = requestAnimationFrame(ledsLoop); }
+}
+
+function ledsSize(){
+  if (!D.cv) return;
+  var wrap = D.cv.parentNode, r = wrap.getBoundingClientRect();
+  var w = Math.min(r.width, 420), h = w * 0.86;
+  wrap.style.height = h + "px"; D.cv.style.width = w + "px"; D.cv.style.margin = "0 auto";
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  D.w = w; D.h = h; D.cv.width = Math.round(w * dpr); D.cv.height = Math.round(h * dpr);
+  D.cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener("resize", function(){ if (S.tab === "leds") ledsSize(); });
+
+/* ---------- Editing ---------- */
+function ledsEdit(fn){ if (D.quest) return; ledsPlay(false); fn(D.frames[D.cur]); ledsAfter(); }
+function ledsAfter(){ ledsFrames(); ledsCode(); ledsSave(); }
+function ledsShift(dir){
+  ledsEdit(function(f){
+    var o = blankFrame();
+    for (var y = 0; y < 5; y++) for (var x = 0; x < 5; x++){
+      var sx = x, sy = y;
+      if (dir === "L") sx = x + 1; if (dir === "R") sx = x - 1; if (dir === "U") sy = y + 1; if (dir === "D") sy = y - 1;
+      o[y*5 + x] = (sx >= 0 && sx < 5 && sy >= 0 && sy < 5) ? f[sy*5 + sx] : false;
+    }
+    for (var i = 0; i < 25; i++) f[i] = o[i];
+  });
+}
+function ledsPlay(on){
+  D.playing = on && D.frames.length > 0; D.playIdx = D.cur; D.playT = 0;
+  var b = el("ld-play"); if (b) b.textContent = D.playing ? "⏹ Stop" : "▶ Play";
+}
+
+/* geometry of the drawn micro:bit */
+function ledGeo(){
+  var g = D.w * 0.46, cell = g / 5;
+  return { x0:(D.w - g)/2, y0:D.h * 0.17, cell:cell };
+}
+function ledAt(e){
+  var r = D.cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top, G = ledGeo();
+  var x = Math.floor((px - G.x0) / G.cell), y = Math.floor((py - G.y0) / G.cell);
+  if (x < 0 || x > 4 || y < 0 || y > 4) return null;
+  return { x:x, y:y, i:y*5 + x };
+}
+function ledsDown(e){
+  var p = ledAt(e); if (!p) return;
+  D.cv.setPointerCapture(e.pointerId);
+  if (D.quest){ questTap(p); return; }
+  ledsPlay(false);
+  var f = D.frames[D.cur]; D.paint = !f[p.i]; f[p.i] = D.paint; ledBlip(D.paint); D.lastI = p.i; ledsFrames(); ledsCode();
+}
+function ledsMove(e){
+  if (D.paint === null || D.quest) return;
+  var p = ledAt(e); if (!p || p.i === D.lastI) return;
+  D.lastI = p.i; var f = D.frames[D.cur];
+  if (f[p.i] !== D.paint){ f[p.i] = D.paint; ledBlip(D.paint); ledsFrames(); ledsCode(); }
+}
+function ledBlip(on){ var a = SFX.ctx && SFX.ctx(); if (!a) return; var o = a.createOscillator(), g = a.createGain(), t = a.currentTime;
+  o.type = "sine"; o.frequency.setValueAtTime(on ? 1200 : 700, t); g.gain.setValueAtTime(0.06, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + 0.06); }
+
+/* ---------- Frames strip ---------- */
+function ledsFrames(){
+  var box = el("led-frames"); if (!box) return;
+  box.innerHTML = "";
+  D.frames.forEach(function(f, i){
+    var c = document.createElement("canvas"); c.width = 56; c.height = 56; c.className = "frame-th" + (i === D.cur ? " on" : "");
+    var x = c.getContext("2d"); x.fillStyle = "#111827"; x.fillRect(0, 0, 56, 56);
+    for (var k = 0; k < 25; k++){ x.fillStyle = f[k] ? "#ff3b3b" : "#3f2a2a"; x.fillRect(6 + (k%5)*9.4, 6 + Math.floor(k/5)*9.4, 6, 6); }
+    c.title = "Frame " + (i + 1);
+    c.onclick = function(){ if (D.quest) return; ledsPlay(false); D.cur = i; ledsFrames(); };
+    var w = document.createElement("div"); w.className = "frame-w"; w.appendChild(c);
+    var n = document.createElement("span"); n.textContent = i + 1; w.appendChild(n);
+    box.appendChild(w);
+  });
+}
+
+/* ---------- Code generation ---------- */
+function ledRows(f, ind){ var s = ""; for (var y = 0; y < 5; y++){ var r = []; for (var x = 0; x < 5; x++) r.push(f[y*5 + x] ? "#" : "."); s += ind + r.join(" ") + "\n"; } return s; }
+function ledsJS(){
+  if (D.frames.length === 1) return "basic.showLeds(`\n" + ledRows(D.frames[0], "    ") + "    `)\n";
+  var s = "basic.forever(function () {\n";
+  D.frames.forEach(function(f){ s += "    basic.showLeds(`\n" + ledRows(f, "        ") + "        `)\n"; if (D.pause) s += "    basic.pause(" + D.pause + ")\n"; });
+  return s + "})\n";
+}
+function ledsPy(){
+  if (D.frames.length === 1) return 'basic.show_leds("""\n' + ledRows(D.frames[0], "    ") + '    """)\n';
+  var s = "def on_forever():\n";
+  D.frames.forEach(function(f){ s += '    basic.show_leds("""\n' + ledRows(f, "        ") + '        """)\n'; if (D.pause) s += "    basic.pause(" + D.pause + ")\n"; });
+  return s + "basic.forever(on_forever)\n";
+}
+function blockGrid(f){ var s = '<span class="bk-grid">'; for (var i = 0; i < 25; i++) s += '<i class="'+(f[i]?"on":"")+'"></i>'; return s + '</span>'; }
+function ledsBlocks(){
+  var inner = D.frames.map(function(f){
+    return '<div class="bk">show leds '+blockGrid(f)+'</div>' + (D.frames.length > 1 && D.pause ? '<div class="bk">pause (ms) <span class="bk-n">'+D.pause+'</span></div>' : '');
+  }).join("");
+  return '<div class="bk-hat">'+(D.frames.length > 1 ? "forever" : "on start")+'</div><div class="bk-body">'+inner+'</div><div class="bk-foot"></div>';
+}
+function ledsCode(){
+  var box = el("led-code"); if (!box) return;
+  document.querySelectorAll("[data-code]").forEach(function(b){ b.className = b.getAttribute("data-code") === D.code ? "on" : ""; });
+  if (D.code === "blocks") box.innerHTML = '<div class="bk-wrap">' + ledsBlocks() + '</div>';
+  else { var pre = document.createElement("pre"); pre.textContent = D.code === "js" ? ledsJS() : ledsPy(); box.innerHTML = ""; box.appendChild(pre); }
+}
+function ledsCopy(){
+  var txt = D.code === "py" ? ledsPy() : ledsJS();
+  function done(){
+    var b = el("ld-copy"); if (b){ b.textContent = "✅ Copied!"; setTimeout(function(){ if (el("ld-copy")) el("ld-copy").textContent = "📋 Copy code"; }, 1800); }
+    if (!D.copiedOnce){ D.copiedOnce = true; ledsSave(); award(1, "Code ready for your micro:bit!"); }
+  }
+  function fallback(){ var t = document.createElement("textarea"); t.value = txt; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); } catch(e){} t.remove(); done(); }
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, fallback); else fallback();
+}
+
+/* ---------- Coordinate Quest: find the LED at x, y ---------- */
+function questStart(){
+  ledsPlay(false);
+  D.quest = { round:0, right:0, grid:blankFrame(), target:null, msg:"", flash:0 };
+  questNext(); el("ld-quest").textContent = "✖ End quest";
+}
+function questNext(){
+  var q = D.quest; q.round++; q.grid = blankFrame();
+  var t; do { t = { x:Math.floor(Math.random()*5), y:Math.floor(Math.random()*5) }; } while (q.target && t.x === q.target.x && t.y === q.target.y);
+  q.target = t; q.msg = ""; questUi();
+}
+function questTap(p){
+  var q = D.quest;
+  if (p.x === q.target.x && p.y === q.target.y){
+    q.grid = blankFrame(); q.grid[p.i] = true; q.right++; q.flash = 0.6; SFX.star();
+    q.msg = "✅ Yes! x=" + p.x + ", y=" + p.y;
+    if (q.round >= 5){ setTimeout(function(){ questEnd(true); }, 700); }
+    else setTimeout(function(){ if (D.quest === q) questNext(); }, 800);
+  } else {
+    SFX.miss(); q.grid = blankFrame(); q.grid[p.i] = true;
+    q.msg = "That one is x=" + p.x + ", y=" + p.y + ". Remember: x counts ACROSS → and y counts DOWN ↓, both starting at 0.";
+  }
+  questUi();
+}
+function questEnd(won){
+  var q = D.quest; D.quest = null;
+  var b = el("ld-quest"); if (b) b.textContent = "🎯 Coordinate Quest";
+  var box = el("led-quest");
+  if (won && box){
+    box.innerHTML = '<div class="success-box">🏆 Quest complete! You found all 5 LEDs. In MakeCode, <b>plot x y</b> uses these same numbers.</div>';
+    SFX.fanfare(); if (!D.questDone){ D.questDone = true; ledsSave(); award(2, "Coordinate master!"); }
+  } else if (box) box.innerHTML = "";
+}
+function questUi(){
+  var box = el("led-quest"); if (!box) return;
+  if (!D.quest){ return; }
+  var q = D.quest;
+  box.innerHTML = '<div class="mission"><div class="m-t">🎯 Round '+Math.min(q.round,5)+' of 5</div>Tap the LED at <b style="font-size:1.1rem">x = '+q.target.x+', y = '+q.target.y+'</b>'
+    + (q.msg ? '<div style="margin-top:6px">'+q.msg+'</div>' : '') + '</div>';
+}
+
+/* ---------- Loop + drawing the micro:bit ---------- */
+function ledsLoop(now){
+  if (!D.cv || !document.body.contains(D.cv)){ D.raf = 0; return; }
+  var dt = Math.min(0.05, (now - D.last) / 1000); D.last = now; D.t += dt;
+  if (D.playing){
+    D.playT += dt * 1000;
+    var frameMs = 400 + D.pause;          // MakeCode's show leds waits 400 ms, then the pause
+    if (D.playT >= frameMs){ D.playT = 0; D.playIdx = (D.playIdx + 1) % D.frames.length; }
+  }
+  if (D.quest && D.quest.flash > 0) D.quest.flash -= dt;
+  ledsDraw();
+  D.raf = requestAnimationFrame(ledsLoop);
+}
+function ledsDraw(){
+  var c = D.cx, w = D.w, h = D.h, G = ledGeo(), f = frameOnScreen();
+  c.clearRect(0, 0, w, h);
+  // board
+  var bh = h * 0.80;
+  rr(c, 2, 2, w - 4, bh, 22); c.fillStyle = "#1f2937"; c.fill();
+  // edge connector (gold)
+  c.fillStyle = "#1f2937"; c.fillRect(2, bh - 30, w - 4, h - bh + 26);
+  rr(c, 2, h - 40, w - 4, 38, 6); c.fillStyle = "#1f2937"; c.fill();
+  var pads = [["0",0.12],["1",0.33],["2",0.54],["3V",0.73],["GND",0.90]];
+  for (var t = 0; t < 40; t++){ c.fillStyle = "#c9a227"; c.fillRect(8 + t * ((w - 16) / 40), h - 14, (w - 16) / 40 - 2, 12); }
+  pads.forEach(function(p){
+    var px = w * p[1], pw = w * 0.11;
+    c.fillStyle = "#e0b73a"; rr(c, px - pw/2, h - 44, pw, 40, 6); c.fill();
+    c.fillStyle = "#1f2937"; c.beginPath(); c.arc(px, h - 30, pw * 0.22, 0, 6.28); c.fill();
+    c.fillStyle = "#fff"; c.font = "700 " + Math.round(w*0.03) + "px Arial"; c.textAlign = "center"; c.fillText(p[0], px, h - 50);
+  });
+  // logo (V2 touch logo)
+  var lx = w/2, ly = h * 0.08;
+  c.strokeStyle = "#e0b73a"; c.lineWidth = 3; c.beginPath(); c.ellipse(lx, ly, w*0.05, w*0.03, 0, 0, 6.28); c.stroke();
+  c.fillStyle = "#e0b73a"; c.beginPath(); c.arc(lx - w*0.022, ly, 3, 0, 6.28); c.arc(lx + w*0.022, ly, 3, 0, 6.28); c.fill();
+  // buttons A and B
+  [["A", w*0.13], ["B", w*0.87]].forEach(function(b){
+    var by = G.y0 + G.cell * 2.5, r = w * 0.06;
+    c.fillStyle = "#9ca3af"; rr(c, b[1] - r*1.3, by - r*1.3, r*2.6, r*2.6, 6); c.fill();
+    c.fillStyle = "#111827"; c.beginPath(); c.arc(b[1], by, r, 0, 6.28); c.fill();
+    c.fillStyle = "#fff"; c.font = "800 " + Math.round(w*0.045) + "px Arial"; c.textAlign = "center"; c.fillText(b[0], b[1], by - r*1.6);
+  });
+  // LEDs
+  for (var i = 0; i < 25; i++){
+    var x = i % 5, y = Math.floor(i / 5);
+    var cx = G.x0 + (x + 0.5) * G.cell, cy = G.y0 + (y + 0.5) * G.cell, lw = G.cell * 0.26, lh = G.cell * 0.46;
+    if (f[i]){
+      var gl = c.createRadialGradient(cx, cy, 2, cx, cy, G.cell * 0.75);
+      gl.addColorStop(0, "rgba(255,60,60,.75)"); gl.addColorStop(1, "rgba(255,60,60,0)");
+      c.fillStyle = gl; c.beginPath(); c.arc(cx, cy, G.cell * 0.75, 0, 6.28); c.fill();
+    }
+    c.fillStyle = f[i] ? "#ff4040" : "#4b3535"; rr(c, cx - lw/2, cy - lh/2, lw, lh, 2); c.fill();
+    if (f[i]){ c.fillStyle = "rgba(255,230,230,.9)"; c.fillRect(cx - lw*0.2, cy - lh*0.35, lw*0.4, lh*0.7); }
+  }
+  // target ring in the quest (only flashes after a correct answer)
+  if (D.quest && D.quest.flash > 0){
+    var tx = G.x0 + (D.quest.target.x + 0.5) * G.cell, ty = G.y0 + (D.quest.target.y + 0.5) * G.cell;
+    c.strokeStyle = "rgba(250,204,21," + D.quest.flash + ")"; c.lineWidth = 3; c.beginPath(); c.arc(tx, ty, G.cell * 0.5, 0, 6.28); c.stroke();
+  }
+  // x,y labels
+  if (D.coords || D.quest){
+    c.fillStyle = "#93c5fd"; c.font = "800 " + Math.round(G.cell * 0.32) + "px Arial"; c.textAlign = "center"; c.textBaseline = "middle";
+    for (var k = 0; k < 5; k++){
+      c.fillText(k, G.x0 + (k + 0.5) * G.cell, G.y0 - G.cell * 0.35);
+      c.fillText(k, G.x0 - G.cell * 0.35, G.y0 + (k + 0.5) * G.cell);
+    }
+    c.fillStyle = "#fde68a"; c.font = "800 " + Math.round(G.cell * 0.28) + "px Arial";
+    c.fillText("x →", G.x0 + G.cell * 5 + G.cell * 0.45, G.y0 - G.cell * 0.35);
+    c.fillText("y ↓", G.x0 - G.cell * 0.35, G.y0 + G.cell * 5 + G.cell * 0.35);
+    c.textBaseline = "alphabetic";
+  }
+  if (D.playing){ c.fillStyle = "#86efac"; c.font = "800 " + Math.round(w*0.035) + "px Arial"; c.textAlign = "left"; c.fillText("▶ frame " + (D.playIdx + 1) + "/" + D.frames.length, 14, 24); }
+}
+
 /* ================= ROUTER ================= */
 function render(){
   renderTabs();
@@ -1450,10 +1786,12 @@ function render(){
   else if (S.tab==="coder") renderCoder();
   else if (S.tab==="lab") renderLab();
   else if (S.tab==="game") renderGame();
+  else if (S.tab==="leds") renderLeds();
 }
 load();
 if (location.hash === "#game") S.tab = "game";
 if (location.hash === "#lab") S.tab = "lab";
+if (location.hash === "#leds") S.tab = "leds";
 render();
 </script>
 </body>
