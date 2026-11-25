@@ -127,6 +127,26 @@
 .dev-banner a { color: #fff; text-decoration: underline; }
 .dev-banner .close-x { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; color: #fff; font-size: 1rem; cursor: pointer; padding: 2px 6px; }
 
+  /* Circuit Lab v2 */
+  .lv-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 10px; scrollbar-width: thin; }
+  .lv-chip { flex: 0 0 auto; background: #eef2ff; color: #3730a3; font-weight: 800; font-size: .74rem; border-radius: 999px; padding: 7px 12px; border: 2px solid transparent; }
+  .lv-chip.on { background: #ff8c00; color: #fff; }
+  .mission { background: #fff7ed; border: 2px solid #fed7aa; border-radius: 18px; padding: 12px 14px; font-size: .86rem; font-weight: 600; color: #374151; margin-bottom: 10px; }
+  .mission .m-t { font-weight: 900; color: #c2410c; margin-bottom: 4px; font-size: .95rem; }
+  .m-hint { margin-top: 8px; background: #fde68a; color: #92400e; font-weight: 800; font-size: .76rem; border-radius: 999px; padding: 5px 12px; }
+  .m-hint-txt { margin-top: 8px; background: #fffbeb; border-radius: 12px; padding: 8px 10px; font-size: .8rem; }
+  .lab-tools { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .lab-tools .tool { background: #e0f2fe; color: #075985; font-weight: 800; font-size: .78rem; border-radius: 12px; padding: 8px 12px; }
+  .lab-tools .tool:disabled { opacity: .4; }
+  #lab-board { position: relative; border: 4px solid #7dd3fc; border-radius: 22px; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .lab-status { min-height: 0; font-size: .82rem; font-weight: 700; border-radius: 14px; margin-top: 8px; }
+  .lab-status.warn { background: #fee2e2; color: #991b1b; padding: 10px 12px; border: 2px solid #fca5a5; }
+  .lab-status.info { background: #ecfeff; color: #155e75; padding: 10px 12px; }
+  .palette { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; margin: 10px 0; }
+  .pal-btn { background: #fff; border: 2px solid #e5e7eb; border-radius: 14px; padding: 8px 6px; font-weight: 800; font-size: .74rem; color: #334155; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 0 2px 6px rgba(0,0,0,.06); }
+  .pal-btn .pe { font-size: 1.4rem; } .pal-btn .pc { color: #ea580c; font-size: .7rem; }
+  .pal-btn:disabled { opacity: .35; }
+  .pal-btn:active { transform: scale(.95); }
 </style>
 </head>
 <body>
@@ -527,28 +547,581 @@ async function runProgram(){
   render();
 }
 
-/* ================= CIRCUIT ================= */
+/* ================= CIRCUIT LAB (v2: build-your-own circuits + real simulation) ================= */
+/* Parts are tiles on a grid. Each tile has two metal studs (terminals). Kids join studs with
+   crocodile-clip wires. Every frame we solve the circuit with nodal analysis (Ohm's law for every
+   node), then draw glowing bulbs, buzzing buzzers, spinning fans and moving electrons. */
+
+var PARTS = {
+  battery:  { name:"Battery",      emoji:"🔋", R:0.5, V:3 },
+  bulb:     { name:"Bulb",         emoji:"💡", R:6 },
+  "switch": { name:"Switch",       emoji:"🎚️" },
+  button:   { name:"Push button",  emoji:"🔘" },
+  buzzer:   { name:"Buzzer",       emoji:"🔔", R:20 },
+  motor:    { name:"Motor + fan",  emoji:"🌀", R:8 },
+  led:      { name:"LED",          emoji:"🔴", R:10, Vf:1.8 },
+  resistor: { name:"Resistor",     emoji:"🟫", R:100 },
+  sensor:   { name:"Night sensor", emoji:"🌙" }
+};
+var PART_ORDER = ["battery","bulb","switch","button","buzzer","motor","led","resistor","sensor"];
+
+var LEVELS = [
+  { title:"Light it up!", parts:{battery:1, bulb:1},
+    goal:"Make the bulb glow. Join the battery and the bulb with wires to make a loop.",
+    hint:"Drag from a metal dot on the battery to a metal dot on the bulb. You need TWO wires — one from each end of the battery.",
+    check:function(){ var r = labResults(); return countWhere(r, "bulb", function(x){ return x.bright > 0.15; }) >= 1; },
+    why:"Electricity needs a complete LOOP: out of the battery, through the bulb, and back again. Break the loop anywhere and the bulb goes out.",
+    real:"Battery tile + bulb tile + 2 crocodile clips." },
+  { title:"Add a switch", parts:{battery:1, bulb:1, "switch":1},
+    goal:"Build a circuit where the switch turns the bulb ON and OFF. Tap the switch to flip it.",
+    hint:"Put the switch IN the loop: battery → switch → bulb → back to battery.",
+    check:function(){ var on = labResults({sw:true}), off = labResults({sw:false});
+      return countWhere(on, "bulb", lit) >= 1 && countWhere(off, "bulb", lit) === 0 && anyOn("switch"); },
+    why:"A switch is a gap you can open and close. Closed = the loop is complete. Open = there's a gap, so nothing flows. Every light switch in your house works like this!",
+    real:"Battery + switch + bulb tiles, 3 clips." },
+  { title:"Doorbell", parts:{battery:1, button:1, buzzer:1},
+    goal:"Make a doorbell: the buzzer should sound ONLY while you hold the button down.",
+    hint:"Same loop as before, but with the button instead of a switch. Press and hold the button to test.",
+    check:function(){ var p = labResults({btn:true}), u = labResults({btn:false});
+      return countWhere(p, "buzzer", function(x){ return x.on; }) >= 1 && countWhere(u, "buzzer", function(x){ return x.on; }) === 0; },
+    why:"A push button only closes the loop while you press it. Let go and the spring pops it open again. Doorbells, keyboards and game controllers all use buttons like this.",
+    real:"Battery + push button + buzzer tiles." },
+  { title:"Two bulbs in a line", parts:{battery:1, bulb:2},
+    goal:"Light BOTH bulbs using one loop that goes through one bulb, then the other.",
+    hint:"battery → bulb 1 → bulb 2 → back to battery. Notice how bright they are!",
+    check:function(){ var r = labResults(); var b = r.filter(function(x){ return x.type === "bulb"; });
+      return b.length === 2 && b[0].bright > 0.12 && b[1].bright > 0.12 && b[0].bright < 0.5 && b[1].bright < 0.5; },
+    why:"This is a SERIES circuit. The bulbs share the battery's push, so each one gets less — they're both dim. And if one breaks, the other goes out too!",
+    real:"Battery + 2 bulb tiles in a row, 3 clips." },
+  { title:"Two bright bulbs", parts:{battery:1, bulb:2},
+    goal:"Now light both bulbs so they are BOTH bright.",
+    hint:"Give each bulb its own path to the battery: connect both bulbs to the same two battery ends, side by side.",
+    check:function(){ var r = labResults(); var b = r.filter(function(x){ return x.type === "bulb"; });
+      return b.length === 2 && b[0].bright > 0.6 && b[1].bright > 0.6 && !anyShort(r); },
+    why:"This is a PARALLEL circuit. Each bulb gets its own loop and the full push of the battery, so both are bright. Houses are wired in parallel — that's why one broken bulb doesn't switch off the whole house.",
+    real:"Battery + 2 bulbs, 4 clips: both bulbs clip to the same battery ends." },
+  { title:"Spin the fan", parts:{battery:1, "switch":1, motor:1},
+    goal:"Use the switch to turn the fan on and off.",
+    hint:"battery → switch → motor → battery. Then flip the switch.",
+    check:function(){ var on = labResults({sw:true}), off = labResults({sw:false});
+      return countWhere(on, "motor", function(x){ return x.speed > 0.5; }) >= 1 && countWhere(off, "motor", function(x){ return x.speed > 0.05; }) === 0 && anyOn("switch"); },
+    why:"A motor turns electricity into MOVEMENT. Robots use motors for wheels, arms and grippers — the same idea as this fan.",
+    real:"Battery + switch + motor tile." },
+  { title:"Careful with LEDs!", parts:{battery:1, led:1, resistor:1},
+    goal:"Light the LED without burning it out. LEDs only work one way round!",
+    hint:"The LED's + leg must face the battery's + side. Put the resistor in the loop too — it protects the LED from too much electricity. Tap ↻ to turn a part around.",
+    check:function(){ var r = labResults(); return countWhere(r, "led", function(x){ return x.on && !x.burnt; }) >= 1; },
+    why:"An LED is like a one-way door for electricity, and it's delicate. A resistor slows the electricity down so the LED gets just enough. Without one — POP!",
+    real:"Battery + resistor + LED tiles. Check the LED's long leg goes to +." },
+  { title:"Street light", parts:{battery:1, sensor:1, bulb:1},
+    goal:"Make a light that turns on by itself when it gets dark. Use ☀️/🌙 to test day and night.",
+    hint:"Put the night sensor in the loop like a switch. It lets electricity through only in the dark.",
+    check:function(){ var n = labResults({night:true}), d = labResults({night:false});
+      return countWhere(n, "bulb", lit) >= 1 && countWhere(d, "bulb", lit) === 0; },
+    why:"The sensor is the robot's EYE: it senses light and controls the circuit automatically. Real street lights switch on at night using a light sensor just like this!",
+    real:"Battery + light-sensor tile + bulb. Cover the sensor with your hand to make it 'night'." },
+  { title:"Alarm: light AND sound", parts:{battery:1, "switch":1, bulb:1, buzzer:1},
+    goal:"One switch should turn on BOTH the bulb and the buzzer.",
+    hint:"Try the switch next to the battery, then give the bulb and buzzer each their own path (parallel).",
+    check:function(){ var on = labResults({sw:true}), off = labResults({sw:false});
+      return countWhere(on, "bulb", lit) >= 1 && countWhere(on, "buzzer", function(x){ return x.on; }) >= 1
+        && countWhere(off, "bulb", lit) === 0 && countWhere(off, "buzzer", function(x){ return x.on; }) === 0 && !anyShort(on); },
+    why:"You built a real alarm! One switch controls two outputs. Engineers combine series and parallel parts like this in every machine.",
+    real:"Battery + switch + bulb + buzzer, 5–6 clips." },
+  { title:"Free build", parts:null,
+    goal:"Build anything you like with every part! Try 2 batteries, 3 bulbs, or invent your own gadget.",
+    hint:"Ideas: a fan that only spins at night • two batteries in a line (super bright!) • a doorbell with a light.",
+    check:null, why:"", real:"" }
+];
+
+var L = { level:0, comps:[], wires:[], sel:null, drag:null, pending:null, night:false, nextId:1,
+          cv:null, cx:null, w:0, h:0, cell:60, cols:6, rows:4, raf:0, last:0, t:0,
+          res:[], smoke:[], okTime:0, solved:false, done:{}, statusKey:"", buzz:null, shortWarned:false };
+var WIRE_COLORS = ["#ef4444","#111827","#f59e0b","#22c55e","#3b82f6","#a855f7"];
+
+function labLoad(){ try { var d = JSON.parse(localStorage.getItem("miniMakersCircuits")); if (d){ L.done = d.done || {}; L.level = Math.min(d.level || 0, LEVELS.length - 1); } } catch(e){} }
+function labSave(){ try { localStorage.setItem("miniMakersCircuits", JSON.stringify({ done:L.done, level:L.level })); } catch(e){} }
+labLoad();
+
+/* ---------- Circuit solver (Modified nodal analysis, all parts as conductance + current source) ---------- */
+function solveCircuit(comps, wires, over){
+  over = over || {};
+  var n = comps.length * 2, idx = {};
+  comps.forEach(function(c, i){ idx[c.id] = i; });
+  var night = over.night !== undefined ? over.night : L.night;
+  var ledOn = comps.map(function(c){ return c.type === "led" ? (c.ledOn !== false) : false; });
+  var out = [];
+  for (var iter = 0; iter < 6; iter++){
+    var els = [];   // {p, q, G, S, ci}   current p->q through element = G*(Vp-Vq) + S
+    comps.forEach(function(c, i){
+      var p = i*2, q = i*2 + 1, P = PARTS[c.type];
+      if (c.type === "battery") els.push({ p:p, q:q, G:1/P.R, S:P.V/P.R, ci:i });              // term0 = −, term1 = +
+      else if (c.type === "switch"){ var on = over.sw !== undefined ? over.sw : c.on; if (on) els.push({ p:p, q:q, G:20, S:0, ci:i }); }
+      else if (c.type === "button"){ var pr = over.btn !== undefined ? over.btn : c.pressed; if (pr) els.push({ p:p, q:q, G:20, S:0, ci:i }); }
+      else if (c.type === "sensor"){ if (night) els.push({ p:p, q:q, G:1/3, S:0, ci:i }); }
+      else if (c.type === "led"){ if (!c.burnt && ledOn[i]) els.push({ p:q, q:p, G:1/P.R, S:-P.Vf/P.R, ci:i }); } // term1 = + (anode)
+      else els.push({ p:p, q:q, G:1/P.R, S:0, ci:i });
+    });
+    wires.forEach(function(w){
+      if (idx[w.a.c] === undefined || idx[w.b.c] === undefined) return;
+      els.push({ p:idx[w.a.c]*2 + w.a.t, q:idx[w.b.c]*2 + w.b.t, G:100, S:0, wire:w });
+    });
+    // build matrix
+    var A = [], b = [];
+    for (var r = 0; r < n; r++){ A.push(new Array(n).fill(0)); A[r][r] = 1e-9; b.push(0); }
+    els.forEach(function(e){
+      A[e.p][e.p] += e.G; A[e.q][e.q] += e.G; A[e.p][e.q] -= e.G; A[e.q][e.p] -= e.G;
+      b[e.p] -= e.S; b[e.q] += e.S;
+    });
+    var V = gauss(A, b);
+    // currents
+    var cur = comps.map(function(){ return 0; });
+    els.forEach(function(e){
+      e.I = e.G * (V[e.p] - V[e.q]) + e.S;
+      if (e.ci !== undefined) cur[e.ci] = (comps[e.ci].type === "led") ? -e.I : e.I;  // store as term0 -> term1
+      if (e.wire) e.wire._I = e.I;
+    });
+    // check LED guesses
+    var changed = false;
+    comps.forEach(function(c, i){
+      if (c.type !== "led" || c.burnt) return;
+      if (ledOn[i] && -cur[i] < 0){ ledOn[i] = false; changed = true; }
+      else if (!ledOn[i] && (V[i*2+1] - V[i*2]) > PARTS.led.Vf){ ledOn[i] = true; changed = true; }
+    });
+    if (!changed || iter === 5){
+      out = comps.map(function(c, i){
+        var I = cur[i], a = Math.abs(I), o = { type:c.type, I:I, bright:0, on:false, speed:0, burnt:!!c.burnt, short:false, ledOn:ledOn[i] };
+        if (c.type === "bulb"){ o.bright = (I*I*PARTS.bulb.R) / 1.28; o.on = o.bright > 0.15; }
+        if (c.type === "buzzer") o.on = a > 0.03;
+        if (c.type === "motor") o.speed = a / 0.35;
+        if (c.type === "led"){ var li = -I; o.on = li > 0.003; o.bright = Math.min(1, li / 0.015); o.ledI = li; }
+        if (c.type === "battery") o.short = a > 2.5;
+        return o;
+      });
+      out.wireI = wires.map(function(w){ return w._I || 0; });
+      return out;
+    }
+  }
+  return out;
+}
+function gauss(A, b){
+  var n = b.length;
+  for (var c = 0; c < n; c++){
+    var mx = c; for (var r = c+1; r < n; r++) if (Math.abs(A[r][c]) > Math.abs(A[mx][c])) mx = r;
+    var t = A[c]; A[c] = A[mx]; A[mx] = t; var tb = b[c]; b[c] = b[mx]; b[mx] = tb;
+    var piv = A[c][c]; if (Math.abs(piv) < 1e-15) continue;
+    for (var r2 = c+1; r2 < n; r2++){
+      var f = A[r2][c] / piv; if (!f) continue;
+      for (var k = c; k < n; k++) A[r2][k] -= f * A[c][k];
+      b[r2] -= f * b[c];
+    }
+  }
+  var x = new Array(n).fill(0);
+  for (var i = n-1; i >= 0; i--){
+    var s = b[i]; for (var j = i+1; j < n; j++) s -= A[i][j] * x[j];
+    x[i] = Math.abs(A[i][i]) < 1e-15 ? 0 : s / A[i][i];
+  }
+  return x;
+}
+function labResults(over){ return solveCircuit(L.comps, L.wires, over); }
+function lit(x){ return x.bright > 0.15; }
+function countWhere(r, type, fn){ var n = 0; r.forEach(function(x){ if (x.type === type && fn(x)) n++; }); return n; }
+function anyShort(r){ return r.some(function(x){ return x.short; }); }
+function anyOn(type){ return L.comps.some(function(c){ return c.type === type && c.on; }); }
+
+/* ---------- Page ---------- */
 function renderLab(){
-  var on = S.switchOn && S.wire;
+  var lv = LEVELS[L.level];
+  var chips = LEVELS.map(function(l, i){
+    return '<button class="lv-chip'+(i===L.level?" on":"")+'" data-lv="'+i+'">'+(L.done[i]?"✅ ":"")+(i+1)+'. '+l.title+'</button>';
+  }).join("");
   var html = '<div class="page"><h2 class="page-title">⚡ Circuit Lab</h2>'
-    + '<p class="page-sub">Build a circuit to light the bulb. Flip the switch and connect the wire!</p>'
-    + '<div class="circuit-panel"><div class="bulb'+(on?" on":"")+'">'+(on?"💡":"🔌")+'</div>'
-    + '<div class="wire-row"><span class="big">🔋</span>'
-    + '<svg width="180" height="40"><line x1="0" y1="20" x2="180" y2="20" stroke="'+(on?"#ff8c00":"#d1d5db")+'" stroke-width="5" stroke-linecap="round"/>'
-    + (on?'<circle r="5" fill="#ff8c00"><animate attributeName="cx" values="0;180" dur="1.5s" repeatCount="indefinite"/></circle>':"")+'</svg>'
-    + '<span class="big'+(on?"":" opacity:.5")+'">⚡</span></div>'
-    + '<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">'
-    + '<button class="toggle'+(S.switchOn?" on-amber":"")+'" id="sw">'+(S.switchOn?"🔌 Switch: ON":"🔌 Switch: OFF")+'</button>'
-    + '<button class="toggle'+(S.wire?" on-green":"")+'" id="wr">'+(S.wire?"🧵 Wire: Connected":"🧵 Wire: Loose")+'</button></div>'
-    + (on?'<div class="success-box">🎉 Circuit complete! Electricity flows in a LOOP and the bulb shines!</div>':"")
-    + '</div><div class="info-grid">'
-    + '<div class="info-card" style="background:#f0f9ff;border:2px solid #bae6fd"><h4 style="color:#0369a1;margin-bottom:6px">🔍 What\'s happening?</h4>Electrons flow from the battery\'s <b>−</b> side, through the wire, through the bulb (making it glow!), and back to <b>+</b>. It\'s a loop — break it anywhere and everything stops!</div>'
-    + '<div class="info-card" style="background:#fff3e0;border:2px solid #ffd9a0"><h4 style="color:#b45309;margin-bottom:6px">🤔 Think about it</h4>What happens if the wire is connected but the switch is OFF?<br><button class="btn-primary" id="try-exp" style="margin-top:10px">Try it!</button></div>'
-    + '</div></div>';
-  var app = el("app"); app.innerHTML = html;
-  el("sw").onclick = function(){ S.switchOn = !S.switchOn; render(); };
-  el("wr").onclick = function(){ S.wire = !S.wire; render(); };
-  var t = el("try-exp"); if (t) t.onclick = function(){ S.switchOn = false; S.wire = true; render(); award(1, "Great experimenting! 🔬"); };
+    + '<p class="page-sub">Build real circuits! Drag from one metal dot to another to clip on a wire. Tap a part to select it.</p>'
+    + '<div class="lv-row">'+chips+'</div>'
+    + '<div class="mission"><div class="m-t">'+(lv.check?"Mission "+(L.level+1)+": ":"")+lv.title+'</div><div>'+lv.goal+'</div>'
+    + '<button class="m-hint" id="lab-hint">💡 Hint</button><div id="lab-hint-txt" class="m-hint-txt" style="display:none">'+lv.hint+'</div></div>'
+    + '<div class="lab-tools">'
+    + '<button class="tool" id="lab-rot" disabled>↻ Turn</button><button class="tool" id="lab-del" disabled>🗑 Remove</button>'
+    + '<button class="tool" id="lab-night">'+(L.night?"🌙 Night":"☀️ Day")+'</button>'
+    + '<button class="tool" id="lab-mute">'+(G.muted?"🔇":"🔊")+'</button>'
+    + '<button class="tool" id="lab-clear">🧹 Clear</button></div>'
+    + '<div id="lab-board"><canvas id="lab-canvas" style="display:block;width:100%;height:100%"></canvas></div>'
+    + '<div id="lab-status" class="lab-status"></div>'
+    + '<div class="palette" id="lab-pal"></div>'
+    + '<div id="lab-win"></div>'
+    + '<p class="tiny-tip">Tip: you can also tap one metal dot, then tap another, to add a wire. Tap a wire to select it and remove it.</p></div>';
+  el("app").innerHTML = html;
+  L.cv = el("lab-canvas"); L.cx = L.cv.getContext("2d");
+  labSize();
+  document.querySelectorAll(".lv-chip").forEach(function(b){ b.onclick = function(){ labSetLevel(+b.getAttribute("data-lv")); }; });
+  el("lab-hint").onclick = function(){ var t = el("lab-hint-txt"); t.style.display = t.style.display === "none" ? "block" : "none"; };
+  el("lab-rot").onclick = function(){ if (L.sel && L.sel.kind === "comp"){ L.sel.c.rot = (L.sel.c.rot + 1) % 4; labClick(); } };
+  el("lab-del").onclick = labDelete;
+  el("lab-night").onclick = function(){ L.night = !L.night; this.textContent = L.night ? "🌙 Night" : "☀️ Day"; };
+  el("lab-mute").onclick = function(){ G.muted = !G.muted; this.textContent = G.muted ? "🔇" : "🔊"; };
+  el("lab-clear").onclick = function(){ L.comps = []; L.wires = []; L.sel = null; L.pending = null; labUi(); };
+  var cv = L.cv;
+  cv.addEventListener("pointerdown", labDown);
+  cv.addEventListener("pointermove", labMove);
+  cv.addEventListener("pointerup", labUp);
+  cv.addEventListener("pointercancel", labUp);
+  labUi();
+  if (L.solved) labShowWin();
+  if (!L.raf){ L.last = performance.now(); L.raf = requestAnimationFrame(labLoop); }
+}
+
+function labSetLevel(i){
+  L.level = i; L.comps = []; L.wires = []; L.sel = null; L.pending = null; L.solved = false; L.okTime = 0;
+  L.night = false; L.shortWarned = false; labSave(); render();
+  setTimeout(function(){ var b = el("lab-board"); if (b && b.scrollIntoView) b.scrollIntoView({ block:"nearest", behavior:"smooth" }); }, 50);
+}
+
+function labSize(){
+  if (!L.cv) return;
+  var r = L.cv.parentNode.getBoundingClientRect();
+  L.cols = r.width < 520 ? 5 : 7;
+  L.cell = r.width / L.cols;
+  L.rows = r.width < 520 ? 5 : 4;
+  var h = L.cell * L.rows;
+  L.cv.parentNode.style.height = h + "px";
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  L.w = r.width; L.h = h; L.cv.width = Math.round(r.width*dpr); L.cv.height = Math.round(h*dpr);
+  L.cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  // keep parts on the board if the size changed
+  L.comps.forEach(function(c){ c.col = Math.min(c.col, L.cols-1); c.row = Math.min(c.row, L.rows-1); });
+}
+window.addEventListener("resize", function(){ if (S.tab === "lab") labSize(); });
+
+function used(type){ return L.comps.filter(function(c){ return c.type === type; }).length; }
+function allowed(type){ var p = LEVELS[L.level].parts; return p ? (p[type] || 0) : 6; }
+
+function labUi(){
+  var pal = el("lab-pal"); if (!pal) return;
+  pal.innerHTML = "";
+  PART_ORDER.forEach(function(t){
+    var max = allowed(t); if (!max) return;
+    var left = max - used(t);
+    var b = document.createElement("button"); b.className = "pal-btn"; b.disabled = left <= 0;
+    b.innerHTML = '<span class="pe">'+PARTS[t].emoji+'</span><span>'+PARTS[t].name+'</span>'+(LEVELS[L.level].parts?'<span class="pc">×'+left+'</span>':'');
+    b.onclick = function(){ labAdd(t); };
+    pal.appendChild(b);
+  });
+  var hasSel = !!L.sel;
+  el("lab-rot").disabled = !(hasSel && L.sel.kind === "comp");
+  el("lab-del").disabled = !hasSel;
+}
+
+function cellFree(col, row, except){ return !L.comps.some(function(c){ return c !== except && c.col === col && c.row === row; }); }
+function labAdd(type){
+  if (used(type) >= allowed(type)) return;
+  for (var r = 0; r < L.rows; r++) for (var c = 0; c < L.cols; c++){
+    if (cellFree(c, r)){
+      var comp = { id:L.nextId++, type:type, col:c, row:r, rot:0, on:false, pressed:false, burnt:false, ang:0 };
+      L.comps.push(comp); L.sel = { kind:"comp", c:comp }; labUi(); labClick(); return;
+    }
+  }
+  labStatus("full", "The board is full! Remove a part first.");
+}
+function labDelete(){
+  if (!L.sel) return;
+  if (L.sel.kind === "comp"){
+    var id = L.sel.c.id;
+    L.comps = L.comps.filter(function(c){ return c.id !== id; });
+    L.wires = L.wires.filter(function(w){ return w.a.c !== id && w.b.c !== id; });
+  } else L.wires = L.wires.filter(function(w){ return w !== L.sel.w; });
+  L.sel = null; labUi();
+}
+
+/* ---------- Geometry ---------- */
+function compCenter(c){
+  if (L.drag && L.drag.kind === "comp" && L.drag.c === c && L.drag.moved) return { x:L.drag.x, y:L.drag.y };
+  return { x:(c.col + 0.5) * L.cell, y:(c.row + 0.5) * L.cell };
+}
+function termPos(c, t){
+  var ctr = compCenter(c), d = L.cell * 0.42, a = c.rot * Math.PI / 2, s = t === 0 ? -1 : 1;
+  return { x:ctr.x + Math.cos(a) * d * s, y:ctr.y + Math.sin(a) * d * s };
+}
+function findComp(id){ for (var i = 0; i < L.comps.length; i++) if (L.comps[i].id === id) return L.comps[i]; return null; }
+function wireCurve(w){
+  var A = termPos(findComp(w.a.c), w.a.t), B = termPos(findComp(w.b.c), w.b.t);
+  var d = Math.hypot(B.x - A.x, B.y - A.y);
+  return { A:A, B:B, C:{ x:(A.x + B.x)/2, y:(A.y + B.y)/2 + 14 + d * 0.18 } };
+}
+function qpt(q, t){ var u = 1 - t; return { x:u*u*q.A.x + 2*u*t*q.C.x + t*t*q.B.x, y:u*u*q.A.y + 2*u*t*q.C.y + t*t*q.B.y }; }
+function labPos(e){ var r = L.cv.getBoundingClientRect(); return { x:e.clientX - r.left, y:e.clientY - r.top }; }
+function hitTerm(p){
+  var best = null, bd = Math.max(16, L.cell * 0.22);
+  L.comps.forEach(function(c){ [0,1].forEach(function(t){ var q = termPos(c, t), d = Math.hypot(q.x - p.x, q.y - p.y); if (d < bd){ bd = d; best = { c:c.id, t:t }; } }); });
+  return best;
+}
+function hitComp(p){
+  for (var i = L.comps.length - 1; i >= 0; i--){ var ctr = compCenter(L.comps[i]); if (Math.abs(ctr.x - p.x) < L.cell*0.36 && Math.abs(ctr.y - p.y) < L.cell*0.36) return L.comps[i]; }
+  return null;
+}
+function hitWire(p){
+  for (var i = L.wires.length - 1; i >= 0; i--){
+    var q = wireCurve(L.wires[i]);
+    for (var k = 0; k <= 20; k++){ var pt = qpt(q, k/20); if (Math.hypot(pt.x - p.x, pt.y - p.y) < 10) return L.wires[i]; }
+  }
+  return null;
+}
+function sameTerm(a, b){ return a && b && a.c === b.c && a.t === b.t; }
+function addWire(a, b){
+  if (sameTerm(a, b)) return;
+  var dup = L.wires.some(function(w){ return (sameTerm(w.a, a) && sameTerm(w.b, b)) || (sameTerm(w.a, b) && sameTerm(w.b, a)); });
+  if (dup || L.wires.length >= 40) return;
+  L.wires.push({ a:a, b:b, color:WIRE_COLORS[L.wires.length % WIRE_COLORS.length] });
+  labClick(); L.sel = null; labUi();
+}
+
+/* ---------- Touch / mouse ---------- */
+function labDown(e){
+  var p = labPos(e); L.cv.setPointerCapture(e.pointerId);
+  var t = hitTerm(p);
+  if (t){ L.drag = { kind:"wire", from:t, x:p.x, y:p.y, sx:p.x, sy:p.y }; return; }
+  var c = hitComp(p);
+  if (c){
+    L.sel = { kind:"comp", c:c }; L.pending = null;
+    L.drag = { kind:"comp", c:c, x:p.x, y:p.y, sx:p.x, sy:p.y, moved:false };
+    if (c.type === "button"){ c.pressed = true; labClick(); }
+    labUi(); return;
+  }
+  var w = hitWire(p);
+  if (w){ L.sel = { kind:"wire", w:w }; L.pending = null; labUi(); return; }
+  L.sel = null; L.pending = null; labUi();
+}
+function labMove(e){
+  if (!L.drag) return;
+  var p = labPos(e); L.drag.x = p.x; L.drag.y = p.y;
+  if (L.drag.kind === "comp" && !L.drag.moved && Math.hypot(p.x - L.drag.sx, p.y - L.drag.sy) > 10){
+    L.drag.moved = true; L.drag.c.pressed = false;
+  }
+}
+function labUp(e){
+  var d = L.drag; L.drag = null; if (!d) return;
+  var p = labPos(e);
+  if (d.kind === "wire"){
+    var t2 = hitTerm(p);
+    var tapped = Math.hypot(p.x - d.sx, p.y - d.sy) < 8;
+    if (t2 && !sameTerm(t2, d.from)) { addWire(d.from, t2); L.pending = null; }
+    else if (tapped){
+      if (L.pending && !sameTerm(L.pending, d.from)){ addWire(L.pending, d.from); L.pending = null; }
+      else L.pending = sameTerm(L.pending, d.from) ? null : d.from;
+    }
+    return;
+  }
+  var c = d.c;
+  if (d.moved){
+    var col = Math.max(0, Math.min(L.cols - 1, Math.floor(p.x / L.cell)));
+    var row = Math.max(0, Math.min(L.rows - 1, Math.floor(p.y / L.cell)));
+    if (cellFree(col, row, c)){ c.col = col; c.row = row; }
+    labClick();
+  } else {
+    if (c.type === "switch"){ c.on = !c.on; labClick(); }
+    if (c.type === "led" && c.burnt){ c.burnt = false; labStatus("newled", "🔧 New LED fitted! This time add a resistor to protect it."); }
+  }
+  if (c.type === "button") c.pressed = false;
+}
+
+/* ---------- Sounds (made in code) ---------- */
+function labClick(){ var a = SFX.ctx && SFX.ctx(); if (!a) return; var o = a.createOscillator(), g = a.createGain(), t = a.currentTime;
+  o.type = "square"; o.frequency.setValueAtTime(1800, t); g.gain.setValueAtTime(0.05, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.03);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + 0.04); }
+function labBuzz(on){
+  if (on && !G.muted){
+    if (L.buzz) return;
+    var a = SFX.ctx && SFX.ctx(); if (!a) return;
+    var o = a.createOscillator(), lfo = a.createOscillator(), lg = a.createGain(), g = a.createGain();
+    o.type = "square"; o.frequency.value = 520; lfo.frequency.value = 30; lg.gain.value = 40;
+    lfo.connect(lg); lg.connect(o.frequency); g.gain.value = 0.05;
+    o.connect(g); g.connect(a.destination); o.start(); lfo.start();
+    L.buzz = { o:o, lfo:lfo };
+  } else if (L.buzz){ try { L.buzz.o.stop(); L.buzz.lfo.stop(); } catch(e){} L.buzz = null; }
+}
+
+function labStatus(key, msg){
+  var s = el("lab-status"); if (!s) return;
+  if (L.statusKey === key) return; L.statusKey = key;
+  s.innerHTML = msg || ""; s.className = "lab-status" + (key === "short" || key === "burnt" ? " warn" : (msg ? " info" : ""));
+}
+
+function labShowWin(){
+  var lv = LEVELS[L.level], box = el("lab-win"); if (!box) return;
+  var next = L.level < LEVELS.length - 1;
+  box.innerHTML = '<div class="success-box" style="text-align:left">🎉 Mission complete! <div style="font-weight:600;margin-top:6px">'+lv.why+'</div>'
+    + '<div style="font-weight:600;margin-top:8px;color:#0f766e">🧰 Build it for real: '+lv.real+'</div>'
+    + (next?'<button class="btn-primary" id="lab-next" style="margin-top:10px">Next mission →</button>':'')+'</div>';
+  var nb = el("lab-next"); if (nb) nb.onclick = function(){ labSetLevel(L.level + 1); };
+}
+
+/* ---------- Loop ---------- */
+function labLoop(now){
+  if (!L.cv || !document.body.contains(L.cv)){ L.raf = 0; labBuzz(false); return; }
+  var dt = Math.min(0.05, (now - L.last) / 1000); L.last = now; L.t += dt;
+  // simulate
+  var r = labResults(); L.res = r;
+  L.comps.forEach(function(c, i){
+    var x = r[i]; if (!x) return;
+    if (c.type === "led"){
+      c.ledOn = x.ledOn;
+      if (!c.burnt && x.ledI > 0.06){ c.burnt = true; SFX.brick(); labPuff(c, "#9ca3af", 18); labStatus("burnt", "💥 POP! The LED burnt out — too much electricity. Tap it to fit a new one, and add a resistor to protect it."); }
+    }
+    if (c.type === "motor") c.ang += x.speed * dt * 14 * (x.I >= 0 ? 1 : -1);
+    if (x.short && Math.random() < dt * 14) labPuff(c, "#6b7280", 1);
+  });
+  var shorted = anyShort(r);
+  if (shorted){ labStatus("short", "⚠️ SHORT CIRCUIT! The electricity is taking a shortcut straight back to the battery, so it's getting HOT. Remove the shortcut wire!"); if (!L.shortWarned){ L.shortWarned = true; SFX.miss(); } }
+  else { L.shortWarned = false; if (L.statusKey === "short") labStatus("", ""); }
+  labBuzz(r.some(function(x){ return x.type === "buzzer" && x.on; }));
+  // mission check (must stay true for a moment)
+  var lv = LEVELS[L.level];
+  if (lv.check && !L.solved){
+    if (lv.check()){ L.okTime += dt; if (L.okTime > 0.5){ L.solved = true;
+        if (!L.done[L.level]){ L.done[L.level] = true; labSave(); award(2, "Circuit mission complete!"); } else SFX.fanfare();
+        labShowWin(); var chip = document.querySelector('.lv-chip[data-lv="'+L.level+'"]'); if (chip && chip.textContent.indexOf("✅") < 0) chip.textContent = "✅ " + chip.textContent; } }
+    else L.okTime = 0;
+  }
+  // smoke particles
+  for (var k = L.smoke.length - 1; k >= 0; k--){ var s = L.smoke[k]; s.x += s.vx*dt; s.y += s.vy*dt; s.r += 10*dt; s.life -= dt*0.8; if (s.life <= 0) L.smoke.splice(k, 1); }
+  labDraw();
+  L.raf = requestAnimationFrame(labLoop);
+}
+function labPuff(c, color, n){
+  var ctr = compCenter(c);
+  for (var i = 0; i < n; i++) L.smoke.push({ x:ctr.x + (Math.random()-0.5)*20, y:ctr.y - 10, vx:(Math.random()-0.5)*30, vy:-30 - Math.random()*30, r:4 + Math.random()*4, life:1, color:color });
+}
+
+/* ---------- Drawing (every part is drawn from simple shapes) ---------- */
+function labDraw(){
+  var c = L.cx, w = L.w, h = L.h, cell = L.cell;
+  c.clearRect(0, 0, w, h);
+  c.fillStyle = L.night ? "#1e1b4b" : "#f8fafc"; c.fillRect(0, 0, w, h);
+  c.fillStyle = L.night ? "#3730a3" : "#cbd5e1";
+  for (var gx = 0; gx <= L.cols; gx++) for (var gy = 0; gy <= L.rows; gy++){ c.beginPath(); c.arc(gx*cell, gy*cell, 1.5, 0, 6.28); c.fill(); }
+  if (L.night){ c.fillStyle = "#fef9c3"; c.beginPath(); c.arc(w - 26, 24, 11, 0, 6.28); c.fill(); c.fillStyle = "#1e1b4b"; c.beginPath(); c.arc(w - 21, 20, 10, 0, 6.28); c.fill(); }
+
+  L.comps.forEach(function(comp, i){ drawPart(c, comp, L.res[i] || {}); });
+
+  // wires (on top so the crocodile clips sit on the studs)
+  L.wires.forEach(function(wire, i){
+    var q = wireCurve(wire), sel = L.sel && L.sel.kind === "wire" && L.sel.w === wire;
+    c.lineCap = "round";
+    if (sel){ c.strokeStyle = "rgba(59,130,246,.35)"; c.lineWidth = 11; c.beginPath(); c.moveTo(q.A.x, q.A.y); c.quadraticCurveTo(q.C.x, q.C.y, q.B.x, q.B.y); c.stroke(); }
+    c.strokeStyle = wire.color; c.lineWidth = 4.5; c.beginPath(); c.moveTo(q.A.x, q.A.y); c.quadraticCurveTo(q.C.x, q.C.y, q.B.x, q.B.y); c.stroke();
+    clip(c, q.A, q.C, wire.color); clip(c, q.B, q.C, wire.color);
+    var I = (L.res.wireI && L.res.wireI[i]) || 0;
+    if (Math.abs(I) > 0.002){
+      var len = Math.hypot(q.B.x - q.A.x, q.B.y - q.A.y) + 20, sp = Math.min(160, 25 + Math.abs(I) * 110);
+      var dir = I > 0 ? -1 : 1;   // electrons go the opposite way to conventional current
+      var gap = 16, off = ((L.t * sp * dir) % gap + gap) % gap;
+      c.fillStyle = "#fde047";
+      for (var s = off; s < len; s += gap){ var pt = qpt(q, s / len); c.beginPath(); c.arc(pt.x, pt.y, 2.4, 0, 6.28); c.fill(); }
+    }
+  });
+
+  // terminals highlight while wiring
+  if (L.pending){ var pc = findComp(L.pending.c); if (pc){ var pp = termPos(pc, L.pending.t); c.strokeStyle = "#3b82f6"; c.lineWidth = 3; c.beginPath(); c.arc(pp.x, pp.y, 11 + Math.sin(L.t*8)*2, 0, 6.28); c.stroke(); } }
+  if (L.drag && L.drag.kind === "wire"){
+    var fc = findComp(L.drag.from.c);
+    if (fc){ var fp = termPos(fc, L.drag.from.t); c.strokeStyle = "rgba(59,130,246,.8)"; c.lineWidth = 4; c.setLineDash([6,6]); c.beginPath(); c.moveTo(fp.x, fp.y); c.lineTo(L.drag.x, L.drag.y); c.stroke(); c.setLineDash([]); }
+  }
+  L.smoke.forEach(function(s){ c.globalAlpha = Math.max(0, s.life * 0.6); c.fillStyle = s.color; c.beginPath(); c.arc(s.x, s.y, s.r, 0, 6.28); c.fill(); });
+  c.globalAlpha = 1;
+  if (!L.comps.length){
+    c.fillStyle = L.night ? "#a5b4fc" : "#94a3b8"; c.textAlign = "center"; c.font = "700 14px Poppins, Arial, sans-serif";
+    c.fillText("Tap a part below to put it on the board 👇", w/2, h/2);
+  }
+}
+function clip(c, P, toward, color){
+  var a = Math.atan2(toward.y - P.y, toward.x - P.x);
+  c.save(); c.translate(P.x, P.y); c.rotate(a);
+  c.fillStyle = color; rr(c, 2, -5, 16, 10, 3); c.fill();
+  c.fillStyle = "#cbd5e1"; c.beginPath(); c.moveTo(-3, -4); c.lineTo(5, -5); c.lineTo(5, 5); c.lineTo(-3, 4); c.closePath(); c.fill();
+  c.restore();
+}
+
+function drawPart(c, comp, r){
+  var ctr = compCenter(comp), s = L.cell * 0.74, h = s/2;
+  var sel = L.sel && L.sel.kind === "comp" && L.sel.c === comp;
+  c.save(); c.translate(ctr.x, ctr.y);
+  // glow behind lit parts
+  if (comp.type === "bulb" && r.bright > 0.05){
+    var gr = s * (0.6 + Math.min(1.5, r.bright) * 0.9), gg = c.createRadialGradient(0, 0, 4, 0, 0, gr);
+    gg.addColorStop(0, "rgba(253,224,71," + Math.min(0.9, r.bright) + ")"); gg.addColorStop(1, "rgba(253,224,71,0)");
+    c.fillStyle = gg; c.beginPath(); c.arc(0, 0, gr, 0, 6.28); c.fill();
+  }
+  if (comp.type === "led" && r.on && !comp.burnt){
+    var lr = s * 0.9, lg = c.createRadialGradient(0, 0, 3, 0, 0, lr);
+    lg.addColorStop(0, "rgba(239,68,68," + (0.3 + r.bright*0.6) + ")"); lg.addColorStop(1, "rgba(239,68,68,0)");
+    c.fillStyle = lg; c.beginPath(); c.arc(0, 0, lr, 0, 6.28); c.fill();
+  }
+  c.rotate(comp.rot * Math.PI / 2);
+  // the tile (like a 3D-printed circuit tile)
+  if (sel){ c.strokeStyle = "#3b82f6"; c.lineWidth = 4; rr(c, -h - 4, -h - 4, s + 8, s + 8, 12); c.stroke(); }
+  c.fillStyle = r.short ? "#fecaca" : "#ffffff"; rr(c, -h, -h, s, s, 10); c.fill();
+  c.strokeStyle = "#cbd5e1"; c.lineWidth = 2; c.stroke();
+  // metal track + studs
+  c.strokeStyle = "#94a3b8"; c.lineWidth = 3;
+  c.beginPath(); c.moveTo(-L.cell*0.42, 0); c.lineTo(-h*0.55, 0); c.moveTo(h*0.55, 0); c.lineTo(L.cell*0.42, 0); c.stroke();
+  [-1, 1].forEach(function(sx){ c.fillStyle = "#64748b"; c.beginPath(); c.arc(sx * L.cell*0.42, 0, 6, 0, 6.28); c.fill(); c.fillStyle = "#e2e8f0"; c.beginPath(); c.arc(sx * L.cell*0.42 - 1.5, -1.5, 2, 0, 6.28); c.fill(); });
+  var u = s / 60;   // drawing unit, so parts scale with the board
+  c.scale(u, u);
+  switch (comp.type){
+    case "battery":
+      rr(c, -20, -11, 36, 22, 4); c.fillStyle = r.short ? "#dc2626" : "#1f2937"; c.fill();
+      c.fillStyle = "#f59e0b"; rr(c, 4, -11, 12, 22, 3); c.fill();
+      c.fillStyle = "#9ca3af"; c.fillRect(16, -5, 4, 10);
+      c.fillStyle = "#fff"; c.font = "900 13px Arial"; c.textAlign = "center"; c.textBaseline = "middle";
+      c.save(); c.rotate(-comp.rot * Math.PI/2); c.restore();
+      c.fillText("−", -12, 0); c.fillStyle = "#1f2937"; c.fillText("+", 10, 0);
+      break;
+    case "bulb":
+      c.strokeStyle = "#475569"; c.lineWidth = 2;
+      c.fillStyle = r.bright > 0.05 ? "rgba(253,224,71," + (0.35 + Math.min(1, r.bright)*0.65) + ")" : "rgba(226,232,240,.8)";
+      c.beginPath(); c.arc(0, -4, 14, 0, 6.28); c.fill(); c.stroke();
+      c.fillStyle = "#94a3b8"; c.fillRect(-7, 9, 14, 8);
+      c.strokeStyle = r.bright > 0.05 ? "#ea580c" : "#64748b"; c.beginPath(); c.moveTo(-5, 9); c.lineTo(-4, -4); c.lineTo(-1, -8); c.lineTo(1, -2); c.lineTo(4, -8); c.lineTo(5, 9); c.stroke();
+      break;
+    case "switch":
+      c.fillStyle = "#475569"; c.beginPath(); c.arc(-14, 0, 4, 0, 6.28); c.arc(14, 0, 4, 0, 6.28); c.fill();
+      c.strokeStyle = comp.on ? "#16a34a" : "#dc2626"; c.lineWidth = 4; c.lineCap = "round";
+      c.beginPath(); c.moveTo(-14, 0); c.lineTo(comp.on ? 14 : 8, comp.on ? 0 : -16); c.stroke();
+      c.fillStyle = comp.on ? "#16a34a" : "#dc2626"; c.font = "800 9px Arial"; c.textAlign = "center"; c.fillText(comp.on ? "ON" : "OFF", 0, 18);
+      break;
+    case "button":
+      c.fillStyle = "#334155"; rr(c, -14, -2, 28, 12, 3); c.fill();
+      c.fillStyle = comp.pressed ? "#b91c1c" : "#ef4444"; c.beginPath(); c.ellipse(0, comp.pressed ? 0 : -5, 10, 6, 0, 0, 6.28); c.fill();
+      if (!comp.pressed){ c.fillStyle = "#b91c1c"; c.fillRect(-10, -5, 20, 5); c.fillStyle = "#ef4444"; c.beginPath(); c.ellipse(0, -8, 10, 6, 0, 0, 6.28); c.fill(); }
+      break;
+    case "buzzer":
+      c.fillStyle = "#111827"; c.beginPath(); c.arc(0, 0, 13, 0, 6.28); c.fill();
+      c.fillStyle = "#374151"; c.beginPath(); c.arc(0, 0, 4, 0, 6.28); c.fill();
+      if (r.on){ c.strokeStyle = "#f59e0b"; c.lineWidth = 2; for (var k = 1; k <= 2; k++){ var rad = 14 + k*5 + (L.t*30 % 5); c.beginPath(); c.arc(0, 0, rad, -0.6, 0.6); c.stroke(); c.beginPath(); c.arc(0, 0, rad, Math.PI-0.6, Math.PI+0.6); c.stroke(); } }
+      break;
+    case "motor":
+      c.fillStyle = "#94a3b8"; c.beginPath(); c.arc(0, 0, 9, 0, 6.28); c.fill();
+      c.save(); c.rotate(comp.ang); c.fillStyle = "#3b82f6";
+      for (var b = 0; b < 3; b++){ c.rotate(Math.PI*2/3); c.beginPath(); c.ellipse(0, -12, 5, 11, 0, 0, 6.28); c.fill(); }
+      c.restore(); c.fillStyle = "#1e3a8a"; c.beginPath(); c.arc(0, 0, 3, 0, 6.28); c.fill();
+      break;
+    case "led":
+      c.strokeStyle = "#94a3b8"; c.lineWidth = 2; c.beginPath(); c.moveTo(-5, 6); c.lineTo(-5, 0); c.moveTo(5, 6); c.lineTo(5, 0); c.stroke();
+      c.fillStyle = comp.burnt ? "#6b7280" : (r.on ? "#ff1f1f" : "#991b1b");
+      c.beginPath(); c.arc(0, -6, 9, Math.PI, 0); c.lineTo(9, 4); c.lineTo(-9, 4); c.closePath(); c.fill();
+      if (comp.burnt){ c.strokeStyle = "#111"; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-4, -12); c.lineTo(0, -6); c.lineTo(-2, -2); c.lineTo(3, 2); c.stroke(); }
+      c.fillStyle = "#475569"; c.font = "900 11px Arial"; c.textAlign = "center"; c.fillText("+", 18, -8); c.fillText("−", -18, -8);
+      break;
+    case "resistor":
+      c.fillStyle = "#e7c9a0"; rr(c, -16, -7, 32, 14, 6); c.fill();
+      ["#a16207","#111827","#dc2626","#ca8a04"].forEach(function(col, k){ c.fillStyle = col; c.fillRect(-10 + k*6, -7, 3, 14); });
+      break;
+    case "sensor":
+      c.fillStyle = "#fde68a"; c.beginPath(); c.arc(0, 0, 13, 0, 6.28); c.fill();
+      c.strokeStyle = "#b45309"; c.lineWidth = 2; c.beginPath(); c.moveTo(-8, -4); c.lineTo(-4, 4); c.lineTo(0, -4); c.lineTo(4, 4); c.lineTo(8, -4); c.stroke();
+      c.fillStyle = L.night ? "#4338ca" : "#f59e0b"; c.font = "10px Arial"; c.textAlign = "center"; c.fillText(L.night ? "dark" : "light", 0, 22);
+      break;
+  }
+  c.restore();
 }
 
 /* ================= GAME (v2: canvas + code-drawn art + Web Audio) ================= */
@@ -587,6 +1160,7 @@ var SFX = (function(){
     s.connect(f); f.connect(g); g.connect(c.destination); s.start();
   }
   return {
+    ctx:     ac,
     star:    function(){ tone("sine", 880, 880, 0.12, 0.25); tone("sine", 1320, 1320, 0.18, 0.22, 0.07); },
     battery: function(){ tone("square", 300, 1200, 0.22, 0.08); tone("sine", 1200, 1200, 0.1, 0.12, 0.2); },
     brick:   function(){ noise(0.25, 0.6, 600); tone("sawtooth", 120, 50, 0.3, 0.15); },
@@ -854,6 +1428,7 @@ function render(){
 }
 load();
 if (location.hash === "#game") S.tab = "game";
+if (location.hash === "#lab") S.tab = "lab";
 render();
 </script>
 </body>
