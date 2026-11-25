@@ -550,67 +550,295 @@ function renderLab(){
   var t = el("try-exp"); if (t) t.onclick = function(){ S.switchOn = false; S.wire = true; render(); award(1, "Great experimenting! 🔬"); };
 }
 
-/* ================= GAME ================= */
-var G = { playing:false, score:0, lives:3, items:[], basket:50, tm1:null, tm2:null, _ten:false };
+/* ================= GAME (v2: canvas + code-drawn art + Web Audio) ================= */
+var G = { playing:false, score:0, lives:3, _ten:false, muted:false };
+
+/* ---------- Sound: every effect is generated in code, no audio files ---------- */
+var SFX = (function(){
+  var ctx = null;
+  function ac(){
+    if (G.muted) return null;
+    try {
+      if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (ctx.state === "suspended") ctx.resume();
+    } catch(e){ return null; }
+    return ctx;
+  }
+  // one beep: wave type, start freq, end freq, length (s), volume, delay (s)
+  function tone(type, f1, f2, len, vol, delay){
+    var c = ac(); if (!c) return;
+    var t = c.currentTime + (delay || 0);
+    var o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f1, t);
+    if (f2 !== f1) o.frequency.exponentialRampToValueAtTime(f2, t + len);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + len + 0.02);
+  }
+  // a burst of random noise (crunch / thud)
+  function noise(len, vol, freq){
+    var c = ac(); if (!c) return;
+    var n = Math.floor(c.sampleRate * len), b = c.createBuffer(1, n, c.sampleRate), d = b.getChannelData(0);
+    for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+    var s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+    s.buffer = b; f.type = "lowpass"; f.frequency.value = freq; g.gain.value = vol;
+    s.connect(f); f.connect(g); g.connect(c.destination); s.start();
+  }
+  return {
+    star:    function(){ tone("sine", 880, 880, 0.12, 0.25); tone("sine", 1320, 1320, 0.18, 0.22, 0.07); },
+    battery: function(){ tone("square", 300, 1200, 0.22, 0.08); tone("sine", 1200, 1200, 0.1, 0.12, 0.2); },
+    brick:   function(){ noise(0.25, 0.6, 600); tone("sawtooth", 120, 50, 0.3, 0.15); },
+    miss:    function(){ tone("triangle", 500, 220, 0.25, 0.2); },
+    start:   function(){ tone("square", 520, 520, 0.08, 0.08); tone("square", 780, 780, 0.08, 0.08, 0.1); tone("square", 1040, 1040, 0.12, 0.08, 0.2); },
+    fanfare: function(){ [523, 659, 784, 1047].forEach(function(f, i){ tone("triangle", f, f, 0.18, 0.2, i * 0.11); }); },
+    over:    function(){ [440, 370, 311, 220].forEach(function(f, i){ tone("triangle", f, f * 0.97, 0.28, 0.2, i * 0.22); }); }
+  };
+})();
+
+/* ---------- Game world ---------- */
+var W = { cv:null, cx:null, w:0, h:0, dpr:1, raf:0, last:0, t:0,
+          robot:{ x:0.5, tx:0.5, vx:0, squash:0, blink:0, look:0, wheel:0, hurt:0 },
+          items:[], parts:[], texts:[], spawnIn:0, speed:0, shake:0, bg:[] };
 
 function renderGame(){
   var html = '<div class="page"><h2 class="page-title">🎮 Robot Catch</h2>'
     + '<p class="page-sub">Catch ⭐ stars and 🔋 batteries with your robot. Miss the good ones or catch a 🧱 and you lose a life!</p>'
-    + '<div class="game-stats"><span>🏆 '+G.score+'</span><span>🥇 Best '+BEST.score+'</span><span>'+"❤️".repeat(Math.max(0,G.lives))+'</span></div>'
-    + '<div id="game-area"><div id="basket" style="left:'+G.basket+'%;top:86%">🤖</div>'
-    + (G.playing?"":'<div class="game-overlay"><div class="t">'+(G.lives<=0?("💥 Game over! Score: "+G.score):"🎮 Robot Catch")+'</div><button class="start" id="game-start">'+(G.lives<=0?"Play again!":"Start!")+'</button></div>')
-    + '</div><p class="tiny-tip">Move your finger or mouse across the game area to steer 🤖.</p></div>';
+    + '<div class="game-stats"><span id="gs-score">🏆 '+G.score+'</span><span id="gs-best">🥇 Best '+BEST.score+'</span><span id="gs-lives">'+"❤️".repeat(Math.max(0,G.lives))+'</span>'
+    + '<span id="gs-mute" style="cursor:pointer;margin-left:auto">'+(G.muted?"🔇 Sound off":"🔊 Sound on")+'</span></div>'
+    + '<div id="game-area"><canvas id="game-canvas" style="display:block;width:100%;height:100%"></canvas>'
+    + (G.playing?"":'<div class="game-overlay" id="game-ov"><div class="t">'+(G.lives<=0?("💥 Game over! Score: "+G.score):"🎮 Robot Catch")+'</div><button class="start" id="game-start">'+(G.lives<=0?"Play again!":"Start!")+'</button></div>')
+    + '</div><p class="tiny-tip">Move your finger or mouse across the game area to steer 🤖 (or use ← → keys).</p></div>';
   el("app").innerHTML = html;
   var area = el("game-area");
+  W.cv = el("game-canvas"); W.cx = W.cv.getContext("2d");
+  sizeCanvas();
   function move(clientX){
     var r = area.getBoundingClientRect();
-    var pct = ((clientX - r.left) / r.width) * 100;
-    G.basket = Math.max(5, Math.min(95, pct));
-    el("basket").style.left = G.basket + "%";
+    W.robot.tx = Math.max(0.06, Math.min(0.94, (clientX - r.left) / r.width));
   }
   area.addEventListener("pointermove", function(e){ if (G.playing) move(e.clientX); });
   area.addEventListener("pointerdown", function(e){ if (G.playing) move(e.clientX); });
+  el("gs-mute").onclick = function(){ G.muted = !G.muted; this.textContent = G.muted ? "🔇 Sound off" : "🔊 Sound on"; };
   var st = el("game-start"); if (st) st.onclick = startGame;
-  drawItems();
+  if (!W.raf){ W.last = performance.now(); W.raf = requestAnimationFrame(loop); }
 }
 
-function drawItems(){
-  var area = el("game-area"); if (!area) return;
-  area.querySelectorAll(".falling").forEach(function(f){ f.remove(); });
-  G.items.forEach(function(it){
-    var d = document.createElement("div"); d.className="falling";
-    d.textContent = it.good ? it.kind : "🧱";
-    d.style.left = it.x+"%"; d.style.top = it.y+"%";
-    area.insertBefore(d, el("basket"));
-  });
+function sizeCanvas(){
+  if (!W.cv) return;
+  var r = W.cv.getBoundingClientRect();
+  W.dpr = Math.min(window.devicePixelRatio || 1, 2);
+  W.w = r.width; W.h = r.height;
+  W.cv.width = Math.round(r.width * W.dpr); W.cv.height = Math.round(r.height * W.dpr);
+  W.cx.setTransform(W.dpr, 0, 0, W.dpr, 0, 0);
+  if (!W.bg.length) for (var i = 0; i < 40; i++) W.bg.push({ x:Math.random(), y:Math.random()*0.8, r:0.6+Math.random()*1.8, p:Math.random()*6.28 });
+}
+window.addEventListener("resize", sizeCanvas);
+window.addEventListener("keydown", function(e){
+  if (S.tab !== "game" || !G.playing) return;
+  if (e.key === "ArrowLeft")  { W.robot.tx = Math.max(0.06, W.robot.tx - 0.08); e.preventDefault(); }
+  if (e.key === "ArrowRight") { W.robot.tx = Math.min(0.94, W.robot.tx + 0.08); e.preventDefault(); }
+});
+
+function updateHud(){
+  var s = el("gs-score"), b = el("gs-best"), l = el("gs-lives");
+  if (s) s.textContent = "🏆 " + G.score;
+  if (b) b.textContent = "🥇 Best " + BEST.score;
+  if (l) l.textContent = "❤️".repeat(Math.max(0, G.lives)) || "💔";
 }
 
 function startGame(){
-  G.playing = true; G.score = 0; G.lives = 3; G.items = []; render();
-  clearInterval(G.tm1); clearInterval(G.tm2);
-  G.tm1 = setInterval(function(){
-    G.items.push({ id:Math.random(), x: 10+Math.random()*80, y:-5, good: Math.random()>0.25, kind: Math.random()>0.5?"⭐":"🔋" });
-  }, 900);
-  G.tm2 = setInterval(function(){
-    var next = [];
-    for (var i=0; i<G.items.length; i++){
-      var it = G.items[i]; var y = it.y + 4;
-      if (y >= 88){
-        var caught = Math.abs(it.x - G.basket) < 12;
-        if (caught && it.good) G.score++;
-        else if (caught && !it.good) G.lives--;
-        else if (!caught && it.good) G.lives--;
-        continue;
-      }
-      next.push({ x:it.x, y:y, good:it.good, kind:it.kind });
+  G.playing = true; G.score = 0; G.lives = 3; G._ten = false;
+  W.items = []; W.parts = []; W.texts = []; W.spawnIn = 0.4; W.speed = 0;
+  var ov = el("game-ov"); if (ov) ov.remove();
+  updateHud(); SFX.start();
+}
+
+function endGame(){
+  G.playing = false; SFX.over();
+  if (S.tab === "game") render();
+}
+
+/* ---------- Particles: lots of tiny shapes, each with a simple rule ---------- */
+function burst(x, y, color, n, power){
+  for (var i = 0; i < n; i++){
+    var a = Math.random() * 6.28, sp = (0.3 + Math.random()) * power;
+    W.parts.push({ x:x, y:y, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp - power*0.4, life:1, size:2+Math.random()*3, color:color, star:Math.random()<0.4 });
+  }
+}
+function floatText(x, y, txt, color){ W.texts.push({ x:x, y:y, txt:txt, color:color, life:1 }); }
+
+/* ---------- The game loop: input → update → collisions → draw, ~60x a second ---------- */
+function loop(now){
+  if (!W.cv || !document.body.contains(W.cv)) { W.raf = 0; return; }   // left the game tab: stop
+  var dt = Math.min(0.05, (now - W.last) / 1000); W.last = now; W.t += dt;
+  update(dt); draw();
+  W.raf = requestAnimationFrame(loop);
+}
+
+function update(dt){
+  var R = W.robot, groundY = W.h - 30;
+  // robot glides toward the finger with a springy feel
+  var prev = R.x;
+  R.x += (R.tx - R.x) * Math.min(1, dt * 12);
+  R.vx = (R.x - prev) / dt;
+  R.wheel += R.vx * dt * 40;
+  R.squash *= Math.pow(0.02, dt);
+  R.hurt = Math.max(0, R.hurt - dt);
+  R.blink -= dt; if (R.blink < -0.15) R.blink = 2 + Math.random() * 3;
+  W.shake *= Math.pow(0.01, dt);
+
+  if (G.playing){
+    W.speed += dt * 0.012;                       // slowly gets harder
+    W.spawnIn -= dt;
+    if (W.spawnIn <= 0){
+      var r = Math.random();
+      W.items.push({ x:0.08 + Math.random()*0.84, y:-20, vy:90 + Math.random()*30,
+                     type: r < 0.25 ? "brick" : (r < 0.62 ? "star" : "battery"), rot:Math.random()*6, spin:(Math.random()-0.5)*3 });
+      W.spawnIn = Math.max(0.38, 0.9 - W.speed * 0.6) * (0.7 + Math.random()*0.6);
     }
-    G.items = next;
-    if (G.score > BEST.score) { BEST.score = G.score; save(); }
-    if (G.score > 0 && G.score % 10 === 0 && !G._ten) { G._ten = true; award(2, "10 catches! ⭐⭐"); }
-    if (G.score % 10 !== 0) G._ten = false;
-    if (G.lives <= 0){ clearInterval(G.tm1); clearInterval(G.tm2); G.playing = false; }
-    render();
-  }, 300);
+  }
+
+  // nearest item: the robot's eyes follow it
+  var near = null;
+  for (var i = W.items.length - 1; i >= 0; i--){
+    var it = W.items[i];
+    it.vy += 60 * dt * (1 + W.speed); it.y += it.vy * dt; it.rot += it.spin * dt;
+    if (!near || it.y > near.y) near = it;
+    var px = it.x * W.w, rx = R.x * W.w;
+    if (it.y > groundY - 58 && it.y < groundY - 20 && Math.abs(px - rx) < 40){
+      W.items.splice(i, 1);
+      if (it.type === "brick"){
+        G.lives--; R.hurt = 0.5; W.shake = 10; SFX.brick();
+        burst(px, it.y, "#b45309", 18, 220); floatText(px, it.y - 10, "OUCH!", "#dc2626");
+      } else {
+        G.score++; R.squash = 1;
+        if (it.type === "star"){ SFX.star(); burst(px, it.y, "#facc15", 16, 180); }
+        else { SFX.battery(); burst(px, it.y, "#22c55e", 16, 180); }
+        floatText(px, it.y - 10, "+1", it.type === "star" ? "#d97706" : "#16a34a");
+        if (G.score > BEST.score){ BEST.score = G.score; save(); }
+        if (G.score % 10 === 0){ SFX.fanfare(); award(2, "10 catches! ⭐⭐"); burst(rx, groundY - 60, "#a855f7", 40, 300); }
+      }
+      updateHud();
+      if (G.lives <= 0){ endGame(); return; }
+      continue;
+    }
+    if (it.y > groundY + 10){
+      W.items.splice(i, 1);
+      if (it.type !== "brick" && G.playing){
+        G.lives--; SFX.miss(); burst(px, groundY, "#94a3b8", 10, 120); floatText(px, groundY - 20, "missed!", "#64748b");
+        updateHud();
+        if (G.lives <= 0){ endGame(); return; }
+      }
+    }
+  }
+  R.look = near ? Math.max(-1, Math.min(1, (near.x - R.x) * 4)) : 0;
+
+  for (var j = W.parts.length - 1; j >= 0; j--){
+    var p = W.parts[j]; p.vy += 400 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt * 1.4;
+    if (p.life <= 0) W.parts.splice(j, 1);
+  }
+  for (var k = W.texts.length - 1; k >= 0; k--){
+    var t = W.texts[k]; t.y -= 40 * dt; t.life -= dt; if (t.life <= 0) W.texts.splice(k, 1);
+  }
+}
+
+/* ---------- Drawing: every picture below is made from simple shapes ---------- */
+function rr(c, x, y, w, h, r){ c.beginPath(); c.moveTo(x+r, y); c.arcTo(x+w, y, x+w, y+h, r); c.arcTo(x+w, y+h, x, y+h, r); c.arcTo(x, y+h, x, y, r); c.arcTo(x, y, x+w, y, r); c.closePath(); }
+function starPath(c, r, inner){ c.beginPath(); for (var i = 0; i < 10; i++){ var a = -Math.PI/2 + i*Math.PI/5, rad = i%2 ? r*inner : r; c.lineTo(Math.cos(a)*rad, Math.sin(a)*rad); } c.closePath(); }
+
+function draw(){
+  var c = W.cx, w = W.w, h = W.h, groundY = h - 30;
+  c.save();
+  if (W.shake > 0.3) c.translate((Math.random()-0.5)*W.shake, (Math.random()-0.5)*W.shake);
+  // sky
+  var g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, "#dbeafe"); g.addColorStop(1, "#f5f3ff");
+  c.fillStyle = g; c.fillRect(-20, -20, w+40, h+40);
+  // twinkling dots
+  W.bg.forEach(function(s){ c.globalAlpha = 0.25 + 0.25*Math.sin(W.t*2 + s.p); c.fillStyle = "#a5b4fc"; c.beginPath(); c.arc(s.x*w, s.y*h, s.r, 0, 6.28); c.fill(); });
+  c.globalAlpha = 1;
+  // ground with moving stripes
+  c.fillStyle = "#c7d2fe"; c.fillRect(-20, groundY + 12, w + 40, 40);
+  c.strokeStyle = "#a5b4fc"; c.lineWidth = 2;
+  for (var x = -40 + ((W.t * 20) % 40); x < w + 40; x += 40){ c.beginPath(); c.moveTo(x, groundY + 12); c.lineTo(x - 14, h); c.stroke(); }
+
+  W.items.forEach(function(it){ drawItem(c, it.x * w, it.y, it); });
+  drawRobot(c, W.robot.x * w, groundY);
+
+  W.parts.forEach(function(p){
+    c.globalAlpha = Math.max(0, p.life); c.fillStyle = p.color;
+    if (p.star){ c.save(); c.translate(p.x, p.y); c.rotate(p.life*6); starPath(c, p.size*1.6, 0.45); c.fill(); c.restore(); }
+    else { c.beginPath(); c.arc(p.x, p.y, p.size, 0, 6.28); c.fill(); }
+  });
+  c.globalAlpha = 1;
+  c.textAlign = "center"; c.font = "900 18px Poppins, Arial, sans-serif";
+  W.texts.forEach(function(t){ c.globalAlpha = Math.max(0, t.life); c.fillStyle = t.color; c.fillText(t.txt, t.x, t.y); });
+  c.globalAlpha = 1;
+  c.restore();
+}
+
+function drawItem(c, x, y, it){
+  c.save(); c.translate(x, y);
+  if (it.type === "star"){
+    c.rotate(it.rot);
+    c.shadowColor = "rgba(250,204,21,.9)"; c.shadowBlur = 14;
+    starPath(c, 17, 0.45); c.fillStyle = "#facc15"; c.fill();
+    c.shadowBlur = 0; c.lineWidth = 2.5; c.strokeStyle = "#d97706"; c.stroke();
+    c.fillStyle = "rgba(255,255,255,.7)"; c.beginPath(); c.arc(-4, -5, 3, 0, 6.28); c.fill();
+  } else if (it.type === "battery"){
+    c.rotate(Math.sin(it.rot) * 0.3);
+    rr(c, -11, -18, 22, 36, 5); c.fillStyle = "#1f2937"; c.fill();
+    c.fillStyle = "#9ca3af"; c.fillRect(-5, -23, 10, 6);
+    var lvl = 0.5 + 0.5 * Math.sin(W.t * 6 + it.rot);          // charge bars pulse
+    for (var i = 0; i < 3; i++){ c.fillStyle = i < 1 + lvl * 2.2 ? "#22c55e" : "#374151"; rr(c, -7, 8 - i*10, 14, 7, 2); c.fill(); }
+  } else {
+    c.rotate(it.rot * 0.4);
+    rr(c, -22, -13, 44, 26, 3); c.fillStyle = "#dc2626"; c.fill();
+    c.strokeStyle = "#7f1d1d"; c.lineWidth = 2; c.stroke();
+    c.strokeStyle = "rgba(254,226,226,.8)"; c.beginPath();
+    c.moveTo(-22, 0); c.lineTo(22, 0); c.moveTo(-6, -13); c.lineTo(-6, 0); c.moveTo(10, 0); c.lineTo(10, 13); c.stroke();
+  }
+  c.restore();
+}
+
+function drawRobot(c, x, groundY){
+  var R = W.robot, sq = R.squash, bob = Math.sin(W.t * 5) * 2;
+  var sx = 1 + sq * 0.18, sy = 1 - sq * 0.15, lean = Math.max(-0.25, Math.min(0.25, R.vx * 0.12));
+  c.save(); c.translate(x, groundY);
+  // shadow
+  c.fillStyle = "rgba(67,56,202,.18)"; c.beginPath(); c.ellipse(0, 12, 34, 6, 0, 0, 6.28); c.fill();
+  // wheels (spokes turn as it drives)
+  [-20, 20].forEach(function(wx){
+    c.save(); c.translate(wx, 2); c.fillStyle = "#1f2937"; c.beginPath(); c.arc(0, 0, 10, 0, 6.28); c.fill();
+    c.rotate(R.wheel); c.strokeStyle = "#9ca3af"; c.lineWidth = 2;
+    for (var i = 0; i < 3; i++){ c.rotate(Math.PI/3); c.beginPath(); c.moveTo(-7, 0); c.lineTo(7, 0); c.stroke(); }
+    c.restore();
+  });
+  c.rotate(lean); c.scale(sx, sy); c.translate(0, bob);
+  var body = R.hurt > 0 && Math.floor(R.hurt * 20) % 2 ? "#fca5a5" : "#ff8c00";
+  // body
+  rr(c, -26, -40, 52, 36, 9); c.fillStyle = body; c.fill(); c.lineWidth = 3; c.strokeStyle = "#c2410c"; c.stroke();
+  // chest light (green when happy, red when hurt)
+  c.fillStyle = R.hurt > 0 ? "#ef4444" : (sq > 0.3 ? "#facc15" : "#22c55e");
+  c.beginPath(); c.arc(0, -22, 5, 0, 6.28); c.fill();
+  // catching tray (arms)
+  c.strokeStyle = "#475569"; c.lineWidth = 4; c.lineCap = "round";
+  c.beginPath(); c.moveTo(-26, -30); c.lineTo(-36, -44); c.moveTo(26, -30); c.lineTo(36, -44); c.stroke();
+  // head
+  rr(c, -20, -72, 40, 30, 10); c.fillStyle = "#e0f2fe"; c.fill(); c.strokeStyle = "#0369a1"; c.lineWidth = 3; c.stroke();
+  // eyes: follow the nearest falling thing, blink now and then
+  var eyeH = R.blink < 0 ? 1.5 : 6, lx = R.look * 3;
+  c.fillStyle = "#0f172a";
+  [-8, 8].forEach(function(ex){ c.beginPath(); c.ellipse(ex + lx, -58, 4.5, eyeH, 0, 0, 6.28); c.fill(); });
+  // mouth
+  c.strokeStyle = "#0f172a"; c.lineWidth = 2; c.beginPath();
+  if (R.hurt > 0){ c.moveTo(-6, -47); c.lineTo(6, -47); } else { c.arc(0, -51, 5, 0.2, Math.PI - 0.2); }
+  c.stroke();
+  // antenna that wobbles
+  var aw = Math.sin(W.t * 8) * 4 - lean * 20;
+  c.strokeStyle = "#475569"; c.lineWidth = 3; c.beginPath(); c.moveTo(0, -72); c.quadraticCurveTo(aw * 0.5, -80, aw, -88); c.stroke();
+  c.fillStyle = sq > 0.3 ? "#facc15" : "#ef4444"; c.beginPath(); c.arc(aw, -90, 4.5, 0, 6.28); c.fill();
+  c.restore();
 }
 
 /* ================= ROUTER ================= */
@@ -624,6 +852,7 @@ function render(){
   else if (S.tab==="game") renderGame();
 }
 load();
+if (location.hash === "#game") S.tab = "game";
 render();
 </script>
 </body>
