@@ -146,6 +146,94 @@
   .pal-btn .pe { font-size: 1.4rem; } .pal-btn .pc { color: #ea580c; font-size: .7rem; }
   .pal-btn:disabled { opacity: .35; }
   .pal-btn:active { transform: scale(.95); }
+  /* micro:bit LED Designer */
+  .led-wrap { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 820px){ .led-wrap { grid-template-columns: 1fr 1fr; } }
+  #led-board-wrap { touch-action: none; user-select: none; -webkit-user-select: none; }
+  .led-quest { margin-top: 8px; }
+  .stamps { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .stamp { background: #fff7ed; border: 2px solid #fed7aa; color: #9a3412; font-weight: 800; font-size: .74rem; border-radius: 999px; padding: 6px 10px; }
+  .led-sec-t { font-weight: 900; color: #123; margin-bottom: 6px; }
+  .led-frames { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 8px; }
+  .frame-w { display: flex; flex-direction: column; align-items: center; font-size: .7rem; font-weight: 800; color: #64748b; }
+  .frame-th { width: 56px; height: 56px; border-radius: 10px; border: 3px solid transparent; cursor: pointer; }
+  .frame-th.on { border-color: #ff8c00; }
+  .ld-speed { border-radius: 12px; padding: 8px; font-weight: 800; border: 2px solid #e5e7eb; background: #fff; }
+  .code-tabs { display: flex; gap: 4px; margin-bottom: 6px; }
+  .code-tabs button { background: #e5e7eb; color: #374151; font-weight: 800; font-size: .76rem; border-radius: 10px; padding: 6px 12px; }
+  .code-tabs button.on { background: #1e90ff; color: #fff; }
+  .led-code { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 14px; padding: 10px; max-height: 340px; overflow: auto; }
+  .led-code pre { font-family: Consolas, Menlo, monospace; font-size: .78rem; line-height: 1.35; white-space: pre; color: #0f172a; }
+  .bk-wrap { display: inline-block; font-family: Arial, sans-serif; font-weight: 700; font-size: .8rem; color: #fff; }
+  .bk-hat { background: #1e90ff; border-radius: 14px 14px 0 0; padding: 8px 14px; display: inline-block; min-width: 120px; }
+  .bk-body { border-left: 14px solid #1e90ff; padding: 4px 0; }
+  .bk-foot { background: #1e90ff; height: 12px; width: 120px; border-radius: 0 0 8px 8px; }
+  .bk { background: #1e90ff; border: 1px solid #1873cc; border-radius: 6px; padding: 6px 10px; margin: 3px 0 3px 4px; display: flex; align-items: center; gap: 8px; width: max-content; }
+  .bk-grid { display: grid; grid-template-columns: repeat(5, 10px); gap: 2px; background: #1873cc; padding: 3px; border-radius: 4px; }
+  .bk-grid i { width: 10px; height: 10px; border-radius: 2px; background: #0c3d70; }
+  .bk-grid i.on { background: #fff; }
+  .bk-n { background: #fff; color: #333; border-radius: 999px; padding: 1px 8px; }
+  .guide-link { display: inline-block; margin: -4px 0 12px; background: #fff7ed; color: #c2410c; border: 2px solid #fed7aa; font-weight: 800; font-size: .8rem; border-radius: 999px; padding: 6px 14px; text-decoration: none; }
+  .guide-link:hover { background: #ff8c00; color: #fff; border-color: #ff8c00; }
+  /* Circuit Lab hub + Practical Guide */
+  .back-btn { background: #e0f2fe; color: #075985; font-weight: 800; font-size: .82rem; border-radius: 999px; padding: 7px 14px; margin-bottom: 10px; }
+  .hub-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .hub-card { text-align: left; border-radius: 24px; padding: 22px; color: #fff; box-shadow: 0 8px 22px rgba(0,0,0,.12); transition: transform .15s; display: flex; flex-direction: column; gap: 6px; }
+  .hub-card:hover, .hub-card:active { transform: translateY(-3px); }
+  .hc-sim { background: linear-gradient(135deg,#38bdf8,#1d4ed8); }
+  .hc-guide { background: linear-gradient(135deg,#fbbf24,#ea580c); }
+  .hc-e { font-size: 2.6rem; line-height: 1; }
+  .hc-t { font-size: 1.3rem; font-weight: 900; }
+  .hc-d { font-size: .88rem; font-weight: 500; opacity: .95; }
+  .hc-p { font-size: .78rem; font-weight: 800; background: rgba(255,255,255,.22); border-radius: 999px; padding: 3px 10px; width: max-content; margin-top: 4px; }
+  .hc-go { margin-top: 8px; font-weight: 900; }
+  .safety { background: #fef2f2; border: 2px solid #fecaca; border-radius: 18px; padding: 12px 14px; font-size: .84rem; color: #7f1d1d; margin-bottom: 10px; }
+  .safety ul { margin: 6px 0 0 18px; } .safety li { margin: 2px 0; }
+  .kit { background: #fff; border: 2px solid #e5e7eb; border-radius: 18px; padding: 10px 14px; margin-bottom: 14px; font-size: .86rem; }
+  .kit summary { font-weight: 800; cursor: pointer; color: #123; }
+  .kit ul { list-style: none; margin-top: 8px; display: grid; gap: 4px; }
+  .kit li span { display: inline-block; width: 28px; }
+  .exp-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .exp-card { position: relative; background: #fff; border: 2px solid #e5e7eb; border-radius: 20px; padding: 14px 12px; text-align: left; box-shadow: 0 2px 8px rgba(0,0,0,.05); display: flex; flex-direction: column; gap: 3px; }
+  .exp-card.done { border-color: #86efac; background: #f0fdf4; }
+  .ec-n { position: absolute; top: 10px; right: 12px; font-weight: 900; color: #cbd5e1; }
+  .ec-e { font-size: 1.9rem; } .ec-t { font-weight: 900; color: #123; font-size: .9rem; line-height: 1.25; }
+  .ec-m { font-size: .72rem; color: #64748b; font-weight: 700; } .ec-ok { font-size: .72rem; font-weight: 800; color: #15803d; }
+  .exp-head { display: flex; align-items: center; gap: 12px; }
+  .eh-e { font-size: 2.6rem; } .eh-n { font-size: .75rem; font-weight: 800; color: #ea580c; }
+  .pills { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+  .pills span { background: #f1f5f9; border-radius: 999px; padding: 3px 10px; font-size: .74rem; font-weight: 800; color: #334155; }
+  .pills .pg { background: #dcfce7; color: #15803d; }
+  .exp-goal { font-weight: 700; color: #334155; margin-bottom: 8px; }
+  .diagram { background: #fff; border: 2px solid #e5e7eb; border-radius: 18px; padding: 6px; text-align: center; }
+  .loop-svg { width: 100%; max-width: 420px; height: auto; }
+  .sec-t { font-weight: 900; color: #c2410c; margin: 16px 0 6px; font-size: 1rem; }
+  .sec-t .prog { font-size: .75rem; color: #64748b; margin-left: 6px; }
+  .need { margin-left: 20px; font-size: .9rem; }
+  .q { font-weight: 700; font-size: .92rem; margin-bottom: 6px; }
+  .opts { display: flex; flex-direction: column; gap: 6px; }
+  .opt { text-align: left; background: #fff; border: 2px solid #e5e7eb; border-radius: 14px; padding: 9px 12px; font-weight: 700; font-size: .86rem; color: #334155; }
+  .opt.sel { border-color: #3b82f6; background: #eff6ff; }
+  .opt.good { border-color: #22c55e; background: #dcfce7; } .opt.bad { border-color: #ef4444; background: #fee2e2; }
+  .pred-note { margin-top: 8px; background: #eff6ff; color: #1e40af; border-radius: 12px; padding: 8px 10px; font-size: .82rem; font-weight: 700; }
+  .steps { display: flex; flex-direction: column; gap: 6px; }
+  .step { display: flex; gap: 10px; align-items: flex-start; background: #fff; border: 2px solid #e5e7eb; border-radius: 14px; padding: 10px 12px; font-size: .88rem; cursor: pointer; }
+  .step input { margin-top: 4px; width: 18px; height: 18px; accent-color: #16a34a; flex-shrink: 0; }
+  .step.on { background: #f0fdf4; border-color: #86efac; }
+  .step .sn { font-weight: 900; color: #ea580c; min-width: 16px; }
+  .tbl-wrap { overflow-x: auto; }
+  .res-tbl { border-collapse: collapse; width: 100%; font-size: .84rem; background: #fff; border-radius: 12px; overflow: hidden; }
+  .res-tbl th, .res-tbl td { border-bottom: 1px solid #e5e7eb; padding: 6px 8px; text-align: left; }
+  .res-tbl th { background: #fff7ed; color: #9a3412; }
+  .tb { background: #f1f5f9; border-radius: 8px; padding: 4px 8px; margin-right: 4px; min-width: 34px; font-weight: 800; }
+  .tb.on { background: #ff8c00; color: #fff; }
+  .morse { display: flex; flex-wrap: wrap; gap: 6px; }
+  .morse span { background: #1f2937; color: #fde68a; border-radius: 10px; padding: 5px 10px; font-family: Consolas, monospace; font-size: .9rem; }
+  .morse b { color: #fff; margin-right: 4px; }
+  .why { background: #ecfeff; border-left: 5px solid #06b6d4; border-radius: 12px; padding: 10px 12px; margin-top: 12px; font-size: .88rem; }
+  .more { background: #fdf4ff; border-left: 5px solid #c026d3; border-radius: 12px; padding: 10px 12px; margin-top: 8px; font-size: .88rem; }
+  .exp-nav { display: flex; justify-content: space-between; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+  .exp-nav .tool, #exp-sim { background: #e0f2fe; color: #075985; font-weight: 800; font-size: .82rem; border-radius: 12px; padding: 9px 14px; }
 </style>
 </head>
 <body>
@@ -234,7 +322,7 @@ var CHALLENGES = [
     stars:[{x:2,y:4},{x:2,y:1},{x:4,y:0}], walls:[{x:1,y:2},{x:3,y:3}] }
 ];
 
-var TABS = [ {id:"home",label:"🏠 Home"},{id:"learn",label:"📚 Learn"},{id:"coder",label:"🤖 Robot Coder"},{id:"lab",label:"⚡ Circuit Lab"},{id:"game",label:"🎮 Catch Game"} ];
+var TABS = [ {id:"home",label:"🏠 Home"},{id:"learn",label:"📚 Learn"},{id:"coder",label:"🤖 Robot Coder"},{id:"lab",label:"⚡ Circuit Lab"},{id:"game",label:"🎮 Catch Game"},{id:"leds",label:"💡 LED Designer"} ];
 var TRACKS = [
   { id:"mini", name:"Mini-makers", emoji:"🐣", ages:"Ages 5–6", grad:"g-teal", desc:"Discover STEM through play — energy, motion, structures and first robots!" },
   { id:"mega", name:"Mega-makers", emoji:"🚀", ages:"Ages 7–9", grad:"g-sky", desc:"Dive into electronics, sensors and coding with Scratch!" },
@@ -277,7 +365,7 @@ function renderTabs(){
   var t = el("tabs"); t.innerHTML = "";
   TABS.forEach(function(tb){
     var b = document.createElement("button"); b.className = "tab"+(S.tab===tb.id?" active":""); b.textContent = tb.label;
-    b.onclick = function(){ S.tab = tb.id; render(); };
+    b.onclick = function(){ S.tab = tb.id; if (tb.id === "lab"){ L.view = "hub"; P.exp = null; } render(); };
     t.appendChild(b);
   });
 }
@@ -287,8 +375,9 @@ function renderHome(){
   var cards = [
     {id:"learn",e:"📚",t:"STEM Lessons",d:"Pick your track — Mini, Mega or Sumo!",c:"g-sky"},
     {id:"coder",e:"🤖",t:"Robot Coder",d:"Build block programs, drive a real robot!",c:"g-orange"},
-    {id:"lab",e:"⚡",t:"Circuit Lab",d:"Build circuits and light it up!",c:"g-teal"},
-    {id:"game",e:"🎮",t:"Robot Catch",d:"Play and sharpen reflexes!",c:"g-blue"}
+    {id:"lab",e:"⚡",t:"Circuit Lab",d:"Simulator missions + real hands-on experiments!",c:"g-teal"},
+    {id:"game",e:"🎮",t:"Robot Catch",d:"Play and sharpen reflexes!",c:"g-blue"},
+    {id:"leds",e:"💡",t:"LED Designer",d:"Draw on a micro:bit and get the code!",c:"g-teal"}
   ];
   var html = '<div class="page">'
     + '<div class="hero"><div class="emojis">🤖🧪⚙️🚀</div>'
@@ -302,7 +391,7 @@ function renderHome(){
   html += '</div><div class="note">👨‍👩‍👧 <b>For parents &amp; teachers:</b> This free playground matches our Mini-makers (5–6), Mega-makers (7–9) and Sumo-makers (10–12) tracks. Kids earn ⭐ stars as they play. Progress saves on this device — no account needed. Ready for the real thing? <a href="/#contact" style="color:#ff8c00;font-weight:700;">Book a class!</a></div></div>';
   var app = el("app"); app.innerHTML = html;
   app.querySelectorAll("[data-go]").forEach(function(b){
-    b.onclick = function(){ S.tab = b.getAttribute("data-go"); render(); };
+    b.onclick = function(){ S.tab = b.getAttribute("data-go"); if (S.tab === "lab"){ L.view = "hub"; P.exp = null; } render(); };
   });
 }
 
@@ -748,12 +837,12 @@ function anyShort(r){ return r.some(function(x){ return x.short; }); }
 function anyOn(type){ return L.comps.some(function(c){ return c.type === type && c.on; }); }
 
 /* ---------- Page ---------- */
-function renderLab(){
+function renderSim(){
   var lv = LEVELS[L.level];
   var chips = LEVELS.map(function(l, i){
     return '<button class="lv-chip'+(i===L.level?" on":"")+'" data-lv="'+i+'">'+(L.done[i]?"✅ ":"")+(i+1)+'. '+l.title+'</button>';
   }).join("");
-  var html = '<div class="page"><h2 class="page-title">⚡ Circuit Lab</h2>'
+  var html = '<div class="page"><button class="back-btn" id="lab-back">← Circuit Lab</button><h2 class="page-title">🖥️ Circuit Simulator</h2>'
     + '<p class="page-sub">Build real circuits! Drag from one metal dot to another to clip on a wire. Tap a part to select it.</p>'
     + '<div class="lv-row">'+chips+'</div>'
     + '<div class="mission"><div class="m-t">'+(lv.check?"Mission "+(L.level+1)+": ":"")+lv.title+'</div><div>'+lv.goal+'</div>'
@@ -771,6 +860,7 @@ function renderLab(){
   el("app").innerHTML = html;
   L.cv = el("lab-canvas"); L.cx = L.cv.getContext("2d");
   labSize();
+  el("lab-back").onclick = function(){ labGo("hub"); };
   document.querySelectorAll(".lv-chip").forEach(function(b){ b.onclick = function(){ labSetLevel(+b.getAttribute("data-lv")); }; });
   el("lab-hint").onclick = function(){ var t = el("lab-hint-txt"); t.style.display = t.style.display === "none" ? "block" : "none"; };
   el("lab-rot").onclick = function(){ if (L.sel && L.sel.kind === "comp"){ L.sel.c.rot = (L.sel.c.rot + 1) % 4; labClick(); } };
@@ -808,7 +898,7 @@ function labSize(){
   // keep parts on the board if the size changed
   L.comps.forEach(function(c){ c.col = Math.min(c.col, L.cols-1); c.row = Math.min(c.row, L.rows-1); });
 }
-window.addEventListener("resize", function(){ if (S.tab === "lab") labSize(); });
+window.addEventListener("resize", function(){ if (S.tab === "lab" && L.view === "sim") labSize(); });
 
 function used(type){ return L.comps.filter(function(c){ return c.type === type; }).length; }
 function allowed(type){ var p = LEVELS[L.level].parts; return p ? (p[type] || 0) : 6; }
@@ -1148,6 +1238,365 @@ function drawPart(c, comp, r){
   c.restore();
 }
 
+/* ================= CIRCUIT LAB HUB + PRACTICAL GUIDE ================= */
+/* Circuit Lab opens on a choice page: the on-screen Simulator (missions) or the hands-on
+   Practical Guide (real experiments with basic components). Experiment ideas are adapted
+   from the Circuit Cubes STEM Starter Kit lesson plans, rewritten for basic parts. */
+
+L.view = L.view || "hub";   // "hub" | "sim" | "guide"
+
+var KIT = [
+  ["🔋","Battery holder + 2 AA batteries (3 V)"],
+  ["🐊","Crocodile-clip wires (at least 6)"],
+  ["💡","Small bulb (2.5–3 V) in a holder — 2 of them"],
+  ["🔴","LEDs (any colour) — 2 or 3"],
+  ["🟫","Resistors, 100–220 Ω — 2 or 3"],
+  ["🎚️","Switch"],
+  ["🔘","Push button"],
+  ["🔔","Buzzer (3 V)"],
+  ["🌀","Small DC motor or a TT gear motor"],
+  ["🧺","Everyday things: foil, coins, spoon, pencil, cup, tape, card, markers"]
+];
+
+var EXPS = [
+  { id:"parts", e:"🔍", title:"Meet the parts", time:"15 min", level:1, sim:null,
+    goal:"Get to know your components and find their + and − sides.",
+    need:["Battery holder + batteries","Bulb, LED, buzzer, motor, switch","Crocodile-clip wires"],
+    predict:{ q:"Which part do you think gives the ENERGY to all the others?", o:["The bulb","The battery","The wire"] },
+    steps:[
+      "Lay all your parts out on the table.",
+      "Find the battery's + (positive) end and − (negative) end. Usually red = +, black = −.",
+      "Look closely at an LED: one leg is LONGER. The long leg is + and the short leg is −.",
+      "Find the buzzer's red (+) and black (−) wires. Buzzers have a + side too.",
+      "Squeeze a crocodile clip open and shut. These are your wires — they carry electricity.",
+      "Sort the parts into two groups: parts that MAKE energy, and parts that USE energy."
+    ],
+    check:{ q:"Which leg of an LED is the + (positive) leg?", o:["The longer leg","The shorter leg","Both legs are the same"], a:0,
+      ok:"Yes! The long leg is + and must point towards the battery's + side." },
+    why:"Every circuit has a power source (the battery), things that use the power (bulbs, buzzers, motors) and paths for it to travel (wires). Some parts — LEDs and buzzers — care which way round they go, so we look for their + and − sides.",
+    more:"Draw each part and label its + and − sides in your notebook." },
+
+  { id:"light", e:"💡", title:"Make it light!", time:"15 min", level:1, sim:0,
+    diagram:["💡 Bulb"],
+    goal:"Build your first complete circuit and make a bulb glow.",
+    need:["Battery holder + batteries","1 bulb in a holder","2 crocodile-clip wires"],
+    predict:{ q:"How many wires do you think you need to light the bulb?", o:["1 wire","2 wires","3 wires"] },
+    steps:[
+      "Clip one wire to the battery's + end.",
+      "Clip the other end of that wire to one side of the bulb holder.",
+      "Clip a second wire to the other side of the bulb holder.",
+      "Touch the free end of the second wire to the battery's − end. Does it light?",
+      "Now unclip ONE wire. What happens to the bulb?",
+      "Clip it back on. You have made a complete loop — a circuit!"
+    ],
+    check:{ q:"Why does the bulb go out when you unclip one wire?", o:["The battery runs out","The loop is broken, so electricity can't flow","The bulb gets cold"], a:1,
+      ok:"Correct! Electricity only flows around a complete loop. One gap anywhere stops it." },
+    why:"Electricity flows out of the battery, through the bulb and back to the battery. This complete path is called a CLOSED circuit. A gap makes it an OPEN circuit and nothing flows.",
+    more:"Can you light the bulb using 3 wires instead of 2? Does the length of the wires matter?" },
+
+  { id:"conduct", e:"🥄", title:"Conductor or insulator?", time:"25 min", level:1, sim:null,
+    diagram:["❓ Test object","💡 Bulb"],
+    goal:"Test everyday objects to find which ones let electricity through.",
+    need:["Your bulb circuit from 'Make it light!'","1 extra crocodile-clip wire","Test objects: spoon, coin, foil, paper clip, pencil, plastic ruler, eraser, paper, rubber band, wooden stick"],
+    table:["Metal spoon","Coin","Foil","Paper clip","Pencil lead","Plastic ruler","Eraser","Paper","Rubber band","Wooden stick"],
+    predict:{ q:"Before you test: which kind of objects do you think will light the bulb?", o:["Metal things","Plastic things","Soft things"] },
+    steps:[
+      "Take your bulb circuit and unclip one wire from the battery to make a gap.",
+      "Add an extra wire so you have two free clips with a gap between them.",
+      "For each object, PREDICT first: will it light the bulb? Mark your guess in the table below.",
+      "Clip both free ends onto the object (or press them against it).",
+      "Does the bulb light? Mark the result in the table.",
+      "For the pencil: sharpen BOTH ends and touch the clips to the grey lead. Try an LED instead of the bulb if it's too dim to see."
+    ],
+    check:{ q:"Which group of objects lit the bulb?", o:["Metal objects like the spoon, coin, foil and paper clip","Plastic and rubber objects","Paper and wood"], a:0,
+      ok:"Well done! Metals are CONDUCTORS — they let electricity flow through them easily." },
+    why:"Materials that let electricity through are called CONDUCTORS (metals, and a little bit the graphite in pencils). Materials that block electricity are INSULATORS (plastic, rubber, wood, paper). That's why wires are metal inside with a plastic coat outside.",
+    more:"Look at a phone charger cable. Which part is the conductor and which part is the insulator? Why?" },
+
+  { id:"torch", e:"🔦", title:"Make a flashlight", time:"30 min", level:2, sim:1,
+    diagram:["🎚️ Switch","🟫 Resistor","🔴 LED"],
+    goal:"Build a real flashlight with a switch, inspired by the 'Make a Flashlight' lesson.",
+    need:["Battery holder + batteries","1 LED + 1 resistor (100–220 Ω)","1 switch","3–4 crocodile-clip wires","Toilet-roll tube or small box, tape, foil (optional)"],
+    predict:{ q:"Where should the switch go so it can turn the light on and off?", o:["Anywhere in the loop","Only next to the LED","Outside the loop"] },
+    steps:[
+      "Build a loop: battery + → switch → resistor → LED long leg (+). LED short leg (−) → battery −.",
+      "Flip the switch. Does the LED light? If not, turn the LED around.",
+      "Flip it off and on a few times to test it.",
+      "Tape the battery holder along the tube. Poke the LED out of one end.",
+      "Optional: line the end of the tube with foil around the LED — it reflects the light forward.",
+      "Turn off the room lights and test your flashlight!"
+    ],
+    check:{ q:"What does the switch actually do?", o:["It makes more electricity","It opens and closes a gap in the loop","It makes the LED brighter"], a:1,
+      ok:"Exactly! ON closes the gap so electricity flows. OFF opens a gap and the light goes out." },
+    why:"A switch is a gap you can control. It works anywhere in the loop because the electricity has to pass every part of a series circuit. The resistor protects the LED by limiting how much electricity flows.",
+    more:"Can you add a second LED so your flashlight is brighter? Try putting it in different places." },
+
+  { id:"oneway", e:"↔️", title:"The LED one-way street", time:"15 min", level:2, sim:6,
+    diagram:["🟫 Resistor","🔴 LED"],
+    goal:"Discover that LEDs only work one way round.",
+    need:["Battery holder + batteries","1 LED + 1 resistor","3 crocodile-clip wires"],
+    predict:{ q:"If you turn the LED around, what do you think will happen?", o:["It still lights","It won't light","It lights a different colour"] },
+    steps:[
+      "Build: battery + → resistor → LED long leg. LED short leg → battery −. It should light.",
+      "Now swap the two LED legs around (long leg to battery −).",
+      "Does it light? Swap it back again.",
+      "Try the same thing with the buzzer: swap its red and black wires.",
+      "Now try it with a bulb. Does the bulb care which way round it goes?"
+    ],
+    check:{ q:"Which part did NOT care which way round it was connected?", o:["The LED","The buzzer","The bulb"], a:2,
+      ok:"Right! A bulb works both ways. LEDs (and most buzzers) only work one way — this is called POLARITY." },
+    why:"LED stands for Light Emitting Diode. A diode is like a one-way door: electricity can only go through from + to −. Turn it around and the door stays shut. This is called POLARITY.",
+    more:"Can you use two LEDs facing opposite ways to make a 'which way is it connected?' tester?" },
+
+  { id:"motor", e:"🌀", title:"Spin it backwards", time:"15 min", level:2, sim:5,
+    diagram:["🎚️ Switch","🌀 Motor"],
+    goal:"Make a motor spin, then make it spin the other way.",
+    need:["Battery holder + batteries","1 motor","1 switch (optional)","2–3 crocodile-clip wires","A small piece of tape to make a flag"],
+    predict:{ q:"What do you think will happen if you swap the motor's two wires?", o:["It stops","It spins the other way","It spins faster"] },
+    steps:[
+      "Stick a small tape 'flag' on the motor shaft so you can see it turn.",
+      "Connect the motor to the battery (add the switch in the loop if you have one).",
+      "Watch which way the flag spins: clockwise ↻ or anticlockwise ↺?",
+      "Turn it off. Swap the two wires on the motor.",
+      "Turn it on again. Which way does it spin now?"
+    ],
+    check:{ q:"How do you make a motor spin the other way?", o:["Use a bigger battery","Swap the two wires (reverse the polarity)","Hold it upside down"], a:1,
+      ok:"Yes! Reversing the polarity reverses the motor. Robots do this to drive backwards." },
+    why:"A motor turns electrical energy into movement. The direction electricity flows through it decides which way it turns. Your robot's wheels go forwards and backwards using exactly this idea.",
+    more:"Put a wheel or a paper fan on the shaft. Can you make a fan that blows towards you and away from you?" },
+
+  { id:"series", e:"🔗", title:"Two bulbs: line or side by side?", time:"25 min", level:3, sim:3,
+    diagram:["💡 Bulb 1","💡 Bulb 2"],
+    goal:"Compare series and parallel circuits — inspired by the 'Build a Tower' lesson.",
+    need:["Battery holder + batteries","2 identical bulbs in holders","5–6 crocodile-clip wires"],
+    predict:{ q:"If you connect two bulbs in a line (one after the other), how bright will they be?", o:["Brighter than one bulb","Dimmer than one bulb","The same as one bulb"] },
+    steps:[
+      "SERIES: connect battery + → bulb 1 → bulb 2 → battery −. Look at how bright they are.",
+      "Unscrew (or unclip) bulb 1. What happens to bulb 2?",
+      "PARALLEL: now connect BOTH bulbs straight to the battery — each bulb gets its own two wires to + and −.",
+      "Compare the brightness. Are they brighter or dimmer than in series?",
+      "Unscrew one bulb. Does the other one stay on this time?"
+    ],
+    check:{ q:"In which circuit did one bulb stay on when you removed the other?", o:["Series (in a line)","Parallel (side by side)","Neither"], a:1,
+      ok:"Correct! In parallel, each bulb has its own path, so one can work without the other." },
+    why:"In SERIES there is only one path, so the bulbs share the battery's push and both are dim. Remove one and the path breaks. In PARALLEL each bulb has its own path and gets the full push — both are bright, and one can work alone. Houses are wired in parallel.",
+    more:"Which way would you wire the lights in a classroom? Why?" },
+
+  { id:"morse", e:"📡", title:"Morse code messenger", time:"25 min", level:2, sim:2,
+    diagram:["🔘 Button","🔔 Buzzer"],
+    goal:"Build a buzzer with a push button and send secret messages — from the lesson plans' Morse code challenge.",
+    need:["Battery holder + batteries","1 buzzer","1 push button","3 crocodile-clip wires","A partner"],
+    code:[["A","·−"],["B","−···"],["C","−·−·"],["D","−··"],["E","·"],["H","····"],["I","··"],["L","·−··"],["O","−−−"],["S","···"],["T","−"],["Y","−·−−"]],
+    predict:{ q:"What do you think a push button does that a switch doesn't?", o:["It only works while you press it","It makes more noise","It stays on by itself"] },
+    steps:[
+      "Build a loop: battery + → push button → buzzer red (+). Buzzer black (−) → battery −.",
+      "Press the button. The buzzer sounds only while you hold it down.",
+      "A short press is a DOT (·). A long press is a DASH (−).",
+      "Send S-O-S: ··· −−− ··· (short short short, long long long, short short short).",
+      "Use the code table below to send your partner a word. Can they decode it?",
+      "Swap jobs: now you decode their message."
+    ],
+    check:{ q:"What is SOS in Morse code?", o:["··· −−− ···","−−− ··· −−−","·− ·− ·−"], a:0,
+      ok:"Perfect! SOS is short-short-short, long-long-long, short-short-short." },
+    why:"A push button closes the circuit only while it's pressed — perfect for sending signals. Before phones, people sent Morse code messages along telegraph wires over huge distances using this exact idea.",
+    more:"Swap the buzzer for an LED + resistor and send light messages across a dark room." },
+
+  { id:"crank", e:"⚙️", title:"Hand-crank power", time:"20 min", level:3, sim:null,
+    diagram:["🌀 Motor (spin it!)","🔴 LED"],
+    goal:"Make electricity WITHOUT a battery by spinning a motor — inspired by the 'Hand-Crank Flashlight' lesson.",
+    need:["1 TT gear motor with a wheel (best) or a small DC motor","1 LED","2 crocodile-clip wires","NO battery!"],
+    predict:{ q:"Can a motor make electricity if you spin it by hand?", o:["Yes","No","Only if it has a battery"] },
+    steps:[
+      "Connect the motor's two terminals straight to the LED's two legs. No battery!",
+      "Spin the wheel (or motor shaft) FAST with your fingers. Watch the LED closely.",
+      "No light? Spin it the OTHER way — remember the LED is a one-way street.",
+      "Try spinning slowly, then fast. What changes?",
+      "Have a race: who can keep the LED flickering the longest? Use a timer."
+    ],
+    check:{ q:"Why did the LED only light when you spun one way?", o:["The motor was broken","Spinning the other way sends electricity the wrong way through the LED","LEDs need a battery"], a:1,
+      ok:"Brilliant! The motor became a GENERATOR. Spin direction decides which way the electricity flows." },
+    why:"A motor turns electricity into movement — and it also works backwards! Turn its shaft and it turns movement into electricity. That's called a GENERATOR. Wind turbines and hydro-power dams use giant generators the same way.",
+    more:"Tape a paper or plastic fan to the shaft and blow on it, or hold it in the wind. Can you make a tiny wind turbine?" },
+
+  { id:"shadow", e:"🌗", title:"Shadow torch", time:"30 min", level:2, sim:null,
+    goal:"Test how light passes through materials and project a picture — inspired by the 'GOBO Flashlight' lesson.",
+    need:["Your flashlight from 'Make a flashlight'","Clear plastic, tissue or baking paper, card","Scissors (ask an adult), tape, a dark room and a wall"],
+    table:["Clear plastic","Tissue paper","Baking paper","Card","Your hand","Foil"],
+    tableCols:["Transparent","Translucent","Opaque"],
+    predict:{ q:"What do you think will happen when you shine your torch through card?", o:["All the light goes through","Some light goes through","No light goes through"] },
+    steps:[
+      "Make the room dark and shine your flashlight on a wall.",
+      "Hold each material in front of the torch. Does light go through clearly, a little, or not at all? Mark it in the table.",
+      "Cut a simple shape (star, heart, your initial) out of the middle of a small piece of card. Ask an adult to help.",
+      "Tape the card over the end of your flashlight.",
+      "Shine it on the wall. Move closer and further away — what happens to the picture's size?"
+    ],
+    check:{ q:"Card blocks all the light. What is a material like this called?", o:["Transparent","Translucent","Opaque"], a:2,
+      ok:"Yes! Opaque materials block light. Transparent ones let it all through, and translucent ones let some through." },
+    why:"Light travels in straight lines. TRANSPARENT materials let light straight through, TRANSLUCENT ones scatter it (blurry glow), and OPAQUE ones block it and make a shadow. A stencil (called a GOBO) lets light through only where you cut the shape.",
+    more:"Make a story with 3 different stencils and put on a shadow show for your family." },
+
+  { id:"scribble", e:"✏️", title:"Big build: Scribblebot", time:"45 min", level:3, sim:null,
+    diagram:["🎚️ Switch","🌀 Motor + weight"],
+    goal:"Build a wobbly drawing robot — inspired by the Scribblebot lessons.",
+    need:["Battery holder + batteries","1 small motor + 1 switch","2–3 wires","A paper or plastic cup","3 markers (caps off)","A lump of clay, a cork or a bottle cap to stick on the motor shaft","Tape, and a big sheet of paper"],
+    predict:{ q:"Why do you think a weight stuck OFF-CENTRE on the motor will make the robot move?", o:["It makes it lighter","It makes it wobble and shake","It makes the motor faster"] },
+    steps:[
+      "Turn the cup upside down. Tape 3 markers around it as legs, tips down, evenly spaced.",
+      "Stick the clay or cap onto the motor shaft OFF-CENTRE (to one side), so it's unbalanced.",
+      "Tape the motor on top of the cup with the weight hanging over the edge so it can spin freely.",
+      "Tape the battery holder and switch on the cup and wire them into a loop with the motor.",
+      "Put it on the paper and switch on. Watch it draw!",
+      "Change ONE thing (move the weight, change the leg positions) and see how the drawing changes."
+    ],
+    check:{ q:"What makes the scribblebot move around?", o:["The markers push it","The off-centre weight makes it vibrate","The paper pulls it"], a:1,
+      ok:"Correct! The unbalanced spinning weight shakes the whole robot — the same trick that makes a phone vibrate." },
+    why:"A spinning weight that isn't centred pulls the motor one way, then the other, over and over — that's VIBRATION. The vibration bounces the robot around on its marker legs. Engineers improve a design by changing one thing at a time and testing it.",
+    more:"Can you make your scribblebot draw circles? Try adding a 4th leg, or using a heavier weight." }
+];
+
+var P = { exp:null, data:{} };   // data[id] = { pred, steps:{}, tbl:{}, done }
+function prLoad(){ try { var d = JSON.parse(localStorage.getItem("miniMakersPractical")); if (d) P.data = d; } catch(e){} }
+function prSave(){ try { localStorage.setItem("miniMakersPractical", JSON.stringify(P.data)); } catch(e){} }
+function prD(id){ return P.data[id] || (P.data[id] = { pred:null, steps:{}, tbl:{}, done:false }); }
+prLoad();
+
+/* ---------- Router for the Circuit Lab tab ---------- */
+function renderLab(){
+  if (L.view === "sim") return renderSim();
+  if (L.view === "guide") return P.exp === null ? renderGuideList() : renderExp(P.exp);
+  renderHub();
+}
+function labGo(view){ L.view = view; if (view !== "guide") P.exp = null; render(); window.scrollTo(0, 0); }
+
+function renderHub(){
+  var done = EXPS.filter(function(x){ return prD(x.id).done; }).length;
+  var missions = Object.keys(L.done).length;
+  el("app").innerHTML = '<div class="page"><h2 class="page-title">⚡ Circuit Lab</h2>'
+    + '<p class="page-sub">Learn about electricity two ways: build circuits on the screen, or do real experiments with real parts.</p>'
+    + '<div class="hub-grid">'
+    + '<button class="hub-card hc-sim" id="go-sim"><div class="hc-e">🖥️</div><div class="hc-t">Circuit Simulator</div>'
+    + '<div class="hc-d">Drag parts and wires on the screen. 10 missions from "Light it up!" to building an alarm.</div>'
+    + '<div class="hc-p">✅ '+missions+' / 10 missions</div><div class="hc-go">Start building →</div></button>'
+    + '<button class="hub-card hc-guide" id="go-guide"><div class="hc-e">🧰</div><div class="hc-t">Practical Guide</div>'
+    + '<div class="hc-d">Hands-on experiments with batteries, bulbs, LEDs, motors and buzzers. Make a flashlight, send Morse code, build a Scribblebot!</div>'
+    + '<div class="hc-p">✅ '+done+' / '+EXPS.length+' experiments</div><div class="hc-go">Get experimenting →</div></button>'
+    + '</div>'
+    + '<div class="info-card" style="margin-top:16px;background:#fffbeb;border:2px solid #fde68a"><h4 style="color:#92400e;margin-bottom:6px">💡 Best way to learn</h4>'
+    + 'Try a mission in the <b>Simulator</b> first, then build the same circuit for real in the <b>Practical Guide</b>. Many experiments have a "Try it in the simulator" button.</div>'
+    + '</div>';
+  el("go-sim").onclick = function(){ labGo("sim"); };
+  el("go-guide").onclick = function(){ labGo("guide"); };
+}
+
+function backBar(label, fn){ return '<button class="back-btn" id="lab-back">← '+label+'</button>'; }
+
+/* ---------- Practical guide: list ---------- */
+function renderGuideList(){
+  var cards = EXPS.map(function(x, i){
+    var d = prD(x.id);
+    return '<button class="exp-card'+(d.done?" done":"")+'" data-exp="'+i+'"><div class="ec-n">'+(i+1)+'</div><div class="ec-e">'+x.e+'</div>'
+      + '<div class="ec-t">'+x.title+'</div><div class="ec-m">⏱ '+x.time+' · '+"⚡".repeat(x.level)+'</div>'
+      + (d.done ? '<div class="ec-ok">✅ Done</div>' : '') + '</button>';
+  }).join("");
+  var kit = KIT.map(function(k){ return '<li><span>'+k[0]+'</span>'+k[1]+'</li>'; }).join("");
+  el("app").innerHTML = '<div class="page">' + backBar("Circuit Lab")
+    + '<h2 class="page-title">🧰 Practical Guide</h2>'
+    + '<p class="page-sub">Real experiments with real parts. Each one has steps to follow, a question to predict first, and a quiz at the end to earn ⭐⭐.</p>'
+    + '<div class="safety"><b>⚠️ Safety first</b><ul>'
+    + '<li>Only use <b>batteries</b>. NEVER use plug sockets — mains electricity can kill.</li>'
+    + '<li>Never connect a wire straight from + to − of a battery (a short circuit). It gets HOT.</li>'
+    + '<li>Keep batteries away from your mouth, and ask an adult before cutting anything.</li>'
+    + '<li>If anything gets hot or smells funny, disconnect the battery straight away.</li></ul></div>'
+    + '<details class="kit"><summary>🧺 What you need for all the experiments</summary><ul>'+kit+'</ul></details>'
+    + '<div class="exp-grid">'+cards+'</div></div>';
+  el("lab-back").onclick = function(){ labGo("hub"); };
+  document.querySelectorAll("[data-exp]").forEach(function(b){ b.onclick = function(){ P.exp = +b.getAttribute("data-exp"); render(); window.scrollTo(0, 0); }; });
+}
+
+/* simple picture of a loop circuit: battery on the left, parts along the top */
+function loopSvg(parts){
+  var n = parts.length, w = 340, h = 150, x0 = 50, x1 = 300, y0 = 30, y1 = 120;
+  var s = '<svg viewBox="0 0 '+w+' '+h+'" class="loop-svg" role="img" aria-label="Circuit diagram">';
+  s += '<rect x="'+x0+'" y="'+y0+'" width="'+(x1-x0)+'" height="'+(y1-y0)+'" rx="14" fill="none" stroke="#f59e0b" stroke-width="4"/>';
+  // battery on the left side
+  s += '<rect x="'+(x0-22)+'" y="'+(y0+20)+'" width="44" height="50" rx="8" fill="#1f2937"/>'
+    + '<text x="'+x0+'" y="'+(y0+42)+'" text-anchor="middle" font-size="13" fill="#fbbf24" font-weight="800">+</text>'
+    + '<text x="'+x0+'" y="'+(y0+64)+'" text-anchor="middle" font-size="15" fill="#fff" font-weight="800">−</text>'
+    + '<text x="'+(x0+30)+'" y="'+(y1+24)+'" font-size="11" fill="#64748b" font-weight="700">🔋 Battery</text>';
+  parts.forEach(function(p, i){
+    var cx = x0 + (x1 - x0) * (i + 1) / (n + 1), em = p.split(" ")[0], label = p.slice(em.length + 1);
+    s += '<circle cx="'+cx+'" cy="'+y0+'" r="20" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>'
+      + '<text x="'+cx+'" y="'+(y0+7)+'" text-anchor="middle" font-size="20">'+em+'</text>'
+      + '<text x="'+cx+'" y="'+(y0+40)+'" text-anchor="middle" font-size="11" fill="#334155" font-weight="700">'+label+'</text>';
+  });
+  // electron dots
+  s += '<circle r="4" fill="#fde047"><animateMotion dur="4s" repeatCount="indefinite" path="M'+x0+' '+(y0+14)+' V'+y0+' H'+x1+' V'+y1+' H'+x0+' Z"/></circle>';
+  return s + '</svg>';
+}
+
+/* ---------- Practical guide: one experiment ---------- */
+function renderExp(i){
+  var x = EXPS[i], d = prD(x.id);
+  var need = x.need.map(function(n){ return '<li>'+n+'</li>'; }).join("");
+  var pred = x.predict.o.map(function(o, k){ return '<button class="opt'+(d.pred===k?" sel":"")+'" data-pred="'+k+'">'+o+'</button>'; }).join("");
+  var steps = x.steps.map(function(t, k){ return '<label class="step'+(d.steps[k]?" on":"")+'"><input type="checkbox" data-step="'+k+'"'+(d.steps[k]?" checked":"")+'><span class="sn">'+(k+1)+'</span><span>'+t+'</span></label>'; }).join("");
+  var table = "";
+  if (x.table){
+    var cols = x.tableCols || null;
+    table = '<div class="sec-t">📝 Record your results</div><div class="tbl-wrap"><table class="res-tbl"><tr><th>Object</th>'
+      + (cols ? cols.map(function(c){ return '<th>'+c+'</th>'; }).join("") : '<th>My guess</th><th>Result</th>') + '</tr>'
+      + x.table.map(function(obj, r){
+          var row = d.tbl[r] || {};
+          if (cols) return '<tr><td>'+obj+'</td>' + cols.map(function(c, ci){ return '<td><button class="tb'+(row.c===ci?" on":"")+'" data-t="'+r+'" data-k="c" data-v="'+ci+'">'+(row.c===ci?"✔":"")+'</button></td>'; }).join("") + '</tr>';
+          return '<tr><td>'+obj+'</td>'
+            + '<td><button class="tb'+(row.g===1?" on":"")+'" data-t="'+r+'" data-k="g" data-v="1">💡</button><button class="tb'+(row.g===0?" on":"")+'" data-t="'+r+'" data-k="g" data-v="0">✖</button></td>'
+            + '<td><button class="tb'+(row.r===1?" on":"")+'" data-t="'+r+'" data-k="r" data-v="1">💡</button><button class="tb'+(row.r===0?" on":"")+'" data-t="'+r+'" data-k="r" data-v="0">✖</button></td></tr>';
+        }).join("") + '</table></div>'
+      + (cols ? '' : '<p class="tiny-tip" style="text-align:left">💡 = the bulb lit (conductor) · ✖ = no light (insulator)</p>');
+  }
+  var code = x.code ? '<div class="sec-t">📡 Morse code table</div><div class="morse">' + x.code.map(function(c){ return '<span><b>'+c[0]+'</b> '+c[1]+'</span>'; }).join("") + '</div>' : "";
+  var chk = x.check.o.map(function(o, k){ return '<button class="opt" data-chk="'+k+'">'+o+'</button>'; }).join("");
+  var simBtn = x.sim !== null ? '<button class="tool" id="exp-sim">🖥️ Try it in the simulator</button>' : '';
+  el("app").innerHTML = '<div class="page">' + backBar("All experiments")
+    + '<div class="exp-head"><span class="eh-e">'+x.e+'</span><div><div class="eh-n">Experiment '+(i+1)+' of '+EXPS.length+'</div><h2 class="page-title" style="margin:0">'+x.title+'</h2></div></div>'
+    + '<div class="pills"><span>⏱ '+x.time+'</span><span>'+["","Easy","Medium","Challenge"][x.level]+'</span>'+(d.done?'<span class="pg">✅ Done</span>':'')+'</div>'
+    + '<p class="exp-goal">🎯 '+x.goal+'</p>'
+    + (x.diagram ? '<div class="diagram">'+loopSvg(x.diagram)+'</div>' : '')
+    + '<div class="sec-t">🧺 You need</div><ul class="need">'+need+'</ul>'
+    + '<div class="sec-t">🤔 Predict first</div><div class="q">'+x.predict.q+'</div><div class="opts">'+pred+'</div>'
+    + (d.pred !== null ? '<div class="pred-note">Great guess! Now do the experiment to find out.</div>' : '')
+    + '<div class="sec-t">🔧 Steps <span class="prog" id="step-prog"></span></div><div class="steps">'+steps+'</div>'
+    + table + code
+    + '<div class="sec-t">✅ What happened?</div><div class="q">'+x.check.q+'</div><div class="opts" id="chk-opts">'+chk+'</div><div id="chk-msg"></div>'
+    + '<div id="exp-why" style="'+(d.done?"":"display:none")+'"><div class="why"><b>🧠 Why it works</b><br>'+x.why+'</div>'
+    + '<div class="more"><b>🚀 Try next</b><br>'+x.more+'</div></div>'
+    + '<div class="lab-tools" style="margin-top:12px">'+simBtn+'</div>'
+    + '<div class="exp-nav">'+(i>0?'<button class="tool" id="exp-prev">← '+EXPS[i-1].title+'</button>':'<span></span>')
+    + (i<EXPS.length-1?'<button class="btn-primary" id="exp-next">'+EXPS[i+1].title+' →</button>':'')+'</div>'
+    + '</div>';
+  el("lab-back").onclick = function(){ P.exp = null; render(); window.scrollTo(0, 0); };
+  function stepProg(){ var n = Object.keys(d.steps).filter(function(k){ return d.steps[k]; }).length; el("step-prog").textContent = n + " / " + x.steps.length; }
+  stepProg();
+  document.querySelectorAll("[data-pred]").forEach(function(b){ b.onclick = function(){ d.pred = +b.getAttribute("data-pred"); prSave(); renderExp(i); }; });
+  document.querySelectorAll("[data-step]").forEach(function(c){ c.onchange = function(){ d.steps[c.getAttribute("data-step")] = c.checked; c.parentNode.className = "step" + (c.checked ? " on" : ""); prSave(); stepProg(); }; });
+  document.querySelectorAll("[data-t]").forEach(function(b){ b.onclick = function(){
+    var r = b.getAttribute("data-t"), k = b.getAttribute("data-k"), v = +b.getAttribute("data-v");
+    d.tbl[r] = d.tbl[r] || {}; d.tbl[r][k] = d.tbl[r][k] === v ? null : v; prSave(); renderExp(i); }; });
+  document.querySelectorAll("[data-chk]").forEach(function(b){ b.onclick = function(){
+    var k = +b.getAttribute("data-chk"), msg = el("chk-msg");
+    document.querySelectorAll("[data-chk]").forEach(function(o){ o.classList.remove("good", "bad"); });
+    if (k === x.check.a){
+      b.classList.add("good"); msg.innerHTML = '<div class="success-box" style="text-align:left">🎉 '+x.check.ok+'</div>';
+      el("exp-why").style.display = "";
+      if (!d.done){ d.done = true; prSave(); award(2, "Experiment complete!"); } else SFX.star();
+    } else { b.classList.add("bad"); SFX.miss(); msg.innerHTML = '<div class="pred-note" style="background:#fee2e2;color:#991b1b">Not quite — look back at what happened in your experiment and try again.</div>'; }
+  }; });
+  var sb = el("exp-sim"); if (sb) sb.onclick = function(){ L.view = "sim"; labSetLevel(x.sim); window.scrollTo(0, 0); };
+  var pv = el("exp-prev"); if (pv) pv.onclick = function(){ P.exp = i - 1; render(); window.scrollTo(0, 0); };
+  var nx = el("exp-next"); if (nx) nx.onclick = function(){ P.exp = i + 1; render(); window.scrollTo(0, 0); };
+}
+
 /* ================= GAME (v2: canvas + code-drawn art + Web Audio) ================= */
 var G = { playing:false, score:0, lives:3, _ten:false, muted:false };
 
@@ -1440,6 +1889,315 @@ function drawRobot(c, x, groundY){
   c.restore();
 }
 
+/* ================= micro:bit LED DESIGNER ================= */
+/* Kids draw on a micro:bit drawn in code, build animations frame by frame, and get the
+   matching MakeCode blocks / JavaScript / Python to put on a real micro:bit. */
+
+var STAMPS = {
+  "❤️ Heart": ".#.#." + "#####" + "#####" + ".###." + "..#..",
+  "🙂 Smile": "....." + ".#.#." + "....." + "#...#" + ".###.",
+  "🙁 Sad":   "....." + ".#.#." + "....." + ".###." + "#...#",
+  "➡️ Arrow": "..#.." + "...#." + "#####" + "...#." + "..#..",
+  "✔️ Tick":  "....." + "....#" + "...#." + "#.#.." + ".#...",
+  "🤖 Robot": "#####" + "#.#.#" + "#####" + ".###." + ".#.#.",
+  "⭐ Star":  "..#.." + "#####" + ".###." + ".#.#." + "#...#"
+};
+function blankFrame(){ var f = []; for (var i = 0; i < 25; i++) f.push(false); return f; }
+function stampFrame(s){ var f = []; for (var i = 0; i < 25; i++) f.push(s.charAt(i) === "#"); return f; }
+
+var D = { frames:[stampFrame(STAMPS["❤️ Heart"])], cur:0, playing:false, playIdx:0, playT:0, pause:200,
+          code:"blocks", coords:false, quest:null, paint:null, cv:null, cx:null, w:0, h:0, raf:0, last:0, t:0,
+          copiedOnce:false, questDone:false };
+function ledsLoad(){ try { var d = JSON.parse(localStorage.getItem("miniMakersLeds"));
+  if (d && d.frames && d.frames.length){ D.frames = d.frames; D.pause = d.pause || 200; D.copiedOnce = !!d.copied; D.questDone = !!d.quest; } } catch(e){} }
+function ledsSave(){ try { localStorage.setItem("miniMakersLeds", JSON.stringify({ frames:D.frames, pause:D.pause, copied:D.copiedOnce, quest:D.questDone })); } catch(e){} }
+ledsLoad();
+
+function frameOnScreen(){
+  if (D.quest) return D.quest.grid;
+  if (D.playing) return D.frames[D.playIdx % D.frames.length];
+  return D.frames[D.cur];
+}
+
+/* ---------- Page ---------- */
+function renderLeds(){
+  var speeds = [[0,"🐇 Fast"],[200,"🚶 Medium"],[600,"🐢 Slow"]].map(function(s){
+    return '<option value="'+s[0]+'"'+(D.pause===s[0]?" selected":"")+'>'+s[1]+'</option>'; }).join("");
+  var stamps = Object.keys(STAMPS).map(function(k){ return '<button class="stamp" data-s="'+k+'">'+k+'</button>'; }).join("");
+  var html = '<div class="page"><h2 class="page-title">💡 micro:bit LED Designer</h2>'
+    + '<p class="page-sub">Tap or drag on the LEDs to draw. Add frames to make an animation, then copy the code onto a real micro:bit!</p>'
+    + '<a class="guide-link" href="led-designer-guide.html">📖 How to use this page</a>'
+    + '<div class="led-wrap"><div class="led-left">'
+    + '<div id="led-board-wrap"><canvas id="led-canvas" style="display:block;width:100%;height:100%"></canvas></div>'
+    + '<div id="led-quest" class="led-quest"></div>'
+    + '<div class="lab-tools" style="margin-top:8px">'
+    + '<button class="tool" id="ld-clear">🧹 Clear</button><button class="tool" id="ld-inv">🔄 Flip on/off</button>'
+    + '<button class="tool" data-shift="L">⬅️</button><button class="tool" data-shift="R">➡️</button><button class="tool" data-shift="U">⬆️</button><button class="tool" data-shift="D">⬇️</button>'
+    + '<button class="tool" id="ld-xy">'+(D.coords?"📍 Hide x,y":"📍 Show x,y")+'</button></div>'
+    + '<div class="stamps">'+stamps+'</div>'
+    + '</div><div class="led-right">'
+    + '<div class="led-sec-t">🎞️ Animation frames</div>'
+    + '<div id="led-frames" class="led-frames"></div>'
+    + '<div class="lab-tools"><button class="tool" id="ld-add">➕ New frame</button><button class="tool" id="ld-dup">⧉ Copy frame</button><button class="tool" id="ld-del">🗑 Delete frame</button></div>'
+    + '<div class="lab-tools"><button class="btn-primary" id="ld-play">'+(D.playing?"⏹ Stop":"▶ Play")+'</button>'
+    + '<select id="ld-speed" class="ld-speed">'+speeds+'</select>'
+    + '<button class="tool" id="ld-quest" style="margin-left:auto">🎯 Coordinate Quest</button></div>'
+    + '<div class="led-sec-t" style="margin-top:12px">🧩 Your code</div>'
+    + '<div class="code-tabs"><button data-code="blocks">Blocks</button><button data-code="js">JavaScript</button><button data-code="py">Python</button></div>'
+    + '<div id="led-code" class="led-code"></div>'
+    + '<div class="lab-tools" style="margin-top:8px"><button class="btn-primary" id="ld-copy">📋 Copy code</button>'
+    + '<a class="tool" href="https://makecode.microbit.org/" target="_blank" rel="noopener" style="text-decoration:none">🚀 Open MakeCode</a></div>'
+    + '<div class="info-card" style="background:#f0f9ff;border:2px solid #bae6fd;margin-top:10px"><h4 style="color:#0369a1;margin-bottom:6px">🔌 Put it on your micro:bit</h4>'
+    + '1. Tap <b>Copy code</b>.<br>2. Open MakeCode and start a <b>New Project</b>.<br>3. Click <b>JavaScript</b> at the top, select everything and paste.<br>4. Click <b>Blocks</b> — there are your blocks!<br>5. Plug in the micro:bit and press <b>Download</b>.</div>'
+    + '</div></div></div>';
+  el("app").innerHTML = html;
+  D.cv = el("led-canvas"); D.cx = D.cv.getContext("2d"); ledsSize();
+  D.cv.addEventListener("pointerdown", ledsDown);
+  D.cv.addEventListener("pointermove", ledsMove);
+  D.cv.addEventListener("pointerup", function(){ D.paint = null; ledsSave(); });
+  D.cv.addEventListener("pointercancel", function(){ D.paint = null; });
+  el("ld-clear").onclick = function(){ ledsEdit(function(f){ for (var i = 0; i < 25; i++) f[i] = false; }); };
+  el("ld-inv").onclick = function(){ ledsEdit(function(f){ for (var i = 0; i < 25; i++) f[i] = !f[i]; }); };
+  document.querySelectorAll("[data-shift]").forEach(function(b){ b.onclick = function(){ ledsShift(b.getAttribute("data-shift")); }; });
+  el("ld-xy").onclick = function(){ D.coords = !D.coords; this.textContent = D.coords ? "📍 Hide x,y" : "📍 Show x,y"; };
+  document.querySelectorAll(".stamp").forEach(function(b){ b.onclick = function(){ var s = stampFrame(STAMPS[b.getAttribute("data-s")]); ledsEdit(function(f){ for (var i = 0; i < 25; i++) f[i] = s[i]; }); }; });
+  el("ld-add").onclick = function(){ if (D.frames.length >= 12) return; D.frames.splice(D.cur + 1, 0, blankFrame()); D.cur++; ledsAfter(); };
+  el("ld-dup").onclick = function(){ if (D.frames.length >= 12) return; D.frames.splice(D.cur + 1, 0, D.frames[D.cur].slice()); D.cur++; ledsAfter(); };
+  el("ld-del").onclick = function(){ if (D.frames.length <= 1){ ledsEdit(function(f){ for (var i = 0; i < 25; i++) f[i] = false; }); return; } D.frames.splice(D.cur, 1); D.cur = Math.max(0, D.cur - 1); ledsAfter(); };
+  el("ld-play").onclick = function(){ ledsPlay(!D.playing); };
+  el("ld-speed").onchange = function(){ D.pause = +this.value; ledsAfter(); };
+  el("ld-quest").onclick = function(){ D.quest ? questEnd(false) : questStart(); };
+  document.querySelectorAll("[data-code]").forEach(function(b){ b.onclick = function(){ D.code = b.getAttribute("data-code"); ledsCode(); }; });
+  el("ld-copy").onclick = ledsCopy;
+  ledsFrames(); ledsCode(); questUi();
+  if (!D.raf){ D.last = performance.now(); D.raf = requestAnimationFrame(ledsLoop); }
+}
+
+function ledsSize(){
+  if (!D.cv) return;
+  var wrap = D.cv.parentNode, r = wrap.getBoundingClientRect();
+  var w = Math.min(r.width, 420), h = w * 0.86;
+  wrap.style.height = h + "px"; D.cv.style.width = w + "px"; D.cv.style.margin = "0 auto";
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  D.w = w; D.h = h; D.cv.width = Math.round(w * dpr); D.cv.height = Math.round(h * dpr);
+  D.cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener("resize", function(){ if (S.tab === "leds") ledsSize(); });
+
+/* ---------- Editing ---------- */
+function ledsEdit(fn){ if (D.quest) return; ledsPlay(false); fn(D.frames[D.cur]); ledsAfter(); }
+function ledsAfter(){ ledsFrames(); ledsCode(); ledsSave(); }
+function ledsShift(dir){
+  ledsEdit(function(f){
+    var o = blankFrame();
+    for (var y = 0; y < 5; y++) for (var x = 0; x < 5; x++){
+      var sx = x, sy = y;
+      if (dir === "L") sx = x + 1; if (dir === "R") sx = x - 1; if (dir === "U") sy = y + 1; if (dir === "D") sy = y - 1;
+      o[y*5 + x] = (sx >= 0 && sx < 5 && sy >= 0 && sy < 5) ? f[sy*5 + sx] : false;
+    }
+    for (var i = 0; i < 25; i++) f[i] = o[i];
+  });
+}
+function ledsPlay(on){
+  D.playing = on && D.frames.length > 0; D.playIdx = D.cur; D.playT = 0;
+  var b = el("ld-play"); if (b) b.textContent = D.playing ? "⏹ Stop" : "▶ Play";
+}
+
+/* geometry of the drawn micro:bit */
+function ledGeo(){
+  var g = D.w * 0.46, cell = g / 5;
+  return { x0:(D.w - g)/2, y0:D.h * 0.17, cell:cell };
+}
+function ledAt(e){
+  var r = D.cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top, G = ledGeo();
+  var x = Math.floor((px - G.x0) / G.cell), y = Math.floor((py - G.y0) / G.cell);
+  if (x < 0 || x > 4 || y < 0 || y > 4) return null;
+  return { x:x, y:y, i:y*5 + x };
+}
+function ledsDown(e){
+  var p = ledAt(e); if (!p) return;
+  D.cv.setPointerCapture(e.pointerId);
+  if (D.quest){ questTap(p); return; }
+  ledsPlay(false);
+  var f = D.frames[D.cur]; D.paint = !f[p.i]; f[p.i] = D.paint; ledBlip(D.paint); D.lastI = p.i; ledsFrames(); ledsCode();
+}
+function ledsMove(e){
+  if (D.paint === null || D.quest) return;
+  var p = ledAt(e); if (!p || p.i === D.lastI) return;
+  D.lastI = p.i; var f = D.frames[D.cur];
+  if (f[p.i] !== D.paint){ f[p.i] = D.paint; ledBlip(D.paint); ledsFrames(); ledsCode(); }
+}
+function ledBlip(on){ var a = SFX.ctx && SFX.ctx(); if (!a) return; var o = a.createOscillator(), g = a.createGain(), t = a.currentTime;
+  o.type = "sine"; o.frequency.setValueAtTime(on ? 1200 : 700, t); g.gain.setValueAtTime(0.06, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + 0.06); }
+
+/* ---------- Frames strip ---------- */
+function ledsFrames(){
+  var box = el("led-frames"); if (!box) return;
+  box.innerHTML = "";
+  D.frames.forEach(function(f, i){
+    var c = document.createElement("canvas"); c.width = 56; c.height = 56; c.className = "frame-th" + (i === D.cur ? " on" : "");
+    var x = c.getContext("2d"); x.fillStyle = "#111827"; x.fillRect(0, 0, 56, 56);
+    for (var k = 0; k < 25; k++){ x.fillStyle = f[k] ? "#ff3b3b" : "#3f2a2a"; x.fillRect(6 + (k%5)*9.4, 6 + Math.floor(k/5)*9.4, 6, 6); }
+    c.title = "Frame " + (i + 1);
+    c.onclick = function(){ if (D.quest) return; ledsPlay(false); D.cur = i; ledsFrames(); };
+    var w = document.createElement("div"); w.className = "frame-w"; w.appendChild(c);
+    var n = document.createElement("span"); n.textContent = i + 1; w.appendChild(n);
+    box.appendChild(w);
+  });
+}
+
+/* ---------- Code generation ---------- */
+function ledRows(f, ind){ var s = ""; for (var y = 0; y < 5; y++){ var r = []; for (var x = 0; x < 5; x++) r.push(f[y*5 + x] ? "#" : "."); s += ind + r.join(" ") + "\n"; } return s; }
+function ledsJS(){
+  if (D.frames.length === 1) return "basic.showLeds(`\n" + ledRows(D.frames[0], "    ") + "    `)\n";
+  var s = "basic.forever(function () {\n";
+  D.frames.forEach(function(f){ s += "    basic.showLeds(`\n" + ledRows(f, "        ") + "        `)\n"; if (D.pause) s += "    basic.pause(" + D.pause + ")\n"; });
+  return s + "})\n";
+}
+function ledsPy(){
+  if (D.frames.length === 1) return 'basic.show_leds("""\n' + ledRows(D.frames[0], "    ") + '    """)\n';
+  var s = "def on_forever():\n";
+  D.frames.forEach(function(f){ s += '    basic.show_leds("""\n' + ledRows(f, "        ") + '        """)\n'; if (D.pause) s += "    basic.pause(" + D.pause + ")\n"; });
+  return s + "basic.forever(on_forever)\n";
+}
+function blockGrid(f){ var s = '<span class="bk-grid">'; for (var i = 0; i < 25; i++) s += '<i class="'+(f[i]?"on":"")+'"></i>'; return s + '</span>'; }
+function ledsBlocks(){
+  var inner = D.frames.map(function(f){
+    return '<div class="bk">show leds '+blockGrid(f)+'</div>' + (D.frames.length > 1 && D.pause ? '<div class="bk">pause (ms) <span class="bk-n">'+D.pause+'</span></div>' : '');
+  }).join("");
+  return '<div class="bk-hat">'+(D.frames.length > 1 ? "forever" : "on start")+'</div><div class="bk-body">'+inner+'</div><div class="bk-foot"></div>';
+}
+function ledsCode(){
+  var box = el("led-code"); if (!box) return;
+  document.querySelectorAll("[data-code]").forEach(function(b){ b.className = b.getAttribute("data-code") === D.code ? "on" : ""; });
+  if (D.code === "blocks") box.innerHTML = '<div class="bk-wrap">' + ledsBlocks() + '</div>';
+  else { var pre = document.createElement("pre"); pre.textContent = D.code === "js" ? ledsJS() : ledsPy(); box.innerHTML = ""; box.appendChild(pre); }
+}
+function ledsCopy(){
+  var txt = D.code === "py" ? ledsPy() : ledsJS();
+  function done(){
+    var b = el("ld-copy"); if (b){ b.textContent = "✅ Copied!"; setTimeout(function(){ if (el("ld-copy")) el("ld-copy").textContent = "📋 Copy code"; }, 1800); }
+    if (!D.copiedOnce){ D.copiedOnce = true; ledsSave(); award(1, "Code ready for your micro:bit!"); }
+  }
+  function fallback(){ var t = document.createElement("textarea"); t.value = txt; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); } catch(e){} t.remove(); done(); }
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, fallback); else fallback();
+}
+
+/* ---------- Coordinate Quest: find the LED at x, y ---------- */
+function questStart(){
+  ledsPlay(false);
+  D.quest = { round:0, right:0, grid:blankFrame(), target:null, msg:"", flash:0 };
+  questNext(); el("ld-quest").textContent = "✖ End quest";
+}
+function questNext(){
+  var q = D.quest; q.round++; q.grid = blankFrame();
+  var t; do { t = { x:Math.floor(Math.random()*5), y:Math.floor(Math.random()*5) }; } while (q.target && t.x === q.target.x && t.y === q.target.y);
+  q.target = t; q.msg = ""; questUi();
+}
+function questTap(p){
+  var q = D.quest;
+  if (p.x === q.target.x && p.y === q.target.y){
+    q.grid = blankFrame(); q.grid[p.i] = true; q.right++; q.flash = 0.6; SFX.star();
+    q.msg = "✅ Yes! x=" + p.x + ", y=" + p.y;
+    if (q.round >= 5){ setTimeout(function(){ questEnd(true); }, 700); }
+    else setTimeout(function(){ if (D.quest === q) questNext(); }, 800);
+  } else {
+    SFX.miss(); q.grid = blankFrame(); q.grid[p.i] = true;
+    q.msg = "That one is x=" + p.x + ", y=" + p.y + ". Remember: x counts ACROSS → and y counts DOWN ↓, both starting at 0.";
+  }
+  questUi();
+}
+function questEnd(won){
+  var q = D.quest; D.quest = null;
+  var b = el("ld-quest"); if (b) b.textContent = "🎯 Coordinate Quest";
+  var box = el("led-quest");
+  if (won && box){
+    box.innerHTML = '<div class="success-box">🏆 Quest complete! You found all 5 LEDs. In MakeCode, <b>plot x y</b> uses these same numbers.</div>';
+    SFX.fanfare(); if (!D.questDone){ D.questDone = true; ledsSave(); award(2, "Coordinate master!"); }
+  } else if (box) box.innerHTML = "";
+}
+function questUi(){
+  var box = el("led-quest"); if (!box) return;
+  if (!D.quest){ return; }
+  var q = D.quest;
+  box.innerHTML = '<div class="mission"><div class="m-t">🎯 Round '+Math.min(q.round,5)+' of 5</div>Tap the LED at <b style="font-size:1.1rem">x = '+q.target.x+', y = '+q.target.y+'</b>'
+    + (q.msg ? '<div style="margin-top:6px">'+q.msg+'</div>' : '') + '</div>';
+}
+
+/* ---------- Loop + drawing the micro:bit ---------- */
+function ledsLoop(now){
+  if (!D.cv || !document.body.contains(D.cv)){ D.raf = 0; return; }
+  var dt = Math.min(0.05, (now - D.last) / 1000); D.last = now; D.t += dt;
+  if (D.playing){
+    D.playT += dt * 1000;
+    var frameMs = 400 + D.pause;          // MakeCode's show leds waits 400 ms, then the pause
+    if (D.playT >= frameMs){ D.playT = 0; D.playIdx = (D.playIdx + 1) % D.frames.length; }
+  }
+  if (D.quest && D.quest.flash > 0) D.quest.flash -= dt;
+  ledsDraw();
+  D.raf = requestAnimationFrame(ledsLoop);
+}
+function ledsDraw(){
+  var c = D.cx, w = D.w, h = D.h, G = ledGeo(), f = frameOnScreen();
+  c.clearRect(0, 0, w, h);
+  // board
+  var bh = h * 0.80;
+  rr(c, 2, 2, w - 4, bh, 22); c.fillStyle = "#1f2937"; c.fill();
+  // edge connector (gold)
+  c.fillStyle = "#1f2937"; c.fillRect(2, bh - 30, w - 4, h - bh + 26);
+  rr(c, 2, h - 40, w - 4, 38, 6); c.fillStyle = "#1f2937"; c.fill();
+  var pads = [["0",0.12],["1",0.33],["2",0.54],["3V",0.73],["GND",0.90]];
+  for (var t = 0; t < 40; t++){ c.fillStyle = "#c9a227"; c.fillRect(8 + t * ((w - 16) / 40), h - 14, (w - 16) / 40 - 2, 12); }
+  pads.forEach(function(p){
+    var px = w * p[1], pw = w * 0.11;
+    c.fillStyle = "#e0b73a"; rr(c, px - pw/2, h - 44, pw, 40, 6); c.fill();
+    c.fillStyle = "#1f2937"; c.beginPath(); c.arc(px, h - 30, pw * 0.22, 0, 6.28); c.fill();
+    c.fillStyle = "#fff"; c.font = "700 " + Math.round(w*0.03) + "px Arial"; c.textAlign = "center"; c.fillText(p[0], px, h - 50);
+  });
+  // logo (V2 touch logo)
+  var lx = w/2, ly = h * 0.08;
+  c.strokeStyle = "#e0b73a"; c.lineWidth = 3; c.beginPath(); c.ellipse(lx, ly, w*0.05, w*0.03, 0, 0, 6.28); c.stroke();
+  c.fillStyle = "#e0b73a"; c.beginPath(); c.arc(lx - w*0.022, ly, 3, 0, 6.28); c.arc(lx + w*0.022, ly, 3, 0, 6.28); c.fill();
+  // buttons A and B
+  [["A", w*0.13], ["B", w*0.87]].forEach(function(b){
+    var by = G.y0 + G.cell * 2.5, r = w * 0.06;
+    c.fillStyle = "#9ca3af"; rr(c, b[1] - r*1.3, by - r*1.3, r*2.6, r*2.6, 6); c.fill();
+    c.fillStyle = "#111827"; c.beginPath(); c.arc(b[1], by, r, 0, 6.28); c.fill();
+    c.fillStyle = "#fff"; c.font = "800 " + Math.round(w*0.045) + "px Arial"; c.textAlign = "center"; c.fillText(b[0], b[1], by - r*1.6);
+  });
+  // LEDs
+  for (var i = 0; i < 25; i++){
+    var x = i % 5, y = Math.floor(i / 5);
+    var cx = G.x0 + (x + 0.5) * G.cell, cy = G.y0 + (y + 0.5) * G.cell, lw = G.cell * 0.26, lh = G.cell * 0.46;
+    if (f[i]){
+      var gl = c.createRadialGradient(cx, cy, 2, cx, cy, G.cell * 0.75);
+      gl.addColorStop(0, "rgba(255,60,60,.75)"); gl.addColorStop(1, "rgba(255,60,60,0)");
+      c.fillStyle = gl; c.beginPath(); c.arc(cx, cy, G.cell * 0.75, 0, 6.28); c.fill();
+    }
+    c.fillStyle = f[i] ? "#ff4040" : "#4b3535"; rr(c, cx - lw/2, cy - lh/2, lw, lh, 2); c.fill();
+    if (f[i]){ c.fillStyle = "rgba(255,230,230,.9)"; c.fillRect(cx - lw*0.2, cy - lh*0.35, lw*0.4, lh*0.7); }
+  }
+  // target ring in the quest (only flashes after a correct answer)
+  if (D.quest && D.quest.flash > 0){
+    var tx = G.x0 + (D.quest.target.x + 0.5) * G.cell, ty = G.y0 + (D.quest.target.y + 0.5) * G.cell;
+    c.strokeStyle = "rgba(250,204,21," + D.quest.flash + ")"; c.lineWidth = 3; c.beginPath(); c.arc(tx, ty, G.cell * 0.5, 0, 6.28); c.stroke();
+  }
+  // x,y labels
+  if (D.coords || D.quest){
+    c.fillStyle = "#93c5fd"; c.font = "800 " + Math.round(G.cell * 0.32) + "px Arial"; c.textAlign = "center"; c.textBaseline = "middle";
+    for (var k = 0; k < 5; k++){
+      c.fillText(k, G.x0 + (k + 0.5) * G.cell, G.y0 - G.cell * 0.35);
+      c.fillText(k, G.x0 - G.cell * 0.35, G.y0 + (k + 0.5) * G.cell);
+    }
+    c.fillStyle = "#fde68a"; c.font = "800 " + Math.round(G.cell * 0.28) + "px Arial";
+    c.fillText("x →", G.x0 + G.cell * 5 + G.cell * 0.45, G.y0 - G.cell * 0.35);
+    c.fillText("y ↓", G.x0 - G.cell * 0.35, G.y0 + G.cell * 5 + G.cell * 0.35);
+    c.textBaseline = "alphabetic";
+  }
+  if (D.playing){ c.fillStyle = "#86efac"; c.font = "800 " + Math.round(w*0.035) + "px Arial"; c.textAlign = "left"; c.fillText("▶ frame " + (D.playIdx + 1) + "/" + D.frames.length, 14, 24); }
+}
+
 /* ================= ROUTER ================= */
 function render(){
   renderTabs();
@@ -1449,10 +2207,14 @@ function render(){
   else if (S.tab==="coder") renderCoder();
   else if (S.tab==="lab") renderLab();
   else if (S.tab==="game") renderGame();
+  else if (S.tab==="leds") renderLeds();
 }
 load();
 if (location.hash === "#game") S.tab = "game";
 if (location.hash === "#lab") S.tab = "lab";
+if (location.hash === "#sim"){ S.tab = "lab"; L.view = "sim"; }
+if (location.hash === "#guide"){ S.tab = "lab"; L.view = "guide"; }
+if (location.hash === "#leds") S.tab = "leds";
 render();
 </script>
 </body>
