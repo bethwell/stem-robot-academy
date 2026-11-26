@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>How to use the micro:bit LED Designer — MiniMakers Play &amp; Learn</title>
+<meta name="description" content="Step-by-step guide to drawing, animating and coding the micro:bit LED display with the MiniMakers LED Designer." />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Poppins', Arial, sans-serif; background: #f5f8fc; color: #333; line-height: 1.65; padding-bottom: 40px; }
+  a { color: #0369a1; }
+  .header { background: linear-gradient(90deg,#071b33,#123a6b); color: #fff; }
+  .header-in { max-width: 860px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .back { color: #fff; font-weight: 700; font-size: .85rem; text-decoration: none; background: rgba(255,255,255,.15); padding: 6px 14px; border-radius: 999px; }
+  .back:hover { background: #ff8c00; }
+  .logo { font-weight: 800; font-size: 1.05rem; } .logo span { color: #ff8c00; }
+  .print { margin-left: auto; background: #ff8c00; color: #fff; border: none; font: inherit; font-weight: 800; font-size: .82rem; border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+  main { max-width: 860px; margin: 0 auto; padding: 18px 16px; }
+  h1 { font-size: 1.7rem; font-weight: 800; color: #123; line-height: 1.25; }
+  .sub { color: #555; font-weight: 500; margin: 6px 0 16px; }
+  .toc { background: #fff; border: 2px solid #e2e8f0; border-radius: 18px; padding: 12px 16px; margin-bottom: 18px; font-size: .9rem; }
+  .toc b { color: #123; } .toc ol { margin: 6px 0 0 20px; columns: 2; column-gap: 24px; }
+  @media (max-width: 560px){ .toc ol { columns: 1; } }
+  section { background: #fff; border-radius: 20px; padding: 18px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,.05); }
+  h2 { font-size: 1.2rem; font-weight: 800; color: #c2410c; margin-bottom: 8px; }
+  h3 { font-size: .98rem; font-weight: 800; color: #123; margin: 12px 0 4px; }
+  p, li { font-size: .92rem; }
+  ul, ol { margin: 6px 0 6px 22px; }
+  li { margin: 3px 0; }
+  .tip { background: #ecfeff; border-left: 5px solid #06b6d4; border-radius: 12px; padding: 10px 12px; margin: 10px 0; font-size: .88rem; }
+  .warn { background: #fff7ed; border-left: 5px solid #f97316; border-radius: 12px; padding: 10px 12px; margin: 10px 0; font-size: .88rem; }
+  .btn { display: inline-block; background: #e0f2fe; color: #075985; font-weight: 800; font-size: .8rem; border-radius: 10px; padding: 2px 8px; white-space: nowrap; }
+  .row { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin: 10px 0; }
+  .fig { text-align: center; font-size: .78rem; font-weight: 700; color: #64748b; }
+  .mb { display: inline-grid; grid-template-columns: repeat(5, 16px); gap: 5px; background: #1f2937; padding: 10px; border-radius: 12px; }
+  .mb i { width: 16px; height: 16px; border-radius: 3px; background: #4b3535; }
+  .mb i.on { background: #ff4040; box-shadow: 0 0 8px rgba(255,60,60,.8); }
+  .xy { display: inline-grid; grid-template-columns: 22px repeat(5, 30px); gap: 4px; font-size: .78rem; font-weight: 800; text-align: center; align-items: center; }
+  .xy .c { background: #1f2937; color: #fde68a; border-radius: 6px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: .62rem; }
+  .xy .c.on { background: #ff4040; color: #fff; }
+  .xy .h { color: #2563eb; }
+  .arrow { font-size: 1.4rem; color: #94a3b8; }
+  pre { background: #0f172a; color: #e2e8f0; border-radius: 12px; padding: 12px; font-size: .78rem; overflow-x: auto; line-height: 1.4; }
+  table { width: 100%; border-collapse: collapse; font-size: .86rem; margin-top: 6px; }
+  th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+  th { background: #f1f5f9; color: #123; }
+  .chal { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-top: 8px; }
+  .chal div { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 14px; padding: 10px 12px; font-size: .86rem; }
+  .chal b { color: #c2410c; }
+  .teacher { background: #f0fdf4; border: 2px solid #86efac; }
+  .teacher h2 { color: #15803d; }
+  footer { text-align: center; font-size: .8rem; color: #64748b; margin-top: 10px; }
+  @media print {
+    body { background: #fff; }
+    .header .back, .print { display: none; }
+    section { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+    .mb i.on { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="header"><div class="header-in">
+  <a class="back" href="./#leds" onclick="if (document.referrer && history.length > 1) { history.back(); return false; }">← Back to LED Designer</a>
+  <div class="logo">MiniMakers <span>Play &amp; Learn</span> 🤖</div>
+  <button class="print" onclick="window.print()">🖨️ Print guide</button>
+</div></div>
+
+<main>
+  <h1>📖 How to use the micro:bit LED Designer</h1>
+  <p class="sub">Draw pictures and animations on a micro:bit screen, then put them on a real micro:bit. For MiniMakers, parents and teachers.</p>
+
+  <div class="toc"><b>In this guide</b>
+    <ol>
+      <li><a href="#screen">The micro:bit screen</a></li>
+      <li><a href="#draw">Drawing a picture</a></li>
+      <li><a href="#tools">Handy tools</a></li>
+      <li><a href="#animate">Making an animation</a></li>
+      <li><a href="#code">Reading your code</a></li>
+      <li><a href="#microbit">Putting it on a real micro:bit</a></li>
+      <li><a href="#quest">Coordinate Quest</a></li>
+      <li><a href="#challenges">Challenges to try</a></li>
+      <li><a href="#help">Something not working?</a></li>
+      <li><a href="#teachers">For teachers &amp; parents</a></li>
+    </ol>
+  </div>
+
+  <section id="screen">
+    <h2>1. The micro:bit screen</h2>
+    <p>The front of a micro:bit has <b>25 tiny red lights</b> called <b>LEDs</b>, arranged in <b>5 rows of 5</b>. Each LED can be <b>ON</b> (lit) or <b>OFF</b> (dark). Every picture you make is just a pattern of ONs and OFFs — just like the pixels on a phone screen!</p>
+    <div class="row">
+      <div class="fig"><div class="mb" data-leds=".#.#.##########.###...#.."></div><br>25 LEDs make a heart</div>
+    </div>
+  </section>
+
+  <section id="draw">
+    <h2>2. Drawing a picture</h2>
+    <ol>
+      <li>Open the <b>💡 LED Designer</b> tab.</li>
+      <li><b>Tap</b> an LED to turn it ON. Tap it again to turn it OFF.</li>
+      <li>To draw faster, <b>press and drag</b> your finger (or mouse) across the LEDs.</li>
+    </ol>
+    <div class="tip">💡 <b>Tip:</b> if you start dragging on an OFF light, everything you drag over turns ON. Start on an ON light and you rub them out, like an eraser.</div>
+  </section>
+
+  <section id="tools">
+    <h2>3. Handy tools</h2>
+    <table>
+      <tr><th>Button</th><th>What it does</th></tr>
+      <tr><td><span class="btn">🧹 Clear</span></td><td>Turns every LED off so you can start again.</td></tr>
+      <tr><td><span class="btn">🔄 Flip on/off</span></td><td>Swaps every light: ON becomes OFF and OFF becomes ON.</td></tr>
+      <tr><td><span class="btn">⬅️ ➡️ ⬆️ ⬇️</span></td><td>Slides your whole picture one step. Lights that slide off the edge disappear.</td></tr>
+      <tr><td><span class="btn">📍 Show x,y</span></td><td>Shows the number of every row and column (see <a href="#quest">Coordinate Quest</a>).</td></tr>
+      <tr><td><span class="btn">❤️ Heart</span> and other stamps</td><td>Puts a ready-made picture on the screen. Great for a quick start — then change it to make it your own!</td></tr>
+    </table>
+  </section>
+
+  <section id="animate">
+    <h2>4. Making an animation</h2>
+    <p>An animation is lots of still pictures (called <b>frames</b>) shown quickly one after another — just like a cartoon flip-book.</p>
+    <div class="row">
+      <div class="fig"><div class="mb" data-leds="..#.....#.#####...#...#.."></div><br>Frame 1</div><span class="arrow">→</span>
+      <div class="fig"><div class="mb" data-leds="...#.....#.####....#...#."></div><br>Frame 2</div><span class="arrow">→</span>
+      <div class="fig"><div class="mb" data-leds="....#.......###.........#"></div><br>Frame 3</div>
+    </div>
+    <ol>
+      <li>Draw your first picture.</li>
+      <li>Tap <span class="btn">⧉ Copy frame</span> to make a copy of it.</li>
+      <li>Change the copy a little (the ➡️ button is perfect for moving things).</li>
+      <li>Repeat until you have all your frames. You can have up to <b>12</b>.</li>
+      <li>Tap <span class="btn">▶ Play</span> to watch it. Choose <b>Fast</b>, <b>Medium</b> or <b>Slow</b>.</li>
+    </ol>
+    <ul>
+      <li>Tap a small frame picture to go back and edit it.</li>
+      <li><span class="btn">➕ New frame</span> adds an empty frame. <span class="btn">🗑 Delete frame</span> removes the one you're on.</li>
+    </ul>
+    <div class="tip">💡 <b>Tip:</b> small changes between frames make smooth animations. Big changes make it look jumpy.</div>
+  </section>
+
+  <section id="code">
+    <h2>5. Reading your code</h2>
+    <p>While you draw, the LED Designer writes the code for you. Choose how you want to see it:</p>
+    <ul>
+      <li><b>Blocks</b> — looks just like MakeCode. Each <b>show leds</b> block is one frame.</li>
+      <li><b>JavaScript</b> and <b>Python</b> — the same program written as text, for older MiniMakers.</li>
+    </ul>
+    <h3>What the blocks mean</h3>
+    <ul>
+      <li><b>on start</b> — runs <b>once</b> when the micro:bit turns on. You get this with one frame.</li>
+      <li><b>forever</b> — repeats <b>again and again</b>. You get this with two or more frames, so your animation keeps playing. This is called a <b>loop</b>.</li>
+      <li><b>pause (ms)</b> — waits before the next frame. <b>1000 ms = 1 second</b>.</li>
+    </ul>
+    <p>In the code, <code>#</code> means an LED is ON and <code>.</code> means it is OFF:</p>
+<pre>basic.showLeds(`
+    . # . # .
+    # # # # #
+    # # # # #
+    . # # # .
+    . . # . .
+    `)</pre>
+  </section>
+
+  <section id="microbit">
+    <h2>6. Putting it on a real micro:bit</h2>
+    <ol>
+      <li>In the LED Designer, tap <span class="btn">📋 Copy code</span>. (It doesn't matter which view you're on — Blocks copies the JavaScript.)</li>
+      <li>Tap <span class="btn">🚀 Open MakeCode</span> and click <b>New Project</b>. Give it a name.</li>
+      <li>At the top of MakeCode, click <b>JavaScript</b>.</li>
+      <li>Click inside the code, select everything (<b>Ctrl + A</b>) and paste (<b>Ctrl + V</b>).</li>
+      <li>Click <b>Blocks</b> at the top — your blocks appear!</li>
+      <li>Plug the micro:bit into the computer with a USB cable.</li>
+      <li>Click <b>Download</b>. If MakeCode asks to pair, follow its steps; otherwise drag the downloaded <b>.hex</b> file onto the <b>MICROBIT</b> drive.</li>
+      <li>Watch your picture light up on the micro:bit! 🎉</li>
+    </ol>
+    <div class="tip">💡 Want Python instead? In MakeCode click <b>Python</b> at the top, then paste the code from the LED Designer's <b>Python</b> view.</div>
+    <div class="warn">⚠️ If your animation looks a bit slower on the real micro:bit, that's normal: each <b>show leds</b> block waits about 0.4 seconds on its own, plus your pause. The Play button already copies this timing.</div>
+  </section>
+
+  <section id="quest">
+    <h2>7. Coordinate Quest</h2>
+    <p>Every LED has an address made of two numbers: <b>x</b> and <b>y</b>.</p>
+    <ul>
+      <li><b>x</b> counts <b>across →</b> from left to right.</li>
+      <li><b>y</b> counts <b>down ↓</b> from top to bottom.</li>
+      <li>Both start at <b>0</b>, not 1! So they go 0, 1, 2, 3, 4.</li>
+    </ul>
+    <div class="row"><div class="xy" id="xy"></div>
+      <p style="max-width:300px">The lit LED is at <b>x = 3, y = 1</b>: go 3 across, then 1 down.</p></div>
+    <p>Tap <span class="btn">🎯 Coordinate Quest</span>, then tap the LED the game asks for. Find all 5 to win ⭐⭐. If you pick the wrong one, the game tells you its address so you can try again.</p>
+    <div class="tip">💡 In MakeCode, the <b>plot x y</b> block (in the <b>Led</b> section) uses these exact numbers to turn on one LED at a time.</div>
+  </section>
+
+  <section id="challenges">
+    <h2>8. Challenges to try</h2>
+    <div class="chal">
+      <div><b>⭐ Easy:</b> Draw the first letter of your name.</div>
+      <div><b>⭐ Easy:</b> Make a heart that blinks (2 frames: heart, then empty).</div>
+      <div><b>⭐⭐ Medium:</b> Make an arrow that moves across the screen using ➡️ and Copy frame.</div>
+      <div><b>⭐⭐ Medium:</b> Make a smiley that turns into a sad face and back.</div>
+      <div><b>⭐⭐⭐ Hard:</b> Make a rain animation: drops falling from top to bottom.</div>
+      <div><b>⭐⭐⭐ Hard:</b> Put your animation on your robot, then change the pause in the code to make it faster.</div>
+    </div>
+  </section>
+
+  <section id="help">
+    <h2>9. Something not working?</h2>
+    <table>
+      <tr><th>Problem</th><th>Try this</th></tr>
+      <tr><td>Copy code doesn't paste anything</td><td>Switch to the <b>JavaScript</b> view, press and hold (or drag) to select the code, and copy it yourself.</td></tr>
+      <tr><td>MakeCode shows red errors after pasting</td><td>Make sure you deleted the old code first (Ctrl + A, then paste), and that you pasted into the <b>JavaScript</b> view, not Python.</td></tr>
+      <tr><td>The micro:bit doesn't show up on the computer</td><td>Some USB cables only charge. Try a different cable. Check the micro:bit's yellow light comes on.</td></tr>
+      <tr><td>Nothing happens on the micro:bit</td><td>Wait for the download to finish (the yellow light flashes, then stops). Press the reset button on the back.</td></tr>
+      <tr><td>My drawing disappeared</td><td>Your work is saved on this device and browser only. On a different phone or computer you'll start fresh.</td></tr>
+      <tr><td>No sound when tapping LEDs</td><td>Sound may be turned off in another game (🔇). Turn it on there, or check your device volume.</td></tr>
+    </table>
+  </section>
+
+  <section id="teachers" class="teacher">
+    <h2>10. For teachers &amp; parents</h2>
+    <h3>What learners practise</h3>
+    <ul>
+      <li>Pixels and <b>on/off (binary)</b> thinking on a 5 × 5 grid.</li>
+      <li><b>x, y coordinates</b> starting from 0 — the basis of MakeCode's <b>plot x y</b> and of moving robots on a grid.</li>
+      <li><b>Sequences</b> (frames in order) and <b>loops</b> (<b>forever</b> vs <b>on start</b>).</li>
+      <li>Design → test → improve, and moving code from the screen onto real hardware.</li>
+    </ul>
+    <h3>Suggested targets by age</h3>
+    <table>
+      <tr><th>Age</th><th>Learner can…</th></tr>
+      <tr><td>5–7</td><td>Draw a picture, use stamps, make a 2-frame blink, and show it on a micro:bit with help.</td></tr>
+      <tr><td>8–10</td><td>Finish the Coordinate Quest, make a 4–6 frame animation, copy it into MakeCode on their own, and explain <b>on start</b> vs <b>forever</b>.</td></tr>
+      <tr><td>11–15</td><td>Plan an animation before drawing, read and edit the JavaScript or Python (e.g. change the pause), and explain what a loop does.</td></tr>
+    </table>
+    <h3>A 20-minute session</h3>
+    <ol>
+      <li><b>5 min</b> — Show the micro:bit's 25 LEDs. Learners draw any picture.</li>
+      <li><b>5 min</b> — Coordinate Quest (everyone tries for 5/5).</li>
+      <li><b>7 min</b> — Make a 2–3 frame animation and press Play.</li>
+      <li><b>3 min</b> — Download one or two learners' animations onto a micro:bit robot for everyone to see.</li>
+    </ol>
+    <h3>Quick checks</h3>
+    <ul>
+      <li>"Light up x = 4, y = 0." — Most learners should get it first time after the quest.</li>
+      <li>"Why does your animation keep repeating?" — "Because it's in a <b>forever</b> loop."</li>
+      <li>Older learners: change one number in the code to make it faster and explain what changed.</li>
+    </ul>
+  </section>
+
+  <footer>MiniMakers Robotics Academy · Play &amp; Learn</footer>
+</main>
+
+<script>
+  // draw the little LED pictures in this guide
+  document.querySelectorAll(".mb[data-leds]").forEach(function(g){
+    var p = g.getAttribute("data-leds");
+    for (var i = 0; i < 25; i++){ var c = document.createElement("i"); if (p.charAt(i) === "#") c.className = "on"; g.appendChild(c); }
+  });
+  // coordinate diagram with x = 3, y = 1 lit
+  var xy = document.getElementById("xy"), h = '<span></span>';
+  for (var x = 0; x < 5; x++) h += '<span class="h">x' + x + '</span>';
+  for (var y = 0; y < 5; y++){
+    h += '<span class="h">y' + y + '</span>';
+    for (var x2 = 0; x2 < 5; x2++) h += '<span class="c' + (x2 === 3 && y === 1 ? ' on' : '') + '">' + x2 + ',' + y + '</span>';
+  }
+  xy.innerHTML = h;
+</script>
+</body>
+</html>
