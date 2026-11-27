@@ -269,6 +269,24 @@
   .bcard.up .bval { color: #0f172a; }
   .bbit { position: absolute; bottom: 4px; font-family: Consolas, monospace; font-weight: 900; font-size: .85rem; color: #64748b; }
   .bcard.up .bbit { color: #ea580c; }
+  /* Robot Launch */
+  #ln-area { position: relative; height: 360px; border-radius: 22px; overflow: hidden; border: 4px solid #1e293b; user-select: none; -webkit-user-select: none; }
+  @media (max-width: 520px){ #ln-area { height: 290px; } }
+  #ln-ov .game-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; background: rgba(15,23,42,.62); color: #fff; text-align: center; padding: 16px; }
+  #ln-ov .t { font-weight: 900; font-size: 1.15rem; }
+  .ln-msg { min-height: 0; margin-top: 8px; font-size: .88rem; font-weight: 600; border-radius: 14px; }
+  .ln-msg.info { background: #ecfeff; color: #155e75; padding: 10px 12px; }
+  .ln-msg.warn { background: #fff7ed; color: #9a3412; padding: 10px 12px; border: 2px solid #fed7aa; }
+  .ln-left { display: inline-block; margin-left: 4px; font-weight: 800; color: #c2410c; }
+  .ln-ctrl { display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: end; margin-top: 10px; }
+  @media (max-width: 620px){ .ln-ctrl { grid-template-columns: 1fr; } }
+  .ln-sl label { font-weight: 800; font-size: .86rem; color: #123; display: block; margin-bottom: 4px; }
+  .ln-sl label b { color: #ea580c; } .ln-sl small { color: #64748b; font-weight: 700; }
+  .ln-row { display: flex; align-items: center; gap: 8px; }
+  .ln-row input[type=range] { flex: 1; accent-color: #ea580c; height: 28px; }
+  .ln-pm { width: 38px; height: 38px; border-radius: 12px; background: #e0f2fe; color: #075985; font-weight: 900; font-size: 1.2rem; flex-shrink: 0; }
+  .ln-fire { font-size: 1.05rem; padding: 14px 22px; }
+  .ln-fire:disabled { opacity: .5; }
 </style>
 </head>
 <body>
@@ -357,7 +375,7 @@ var CHALLENGES = [
     stars:[{x:2,y:4},{x:2,y:1},{x:4,y:0}], walls:[{x:1,y:2},{x:3,y:3}] }
 ];
 
-var TABS = [ {id:"home",label:"🏠 Home"},{id:"learn",label:"📚 Learn"},{id:"coder",label:"🤖 Robot Coder"},{id:"lab",label:"⚡ Circuit Lab"},{id:"game",label:"🎮 Catch Game"},{id:"lander",label:"🚀 Lander"},{id:"binary",label:"🔢 Binary Bots"},{id:"leds",label:"💡 LED Designer"} ];
+var TABS = [ {id:"home",label:"🏠 Home"},{id:"learn",label:"📚 Learn"},{id:"coder",label:"🤖 Robot Coder"},{id:"lab",label:"⚡ Circuit Lab"},{id:"game",label:"🎮 Catch Game"},{id:"lander",label:"🚀 Lander"},{id:"binary",label:"🔢 Binary Bots"},{id:"launch",label:"🎯 Robot Launch"},{id:"leds",label:"💡 LED Designer"} ];
 var TRACKS = [
   { id:"mini", name:"Mini-makers", emoji:"🐣", ages:"Ages 5–6", grad:"g-teal", desc:"Discover STEM through play — energy, motion, structures and first robots!" },
   { id:"mega", name:"Mega-makers", emoji:"🚀", ages:"Ages 7–9", grad:"g-sky", desc:"Dive into electronics, sensors and coding with Scratch!" },
@@ -414,6 +432,7 @@ function renderHome(){
     {id:"game",e:"🎮",t:"Robot Catch",d:"Play and sharpen reflexes!",c:"g-blue"},
     {id:"lander",e:"🚀",t:"Rover Lander",d:"Land gently on the Moon, Mars and Earth!",c:"g-orange"},
     {id:"binary",e:"🔢",t:"Binary Bots",d:"Power up robots with binary numbers!",c:"g-sky"},
+    {id:"launch",e:"🎯",t:"Robot Launch",d:"Aim, launch and charge the robot — real physics!",c:"g-teal"},
     {id:"leds",e:"💡",t:"LED Designer",d:"Draw on a micro:bit and get the code!",c:"g-teal"}
   ];
   var html = '<div class="page">'
@@ -2668,6 +2687,326 @@ function drawBinBot(c, b, beltY, isTarget){
   c.restore();
 }
 
+/* ================= ROBOT LAUNCH (projectile physics) ================= */
+/* Set the angle and power, launch a battery to a robot. Uses the real projectile equations:
+     x = x0 + v·cos(θ)·t      y = y0 + v·sin(θ)·t − ½·g·t²
+   Every 3 levels the game moves Earth → Moon → Mars. The launcher's top speed never changes,
+   so on the Moon the same throw really does fly about 6× further. */
+
+var LWORLDS = [
+  { id:"earth", name:"Earth", emoji:"🌍", g:9.8,  sky:["#7dd3fc","#e0f2fe"], ground:"#16a34a", dirt:"#a16207" },
+  { id:"moon",  name:"Moon",  emoji:"🌙", g:1.62, sky:["#020617","#1e1b4b"], ground:"#9ca3af", dirt:"#6b7280" },
+  { id:"mars",  name:"Mars",  emoji:"🔴", g:3.71, sky:["#7c2d12","#fdba74"], ground:"#c2410c", dirt:"#7c2d12" }
+];
+var LV_MAX = 18;          // launcher top speed in m/s (same everywhere)
+var LTYPES = ["flat", "platform", "wall"];
+var LN = { level:1, state:"menu", angle:45, power:60, tries:0, score:0, stars:0, shots:[], cur:null, layout:null,
+           cv:null, cx:null, w:0, h:0, raf:0, last:0, t:0, parts:[], msg:"", best:0, maxLevel:1, showEq:false, hitAnim:0 };
+try { var _ln = JSON.parse(localStorage.getItem("miniMakersLaunch")); if (_ln){ LN.best = _ln.best || 0; LN.maxLevel = _ln.maxLevel || 1; } } catch(e){}
+function launchSave(){ try { localStorage.setItem("miniMakersLaunch", JSON.stringify({ best:LN.best, maxLevel:LN.maxLevel })); } catch(e){} }
+
+function lWorld(level){ return LWORLDS[Math.floor((level - 1) / 3) % 3]; }
+function lType(level){ return level <= 9 ? LTYPES[(level - 1) % 3] : LTYPES[Math.floor(Math.random() * 3)]; }
+function lRange(world){ return LV_MAX * LV_MAX / world.g; }     // the furthest a 45° throw can go on flat ground
+
+/* ---------- Level layout (all in metres), checked so it can always be solved ---------- */
+function lMakeLayout(level){
+  var world = lWorld(level), R = lRange(world), W = R * 1.18, type = lType(level), L, tries = 0;
+  do {
+    var tx = W * (0.42 + Math.random() * 0.28);
+    L = { world:world, type:type, W:W, x0:W * 0.04, y0:W * 0.025, rects:[], target:{ x:tx, base:0 }, hitR:W * 0.045 };
+    if (type === "platform" || (type === "wall" && Math.random() < 0.5)){
+      var ph = W * (0.05 + Math.random() * 0.06), pw = W * 0.11;
+      L.rects.push({ x:tx - pw/2, w:pw, h:ph, kind:"platform" }); L.target.base = ph;
+    }
+    if (type === "wall"){
+      var wx = W * (0.24 + Math.random() * 0.12), wh = W * (0.12 + Math.random() * 0.10);
+      if (wx + W * 0.03 < tx - W * 0.08) L.rects.push({ x:wx, w:W * 0.025, h:wh, kind:"wall" });
+    }
+    tries++;
+  } while (!lSolvable(L) && tries < 60);
+  return L;
+}
+function lSolvable(L){
+  for (var a = 10; a <= 80; a += 2) for (var p = 20; p <= 100; p += 2){ if (lSimulate(L, a, p).hit) return true; }
+  return false;
+}
+
+/* ---------- Physics: step along the real equations and find what the battery hits ---------- */
+function lSimulate(L, angle, power){
+  var g = L.world.g, v = LV_MAX * power / 100, th = angle * Math.PI / 180;
+  var vx = v * Math.cos(th), vy = v * Math.sin(th);
+  var Tmax = (vy + Math.sqrt(vy*vy + 2*g*L.y0)) / g + 0.01, steps = 600, dt = Tmax / steps;
+  var pts = [], maxH = 0, res = { hit:false, kind:"ground", x:0, t:0 };
+  var tg = L.target, robotY = tg.base + L.hitR * 0.9;
+  for (var i = 0; i <= steps; i++){
+    var t = i * dt, x = L.x0 + vx * t, y = L.y0 + vy * t - 0.5 * g * t * t;
+    pts.push({ x:x, y:y, t:t }); if (y > maxH) maxH = y;
+    if (i === 0) continue;
+    if (Math.hypot(x - tg.x, y - robotY) < L.hitR){ res = { hit:true, kind:"robot", x:x, y:y, t:t }; break; }
+    var hitRect = null;
+    for (var r = 0; r < L.rects.length; r++){ var R = L.rects[r]; if (x >= R.x && x <= R.x + R.w && y <= R.h && y >= 0){ hitRect = R; break; } }
+    if (hitRect){
+      var prev = pts[pts.length - 2], onTop = prev.y >= hitRect.h - 0.0001;
+      res = { hit:false, kind:onTop ? "top" : hitRect.kind, x:x, y:onTop ? hitRect.h : y, t:t, rect:hitRect }; if (onTop) pts[pts.length-1].y = hitRect.h; break;
+    }
+    if (y <= 0){ var py = pts[pts.length-2]; var f = py.y / (py.y - y); var gx = py.x + (x - py.x) * f;
+      pts[pts.length-1] = { x:gx, y:0, t:py.t + (t - py.t) * f }; res = { hit:false, kind:"ground", x:gx, y:0, t:pts[pts.length-1].t }; break; }
+    if (x > L.W * 1.6){ res = { hit:false, kind:"off", x:x, y:y, t:t }; break; }
+  }
+  res.pts = pts; res.maxH = maxH; res.v = v; res.range = res.x - L.x0;
+  return res;
+}
+
+/* ---------- Page ---------- */
+function renderLaunch(){
+  var lv = Math.min(LN.maxLevel, 12), chips = "";
+  for (var i = 1; i <= Math.max(9, lv); i++){ var wd = lWorld(i);
+    chips += '<button class="lv-chip'+(i===LN.level?" on":"")+'" data-ll="'+i+'"'+(i>LN.maxLevel?" disabled":"")+'>'+wd.emoji+' '+i+(i>LN.maxLevel?" 🔒":"")+'</button>'; }
+  el("app").innerHTML = '<div class="page"><h2 class="page-title">🎯 Robot Launch</h2>'
+    + '<p class="page-sub">The robot needs a battery! Set the <b>angle</b> and <b>power</b>, then launch. You get 3 tries for each robot.</p>'
+    + '<div class="lv-row">'+chips+'</div>'
+    + '<div class="game-stats"><span id="ln-lvl"></span><span id="ln-tries"></span><span id="ln-score">🏆 '+LN.score+'</span><span id="ln-best">🥇 Best '+LN.best+'</span>'
+    + '<span id="ln-mute" style="cursor:pointer;margin-left:auto">'+(G.muted?"🔇":"🔊")+'</span></div>'
+    + '<div id="ln-area"><canvas id="ln-canvas" style="display:block;width:100%;height:100%"></canvas><div id="ln-ov"></div></div>'
+    + '<div id="ln-msg" class="ln-msg"></div>'
+    + '<div class="ln-ctrl">'
+    + '<div class="ln-sl"><label>📐 Angle <b id="ln-av">'+LN.angle+'°</b></label><div class="ln-row"><button class="ln-pm" data-d="a-">−</button><input type="range" id="ln-a" min="5" max="85" value="'+LN.angle+'"><button class="ln-pm" data-d="a+">+</button></div></div>'
+    + '<div class="ln-sl"><label>💪 Power <b id="ln-pv">'+LN.power+'%</b> <small id="ln-ms"></small></label><div class="ln-row"><button class="ln-pm" data-d="p-">−</button><input type="range" id="ln-p" min="10" max="100" value="'+LN.power+'"><button class="ln-pm" data-d="p+">+</button></div></div>'
+    + '<button class="btn-primary ln-fire" id="ln-fire">🚀 Launch!</button></div>'
+    + '<details class="kit" id="ln-eq-box"'+(LN.showEq?" open":"")+'><summary>🧮 The science (for older MiniMakers)</summary><div id="ln-eq"></div></details>'
+    + '<p class="tiny-tip">Keyboard: ← → change the angle, ↑ ↓ change the power, Space launches.</p></div>';
+  LN.cv = el("ln-canvas"); LN.cx = LN.cv.getContext("2d"); launchSize();
+  document.querySelectorAll("[data-ll]").forEach(function(b){ b.onclick = function(){ if (LN.state === "fly") return; lStartLevel(+b.getAttribute("data-ll")); }; });
+  el("ln-mute").onclick = function(){ G.muted = !G.muted; this.textContent = G.muted ? "🔇" : "🔊"; };
+  el("ln-a").oninput = function(){ LN.angle = +this.value; lCtrlUi(); };
+  el("ln-p").oninput = function(){ LN.power = +this.value; lCtrlUi(); };
+  document.querySelectorAll(".ln-pm").forEach(function(b){ b.onclick = function(){ var d = b.getAttribute("data-d");
+    if (d === "a-") LN.angle = Math.max(5, LN.angle - 1); if (d === "a+") LN.angle = Math.min(85, LN.angle + 1);
+    if (d === "p-") LN.power = Math.max(10, LN.power - 1); if (d === "p+") LN.power = Math.min(100, LN.power + 1);
+    el("ln-a").value = LN.angle; el("ln-p").value = LN.power; lCtrlUi(); }; });
+  el("ln-fire").onclick = lFire;
+  el("ln-eq-box").ontoggle = function(){ LN.showEq = this.open; };
+  var wasMenu = LN.state === "menu" || LN.state === "menu-wait";
+  if (!LN.layout || LN.state === "menu") lStartLevel(LN.level, true);
+  lCtrlUi(); lHud(); lEq();
+  if (wasMenu) lOverlay("start");
+  else if (LN.state === "won") lOverlay("win");
+  else if (LN.state === "failed") lOverlay("fail");
+  if (!LN.raf){ LN.last = performance.now(); LN.raf = requestAnimationFrame(launchLoop); }
+}
+function launchSize(){ var r = LN.cv.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+  LN.w = r.width; LN.h = r.height; LN.cv.width = Math.round(r.width*dpr); LN.cv.height = Math.round(r.height*dpr); LN.cx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+window.addEventListener("resize", function(){ if (S.tab === "launch" && LN.cv) launchSize(); });
+window.addEventListener("keydown", function(e){
+  if (S.tab !== "launch" || !el("ln-a")) return;
+  var used = true;
+  if (e.key === "ArrowLeft") LN.angle = Math.max(5, LN.angle - 1); else if (e.key === "ArrowRight") LN.angle = Math.min(85, LN.angle + 1);
+  else if (e.key === "ArrowDown") LN.power = Math.max(10, LN.power - 1); else if (e.key === "ArrowUp") LN.power = Math.min(100, LN.power + 1);
+  else if (e.key === " ") lFire(); else used = false;
+  if (used){ e.preventDefault(); el("ln-a").value = LN.angle; el("ln-p").value = LN.power; lCtrlUi(); }
+});
+function lCtrlUi(){
+  el("ln-av").textContent = LN.angle + "°"; el("ln-pv").textContent = LN.power + "%";
+  el("ln-ms").textContent = "(" + (LV_MAX * LN.power / 100).toFixed(1) + " m/s)";
+  var f = el("ln-fire"); if (f) f.disabled = !(LN.state === "aim");
+  lEq();
+}
+function lHud(){
+  var w = LN.layout ? LN.layout.world : lWorld(LN.level);
+  el("ln-lvl").textContent = w.emoji + " Level " + LN.level;
+  el("ln-tries").textContent = "🔋".repeat(Math.max(0, 3 - LN.tries)) + "▫️".repeat(Math.min(3, LN.tries));
+  el("ln-score").textContent = "🏆 " + LN.score;
+  if (el("ln-best")) el("ln-best").textContent = "🥇 Best " + LN.best;
+}
+function lEq(){
+  var box = el("ln-eq"); if (!box || !LN.layout) return;
+  var w = LN.layout.world, v = LV_MAX * LN.power / 100, th = LN.angle * Math.PI / 180;
+  var flatRange = v * v * Math.sin(2 * th) / w.g;
+  box.innerHTML = '<p>The battery follows the <b>projectile equations</b>:</p>'
+    + '<pre>x = v · cos(θ) · t\ny = v · sin(θ) · t − ½ · g · t²</pre>'
+    + '<p>Right now: v = <b>'+v.toFixed(1)+' m/s</b>, θ = <b>'+LN.angle+'°</b>, g on '+w.name+' = <b>'+w.g+' m/s²</b>.</p>'
+    + '<p>On flat ground this throw would land about <b>'+flatRange.toFixed(1)+' m</b> away (range = v²·sin(2θ) ÷ g).</p>'
+    + '<p>💡 The furthest throw on flat ground is at <b>45°</b>. Smaller g = longer flights — that\'s why the Moon is so much bigger!</p>';
+}
+
+function lStartLevel(level, quiet){
+  var prevWorld = LN.layout ? LN.layout.world.id : null;
+  LN.level = level; LN.tries = 0; LN.shots = []; LN.cur = null; LN.parts = []; LN.hitAnim = 0;
+  LN.layout = lMakeLayout(level); LN.state = "aim";
+  el("ln-msg") && (el("ln-msg").innerHTML = "");
+  var ov = el("ln-ov"); if (ov) ov.innerHTML = "";
+  if (el("ln-lvl")){ lHud(); lCtrlUi(); }
+  document.querySelectorAll("[data-ll]").forEach(function(b){ b.classList.toggle("on", +b.getAttribute("data-ll") === level); });
+  if (!quiet && prevWorld && prevWorld !== LN.layout.world.id) lOverlay("world");
+  else if (!quiet) lMsg("🎯 Level " + level + ": " + ({ flat:"hit the robot!", platform:"the robot is up on a platform!", wall:"a wall is in the way — go over it!" })[LN.layout.type], "info");
+}
+function lMsg(t, kind){ var m = el("ln-msg"); if (m){ m.className = "ln-msg " + (kind || ""); m.innerHTML = t; } }
+
+function lOverlay(kind){
+  var ov = el("ln-ov"); if (!ov) return;
+  var w = LN.layout.world, body = "";
+  if (kind === "start") body = '<div class="t">🎯 Robot Launch</div><div class="ld-sub">Level '+LN.level+' on '+w.emoji+' '+w.name+'</div><button class="start" id="ln-go">Start!</button>';
+  if (kind === "world"){
+    var times = (9.8 / w.g).toFixed(1);
+    body = '<div class="t">'+w.emoji+' Welcome to '+w.name+'!</div>'
+      + '<div class="ld-fact">Gravity here is <b>'+w.g+' m/s²</b>'+(w.id === "earth" ? "." : ' — about <b>'+times+'× weaker</b> than Earth\'s ('+'9.8 m/s²). Your launcher is just as strong, so <b>the same throw flies about '+times+'× further</b>. Look at the distance ruler!')+'</div>'
+      + '<button class="start" id="ln-go">Let\'s go!</button>';
+  }
+  if (kind === "fail") body = '<div class="t">😢 Out of tries!</div><div class="ld-sub">The robot is still waiting for its battery.</div>'
+      + '<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button class="start" id="ln-go">🔁 Try this level again</button><button class="start" id="ln-skip" style="background:#64748b">Next level →</button></div>';
+  if (kind === "win"){
+    var pts = 4 - LN.tries;
+    body = '<div class="t">⚡ Robot charged! +'+pts+' point'+(pts>1?"s":"")+' & ⭐</div><div class="ld-sub">'+(LN.tries===1?"First try — amazing aim! 🎯":LN.tries===2?"Got it on the second try!":"Phew — last try!")+'</div>'
+      + '<div class="ld-fact">'+LN.cur.stats+'</div><button class="start" id="ln-go">Next level →</button>';
+  }
+  ov.innerHTML = '<div class="game-overlay">'+body+'</div>';
+  el("ln-go").onclick = function(){
+    if (kind === "win"){ lStartLevel(LN.level + 1); return; }
+    if (kind === "fail"){ lStartLevel(LN.level); return; }
+    ov.innerHTML = ""; LN.state = "aim"; lCtrlUi();
+    if (kind === "world") lMsg("🎯 Level " + LN.level + " on " + w.name + ". Try a throw you used on Earth and see what happens!", "info");
+  };
+  var sk = el("ln-skip"); if (sk) sk.onclick = function(){ lStartLevel(LN.level + 1); };
+  if (kind === "world" || kind === "start") LN.state = "menu-wait";
+  if (el("ln-fire")) el("ln-fire").disabled = true;
+}
+
+function lFire(){
+  if (LN.state !== "aim") return;
+  var r = lSimulate(LN.layout, LN.angle, LN.power);
+  var real = r.t, disp = Math.max(1.0, Math.min(2.6, real));
+  LN.cur = { res:r, angle:LN.angle, power:LN.power, clock:0, speed:real / disp, done:false };
+  LN.tries++; LN.state = "fly"; lHud(); lCtrlUi(); lMsg("", "");
+  var a = SFX.ctx && SFX.ctx();
+  if (a){ var o = a.createOscillator(), gg = a.createGain(), tt = a.currentTime; o.type = "triangle"; o.frequency.setValueAtTime(180, tt); o.frequency.exponentialRampToValueAtTime(700, tt + 0.25);
+    gg.gain.setValueAtTime(0.18, tt); gg.gain.exponentialRampToValueAtTime(0.0001, tt + 0.3); o.connect(gg); gg.connect(a.destination); o.start(tt); o.stop(tt + 0.32); }
+}
+function lLanded(){
+  var c = LN.cur, r = c.res, L = LN.layout;
+  c.done = true;
+  c.stats = "Flew " + r.range.toFixed(1) + " m in " + r.t.toFixed(1) + " s, highest point " + r.maxH.toFixed(1) + " m (v = " + r.v.toFixed(1) + " m/s, θ = " + c.angle + "°).";
+  LN.shots.push(c);
+  if (r.hit){
+    LN.state = "won"; LN.hitAnim = 1.2; var pts = 4 - LN.tries; LN.score += pts; LN.stars++;
+    if (LN.score > LN.best) LN.best = LN.score;
+    if (LN.level + 1 > LN.maxLevel) LN.maxLevel = LN.level + 1;
+    launchSave(); SFX.fanfare(); award(1, "Robot charged!");
+    for (var k = 0; k < 40; k++) LN.parts.push({ x:L.target.x, y:L.target.base + L.hitR, vx:(Math.random()-0.5)*L.W*0.5, vy:Math.random()*L.W*0.45, life:1.3, c:["#facc15","#22c55e","#38bdf8","#f472b6"][k%4] });
+    lHud(); setTimeout(function(){ if (LN.state === "won") lOverlay("win"); }, 700);
+    return;
+  }
+  var diff = r.x - L.target.x, txt;
+  if (r.kind === "wall") txt = "🧱 Bonk! The battery hit the wall " + r.y.toFixed(1) + " m up. Try a <b>higher angle</b> or <b>more power</b> to get over it.";
+  else if (r.kind === "platform") txt = "📦 It hit the side of the platform. Aim a little <b>higher</b>.";
+  else if (r.kind === "off") txt = "🚀 Way too far — it flew off the screen! Use <b>less power</b>.";
+  else txt = (diff < 0 ? "⬅️ <b>" + Math.abs(diff).toFixed(1) + " m short</b>." : "➡️ <b>" + diff.toFixed(1) + " m too far</b>.")
+    + (r.kind === "top" ? " (It landed on the platform.)" : "") + (diff < 0 ? " Try a bit more power." : " Try a bit less power.");
+  SFX.miss();
+  for (var j = 0; j < 12; j++) LN.parts.push({ x:r.x, y:r.y, vx:(Math.random()-0.5)*L.W*0.15, vy:Math.random()*L.W*0.12, life:0.8, c:"#a8a29e" });
+  if (LN.tries >= 3){ LN.state = "failed"; lMsg(txt, "warn"); setTimeout(function(){ if (LN.state === "failed") lOverlay("fail"); }, 900); }
+  else { LN.state = "aim"; lMsg(txt + " <span class='ln-left'>" + (3 - LN.tries) + " tr" + (3 - LN.tries === 1 ? "y" : "ies") + " left.</span>", "warn"); }
+  lHud(); lCtrlUi();
+}
+
+function launchLoop(now){
+  if (!LN.cv || !document.body.contains(LN.cv)){ LN.raf = 0; return; }
+  var dt = Math.min(0.05, (now - LN.last) / 1000); LN.last = now; LN.t += dt;
+  if (LN.state === "fly" && LN.cur && !LN.cur.done){
+    LN.cur.clock += dt * LN.cur.speed;
+    if (LN.cur.clock >= LN.cur.res.t){ LN.cur.clock = LN.cur.res.t; lLanded(); }
+  }
+  if (LN.hitAnim > 0) LN.hitAnim -= dt;
+  var g = LN.layout ? LN.layout.world.g : 9.8, L = LN.layout;
+  for (var i = LN.parts.length - 1; i >= 0; i--){ var p = LN.parts[i]; p.x += p.vx*dt; p.y += p.vy*dt; p.vy -= (L ? L.W : 30) * 0.8 * dt; p.life -= dt; if (p.life <= 0) LN.parts.splice(i, 1); }
+  launchDraw();
+  LN.raf = requestAnimationFrame(launchLoop);
+}
+
+/* ---------- Drawing ---------- */
+function launchDraw(){
+  var c = LN.cx, w = LN.w, h = LN.h, L = LN.layout; if (!L) return;
+  var wd = L.world, gy = h - 34, sc = (w - 10) / L.W;      // metres → pixels
+  function X(m){ return 6 + m * sc; } function Y(m){ return gy - m * sc; }
+  var g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, wd.sky[0]); g.addColorStop(1, wd.sky[1]);
+  c.fillStyle = g; c.fillRect(0, 0, w, h);
+  if (wd.id !== "earth"){ for (var s = 0; s < 40; s++){ c.fillStyle = "rgba(255,255,255," + (0.3 + 0.3*Math.sin(LN.t + s)) + ")"; c.fillRect((s * 97) % w, (s * 53) % (gy - 40), 1.5, 1.5); } }
+  if (wd.id === "earth"){ c.fillStyle = "#fde047"; c.beginPath(); c.arc(w - 40, 34, 16, 0, 6.28); c.fill(); }
+  // ground + ruler
+  c.fillStyle = wd.ground; c.fillRect(0, gy, w, 8); c.fillStyle = wd.dirt; c.fillRect(0, gy + 8, w, h - gy);
+  var step = niceStep(L.W / 6);
+  c.fillStyle = "rgba(255,255,255,.85)"; c.font = "700 10px Poppins, Arial"; c.textAlign = "center";
+  for (var m = 0; m <= L.W; m += step){ var px = X(L.x0 + m); if (px > w - 8) break; c.fillRect(px, gy + 8, 1.5, 6); c.fillText(m + " m", px, gy + 25); }
+  // platforms and walls
+  L.rects.forEach(function(R){
+    if (R.kind === "wall"){ c.fillStyle = "#78716c"; c.fillRect(X(R.x), Y(R.h), R.w * sc, R.h * sc);
+      c.strokeStyle = "#57534e"; c.lineWidth = 1; for (var by = 0; by < R.h * sc; by += 8){ c.beginPath(); c.moveTo(X(R.x), Y(R.h) + by); c.lineTo(X(R.x) + R.w*sc, Y(R.h) + by); c.stroke(); } }
+    else { c.fillStyle = "#94a3b8"; c.fillRect(X(R.x), Y(R.h), R.w * sc, R.h * sc); c.fillStyle = "#475569"; c.fillRect(X(R.x), Y(R.h), R.w * sc, 5);
+      c.strokeStyle = "#64748b"; c.lineWidth = 2; c.beginPath(); c.moveTo(X(R.x), Y(R.h)); c.lineTo(X(R.x + R.w), gy); c.moveTo(X(R.x + R.w), Y(R.h)); c.lineTo(X(R.x), gy); c.stroke(); }
+  });
+  // earlier shots: faint dotted lines
+  LN.shots.forEach(function(sh, i){
+    if (sh === LN.cur && !sh.done) return;
+    c.setLineDash([3, 6]); c.strokeStyle = "rgba(255,255,255,.55)"; c.lineWidth = 2; c.beginPath();
+    sh.res.pts.forEach(function(p, k){ if (k === 0) c.moveTo(X(p.x), Y(p.y)); else c.lineTo(X(p.x), Y(p.y)); }); c.stroke(); c.setLineDash([]);
+    var e = sh.res.pts[sh.res.pts.length - 1]; c.fillStyle = "rgba(255,255,255,.8)"; c.font = "800 10px Arial"; c.textAlign = "center";
+    c.fillText((i + 1) + ": " + sh.angle + "°/" + sh.power + "%", X(e.x), Y(e.y) - 8);
+  });
+  // target robot
+  drawLaunchBot(c, X(L.target.x), Y(L.target.base), L.hitR * sc, LN.state === "won");
+  // launcher
+  var lx = X(L.x0), ly = Y(L.y0), ang = LN.angle * Math.PI / 180;
+  c.fillStyle = "#334155"; rr(c, lx - 14, ly, 28, gy - ly + 2, 4); c.fill();
+  c.save(); c.translate(lx, ly); c.rotate(-ang);
+  c.fillStyle = "#f97316"; rr(c, -4, -7, 40, 14, 6); c.fill(); c.fillStyle = "#c2410c"; c.fillRect(30, -7, 6, 14);
+  c.restore();
+  c.fillStyle = "#1e293b"; c.beginPath(); c.arc(lx, ly, 8, 0, 6.28); c.fill();
+  // power arrow while aiming
+  if (LN.state === "aim"){
+    var len = 30 + LN.power * 0.6; c.strokeStyle = "rgba(250,204,21,.9)"; c.lineWidth = 3; c.setLineDash([6, 4]);
+    c.beginPath(); c.moveTo(lx, ly); c.lineTo(lx + Math.cos(ang) * len, ly - Math.sin(ang) * len); c.stroke(); c.setLineDash([]);
+    c.fillStyle = "#fde047"; c.font = "800 11px Arial"; c.textAlign = "left"; c.fillText(LN.angle + "°", lx + 22, ly - 6);
+  }
+  // current flight
+  if (LN.cur && (LN.state === "fly" || !LN.cur.done)){
+    var pts = LN.cur.res.pts, tt = LN.cur.clock, last = pts[0];
+    c.strokeStyle = "#fde047"; c.lineWidth = 2.5; c.beginPath(); c.moveTo(X(pts[0].x), Y(pts[0].y));
+    for (var k = 1; k < pts.length && pts[k].t <= tt; k++){ c.lineTo(X(pts[k].x), Y(pts[k].y)); last = pts[k]; } c.stroke();
+    drawBatt(c, X(last.x), Y(last.y), tt * 8);
+    if (Y(last.y) < 4){ c.fillStyle = "#fff"; c.font = "800 11px Arial"; c.textAlign = "center"; c.fillText("▲ " + last.y.toFixed(0) + " m up", X(last.x), 14); }
+    if (LN.cur.speed > 1.3){ c.fillStyle = "rgba(255,255,255,.85)"; c.font = "800 11px Arial"; c.textAlign = "right"; c.fillText("⏩ ×" + LN.cur.speed.toFixed(0) + " speed", w - 10, 18); }
+  }
+  LN.parts.forEach(function(p){ c.globalAlpha = Math.max(0, Math.min(1, p.life)); c.fillStyle = p.c; c.beginPath(); c.arc(X(p.x), Y(p.y), 3, 0, 6.28); c.fill(); });
+  c.globalAlpha = 1;
+  // planet + gravity badge
+  c.fillStyle = "rgba(0,0,0,.35)"; rr(c, 8, 8, 128, 24, 8); c.fill();
+  c.fillStyle = "#fff"; c.font = "800 11px Poppins, Arial"; c.textAlign = "left"; c.fillText(wd.emoji + " " + wd.name + "  g = " + wd.g + " m/s²", 14, 24);
+}
+function niceStep(x){ var p = Math.pow(10, Math.floor(Math.log10(x))), n = x / p; return (n < 1.5 ? 1 : n < 3.5 ? 2 : n < 7.5 ? 5 : 10) * p; }
+function drawBatt(c, x, y, rot){
+  c.save(); c.translate(x, y); c.rotate(rot);
+  c.fillStyle = "#1f2937"; rr(c, -9, -5, 16, 10, 2); c.fill(); c.fillStyle = "#facc15"; c.fillRect(1, -5, 6, 10);
+  c.fillStyle = "#9ca3af"; c.fillRect(7, -2.5, 3, 5); c.restore();
+}
+function drawLaunchBot(c, x, y, r, happy){
+  var s = Math.max(0.6, r / 16), bob = happy ? Math.abs(Math.sin(LN.t * 10)) * 4 : Math.sin(LN.t * 3) * 1.5;
+  c.save(); c.translate(x, y - bob); c.scale(s, s);
+  // catch zone
+  c.strokeStyle = "rgba(250,204,21,.6)"; c.setLineDash([3, 3]); c.lineWidth = 1.5; c.beginPath(); c.arc(0, -14.4, 16, 0, 6.28); c.stroke(); c.setLineDash([]);
+  c.fillStyle = "#111827"; c.fillRect(-9, -4, 6, 4); c.fillRect(3, -4, 6, 4);
+  c.fillStyle = happy ? "#facc15" : "#3b82f6"; rr(c, -10, -22, 20, 18, 4); c.fill();
+  // battery gauge on chest
+  c.fillStyle = "#0f172a"; rr(c, -6, -18, 12, 8, 2); c.fill();
+  c.fillStyle = happy ? "#22c55e" : "#ef4444"; c.fillRect(-5, -17, happy ? 10 : 3, 6);
+  // arms up to catch
+  c.strokeStyle = "#475569"; c.lineWidth = 3; c.lineCap = "round"; c.beginPath(); c.moveTo(-10, -18); c.lineTo(-16, -28); c.moveTo(10, -18); c.lineTo(16, -28); c.stroke();
+  c.fillStyle = "#e2e8f0"; rr(c, -8, -34, 16, 12, 4); c.fill();
+  c.fillStyle = "#0f172a"; c.beginPath(); c.arc(-3.5, -29, 1.8, 0, 6.28); c.arc(3.5, -29, 1.8, 0, 6.28); c.fill();
+  c.strokeStyle = "#0f172a"; c.lineWidth = 1.2; c.beginPath(); if (happy) c.arc(0, -27, 3, 0.2, Math.PI - 0.2); else c.arc(0, -24, 2.5, Math.PI + 0.3, -0.3); c.stroke();
+  c.fillStyle = happy ? "#facc15" : "#ef4444"; c.beginPath(); c.arc(0, -38, 2.2, 0, 6.28); c.fill();
+  c.restore();
+}
+
 /* ================= ROUTER ================= */
 function render(){
   renderTabs();
@@ -2679,6 +3018,7 @@ function render(){
   else if (S.tab==="game") renderGame();
   else if (S.tab==="lander") renderLander();
   else if (S.tab==="binary") renderBinary();
+  else if (S.tab==="launch") renderLaunch();
   else if (S.tab==="leds") renderLeds();
 }
 load();
@@ -2689,6 +3029,7 @@ if (location.hash === "#guide"){ S.tab = "lab"; L.view = "guide"; }
 if (location.hash === "#leds") S.tab = "leds";
 if (location.hash === "#lander") S.tab = "lander";
 if (location.hash === "#binary") S.tab = "binary";
+if (location.hash === "#launch") S.tab = "launch";
 render();
 </script>
 </body>
