@@ -234,6 +234,41 @@
   .more { background: #fdf4ff; border-left: 5px solid #c026d3; border-radius: 12px; padding: 10px 12px; margin-top: 8px; font-size: .88rem; }
   .exp-nav { display: flex; justify-content: space-between; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
   .exp-nav .tool, #exp-sim { background: #e0f2fe; color: #075985; font-weight: 800; font-size: .82rem; border-radius: 12px; padding: 9px 14px; }
+  /* Rover Lander + Binary Bots */
+  .pl-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .pl-chip { background: #eef2ff; color: #3730a3; font-weight: 800; font-size: .8rem; border-radius: 999px; padding: 7px 14px; border: 2px solid transparent; }
+  .pl-chip small { font-weight: 600; opacity: .8; }
+  .pl-chip.on { background: #ff8c00; color: #fff; }
+  #ld-area, #bb-area { position: relative; height: 380px; border-radius: 22px; overflow: hidden; border: 4px solid #1e293b; touch-action: none; user-select: none; -webkit-user-select: none; }
+  #bb-area { height: 250px; border-color: #7dd3fc; }
+  @media (max-width: 520px){ #ld-area { height: 340px; } #bb-area { height: 210px; } }
+  #ld-ov .game-overlay, #bb-ov .game-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; background: rgba(15,23,42,.62); color: #fff; text-align: center; padding: 16px; }
+  #ld-ov .t, #bb-ov .t { font-weight: 900; font-size: 1.15rem; }
+  .ld-sub { font-weight: 700; font-size: .86rem; opacity: .9; }
+  .ld-fact { background: rgba(255,255,255,.14); border-radius: 14px; padding: 10px 12px; font-size: .82rem; font-weight: 600; max-width: 460px; }
+  .ld-ctrl { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 10px; margin-top: 10px; user-select: none; -webkit-user-select: none; }
+  .ld-btn { background: #1e293b; color: #fff; font-weight: 900; font-size: 1.3rem; border-radius: 18px; padding: 16px 0; touch-action: none; box-shadow: 0 4px 0 #0f172a; }
+  .ld-btn.ld-main { background: #ea580c; box-shadow: 0 4px 0 #9a3412; font-size: 1.05rem; }
+  .ld-btn.down { transform: translateY(3px); box-shadow: 0 1px 0 #0f172a; filter: brightness(1.2); }
+  .bb-hint { font-size: .8rem; font-weight: 800; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+  .bb-sum { display: flex; gap: 10px; align-items: baseline; justify-content: center; margin: 10px 0 6px; flex-wrap: wrap; }
+  .bs-bin { font-family: Consolas, monospace; font-size: 1.5rem; font-weight: 900; letter-spacing: 4px; color: #0f172a; background: #e2e8f0; border-radius: 10px; padding: 2px 10px; }
+  .bs-eq { font-size: 1.4rem; font-weight: 900; color: #ea580c; }
+  .bs-need { font-weight: 700; color: #475569; }
+  .bb-cards { display: grid; gap: 8px; }
+  .bcard { position: relative; height: 112px; min-width: 0; border-radius: 14px; background: #1e293b; border: 3px solid #334155; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 4px; transition: transform .12s; }
+  .bcard.up { background: #fff; border-color: #f59e0b; }
+  .bcard.hint { animation: bhint 1s infinite; }
+  @keyframes bhint { 0%,100% { box-shadow: 0 0 0 0 rgba(59,130,246,.6); } 50% { box-shadow: 0 0 0 6px rgba(59,130,246,.0); border-color: #3b82f6; } }
+  .bcard:active { transform: scale(.95); }
+  .bled { position: absolute; top: 6px; width: 12px; height: 18px; border-radius: 3px; background: #4b3535; }
+  .bled.on { background: #ff4040; box-shadow: 0 0 10px rgba(255,64,64,.9); }
+  .bdots { position: absolute; top: 30px; display: grid; justify-content: center; }
+  .bdots i { border-radius: 50%; background: #f97316; display: block; }
+  .bval { position: absolute; bottom: 20px; font-weight: 900; font-size: 1rem; color: #94a3b8; }
+  .bcard.up .bval { color: #0f172a; }
+  .bbit { position: absolute; bottom: 4px; font-family: Consolas, monospace; font-weight: 900; font-size: .85rem; color: #64748b; }
+  .bcard.up .bbit { color: #ea580c; }
 </style>
 </head>
 <body>
@@ -322,7 +357,7 @@ var CHALLENGES = [
     stars:[{x:2,y:4},{x:2,y:1},{x:4,y:0}], walls:[{x:1,y:2},{x:3,y:3}] }
 ];
 
-var TABS = [ {id:"home",label:"🏠 Home"},{id:"learn",label:"📚 Learn"},{id:"coder",label:"🤖 Robot Coder"},{id:"lab",label:"⚡ Circuit Lab"},{id:"game",label:"🎮 Catch Game"},{id:"leds",label:"💡 LED Designer"} ];
+var TABS = [ {id:"home",label:"🏠 Home"},{id:"learn",label:"📚 Learn"},{id:"coder",label:"🤖 Robot Coder"},{id:"lab",label:"⚡ Circuit Lab"},{id:"game",label:"🎮 Catch Game"},{id:"lander",label:"🚀 Lander"},{id:"binary",label:"🔢 Binary Bots"},{id:"leds",label:"💡 LED Designer"} ];
 var TRACKS = [
   { id:"mini", name:"Mini-makers", emoji:"🐣", ages:"Ages 5–6", grad:"g-teal", desc:"Discover STEM through play — energy, motion, structures and first robots!" },
   { id:"mega", name:"Mega-makers", emoji:"🚀", ages:"Ages 7–9", grad:"g-sky", desc:"Dive into electronics, sensors and coding with Scratch!" },
@@ -377,6 +412,8 @@ function renderHome(){
     {id:"coder",e:"🤖",t:"Robot Coder",d:"Build block programs, drive a real robot!",c:"g-orange"},
     {id:"lab",e:"⚡",t:"Circuit Lab",d:"Simulator missions + real hands-on experiments!",c:"g-teal"},
     {id:"game",e:"🎮",t:"Robot Catch",d:"Play and sharpen reflexes!",c:"g-blue"},
+    {id:"lander",e:"🚀",t:"Rover Lander",d:"Land gently on the Moon, Mars and Earth!",c:"g-orange"},
+    {id:"binary",e:"🔢",t:"Binary Bots",d:"Power up robots with binary numbers!",c:"g-sky"},
     {id:"leds",e:"💡",t:"LED Designer",d:"Draw on a micro:bit and get the code!",c:"g-teal"}
   ];
   var html = '<div class="page">'
@@ -2198,6 +2235,439 @@ function ledsDraw(){
   if (D.playing){ c.fillStyle = "#86efac"; c.font = "800 " + Math.round(w*0.035) + "px Arial"; c.textAlign = "left"; c.fillText("▶ frame " + (D.playIdx + 1) + "/" + D.frames.length, 14, 24); }
 }
 
+/* ================= ROVER LANDER (inspired by PhET's Lunar Lander) ================= */
+/* Land gently on the pad. Gravity is different on each world, so the same lander feels
+   heavier on Earth than on the Moon. Everything is drawn and voiced in code. */
+
+var PLANETS = {
+  moon:  { name:"Moon",  emoji:"🌙", g:18, fuel:100, sky:["#0b1026","#1e1b4b"], ground:"#9ca3af", rock:"#6b7280",
+           fact:"Gravity on the Moon is about 1/6 of Earth's. That's why astronauts could bounce around — and why your lander falls so slowly here." },
+  mars:  { name:"Mars",  emoji:"🔴", g:32, fuel:110, sky:["#3b0a0a","#9a3412"], ground:"#c2410c", rock:"#7c2d12",
+           fact:"Mars has about 3/8 of Earth's gravity. NASA's rovers like Perseverance were lowered onto Mars by a rocket-powered 'sky crane'!" },
+  earth: { name:"Earth", emoji:"🌍", g:52, fuel:140, sky:["#0c4a6e","#38bdf8"], ground:"#15803d", rock:"#166534",
+           fact:"Earth has the strongest gravity of the three, so your engine has to work much harder. Real reusable rockets land on Earth like this today." }
+};
+var LD = { planet:"moon", state:"menu", level:1, score:0, cv:null, cx:null, w:0, h:0, raf:0, last:0, t:0,
+           x:0, y:0, vx:0, vy:0, fuel:100, keys:{}, btn:{}, terrain:[], pad:null, stars:[], parts:[], msg:"",
+           best:{}, landings:0, engine:null };
+try { var _lb = JSON.parse(localStorage.getItem("miniMakersLander")); if (_lb){ LD.best = _lb.best || {}; LD.landings = _lb.landings || 0; } } catch(e){}
+function landerSave(){ try { localStorage.setItem("miniMakersLander", JSON.stringify({ best:LD.best, landings:LD.landings })); } catch(e){} }
+
+var LANDER = { thrust:78, side:34, burn:11, sideBurn:4, safeVy:42, safeVx:26 };
+
+function renderLander(){
+  var chips = Object.keys(PLANETS).map(function(k){ var p = PLANETS[k];
+    return '<button class="pl-chip'+(LD.planet===k?" on":"")+'" data-pl="'+k+'">'+p.emoji+' '+p.name+(k==="earth"?" (hard)":"")+'</button>'; }).join("");
+  el("app").innerHTML = '<div class="page"><h2 class="page-title">🚀 Rover Lander</h2>'
+    + '<p class="page-sub">Bring your robot rover down gently on the landing pad. Fire the engine to slow down — but watch your fuel!</p>'
+    + '<div class="pl-row">'+chips+'</div>'
+    + '<div class="game-stats"><span id="ld-score">🏆 '+LD.score+'</span><span id="ld-lvl">🛬 Landing '+LD.level+'</span><span id="ld-best">🥇 Best '+(LD.best[LD.planet]||0)+'</span>'
+    + '<span id="ld-mute" style="cursor:pointer;margin-left:auto">'+(G.muted?"🔇":"🔊")+'</span></div>'
+    + '<div id="ld-area"><canvas id="ld-canvas" style="display:block;width:100%;height:100%"></canvas><div id="ld-ov"></div></div>'
+    + '<div class="ld-ctrl"><button class="ld-btn" data-b="left">◀</button><button class="ld-btn ld-main" data-b="up">🔥 THRUST</button><button class="ld-btn" data-b="right">▶</button></div>'
+    + '<p class="tiny-tip">Hold 🔥 to fire the engine, ◀ ▶ to drift sideways. On a keyboard: ↑ or Space, and ← →.</p></div>';
+  LD.cv = el("ld-canvas"); LD.cx = LD.cv.getContext("2d"); landerSize();
+  document.querySelectorAll("[data-pl]").forEach(function(b){ b.onclick = function(){ if (LD.state === "fly") return; LD.planet = b.getAttribute("data-pl"); LD.state = "menu"; LD.level = 1; LD.score = 0; render(); }; });
+  el("ld-mute").onclick = function(){ G.muted = !G.muted; this.textContent = G.muted ? "🔇" : "🔊"; if (G.muted) landerEngine(false); };
+  document.querySelectorAll(".ld-btn").forEach(function(b){
+    var k = b.getAttribute("data-b");
+    function on(e){ e.preventDefault(); LD.btn[k] = true; b.classList.add("down"); }
+    function off(){ LD.btn[k] = false; b.classList.remove("down"); }
+    b.addEventListener("pointerdown", on); b.addEventListener("pointerup", off); b.addEventListener("pointerleave", off); b.addEventListener("pointercancel", off);
+    b.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+  });
+  if (LD.state !== "fly") landerOverlay();
+  if (!LD.terrain.length || LD.state === "menu") landerWorld();
+  if (!LD.raf){ LD.last = performance.now(); LD.raf = requestAnimationFrame(landerLoop); }
+}
+
+function landerSize(){
+  var r = LD.cv.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var changed = Math.abs(r.width - LD.w) > 2;
+  LD.w = r.width; LD.h = r.height; LD.cv.width = Math.round(r.width * dpr); LD.cv.height = Math.round(r.height * dpr);
+  LD.cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (changed && LD.state !== "fly") landerWorld();
+}
+window.addEventListener("resize", function(){ if (S.tab === "lander" && LD.cv) landerSize(); });
+window.addEventListener("keydown", function(e){
+  if (S.tab !== "lander") return;
+  if (["ArrowUp","ArrowLeft","ArrowRight"," ","w","a","d"].indexOf(e.key) >= 0){ LD.keys[e.key] = true; if (LD.state === "fly") e.preventDefault(); }
+});
+window.addEventListener("keyup", function(e){ LD.keys[e.key] = false; });
+
+/* terrain: bumpy ground with one flat landing pad that gets smaller each level */
+function landerWorld(){
+  var w = LD.w, h = LD.h, pts = [], step = 24, base = h * 0.80, rough = Math.min(70, 20 + LD.level * 8);
+  var padW = Math.max(46, 100 - (LD.level - 1) * 9), padX = 30 + Math.random() * (w - padW - 60);
+  var y = base;
+  for (var x = 0; x <= w + step; x += step){
+    if (x >= padX - step && x <= padX + padW + step){ y = base - 10; }
+    else { y += (Math.random() - 0.5) * rough; y = Math.max(h * 0.58, Math.min(h * 0.94, y)); }
+    pts.push({ x:x, y:y });
+  }
+  // make the pad exactly flat
+  var padY = null;
+  pts.forEach(function(p){ if (p.x >= padX && p.x <= padX + padW){ if (padY === null) padY = p.y; p.y = padY; } });
+  if (padY === null) padY = base - 10;
+  LD.terrain = pts; LD.pad = { x:padX, w:padW, y:padY };
+  if (!LD.stars.length) for (var i = 0; i < 60; i++) LD.stars.push({ x:Math.random(), y:Math.random() * 0.6, r:Math.random() * 1.4 + 0.3, p:Math.random() * 6 });
+}
+function groundAt(x){
+  var t = LD.terrain; for (var i = 0; i < t.length - 1; i++){ if (x >= t[i].x && x <= t[i+1].x){ var f = (x - t[i].x) / (t[i+1].x - t[i].x); return t[i].y + (t[i+1].y - t[i].y) * f; } }
+  return LD.h;
+}
+
+function landerStart(){
+  landerWorld();
+  var P = PLANETS[LD.planet];
+  LD.x = LD.w * (0.2 + Math.random() * 0.6); LD.y = 40; LD.vx = (Math.random() - 0.5) * 40; LD.vy = 0;
+  LD.fuel = P.fuel; LD.parts = []; LD.state = "fly";
+  var ov = el("ld-ov"); if (ov) ov.innerHTML = "";
+  SFX.start(); landerHud();
+}
+function landerHud(){
+  var s = el("ld-score"), l = el("ld-lvl"), b = el("ld-best");
+  if (s) s.textContent = "🏆 " + LD.score; if (l) l.textContent = "🛬 Landing " + LD.level; if (b) b.textContent = "🥇 Best " + (LD.best[LD.planet] || 0);
+}
+function landerOverlay(result){
+  var ov = el("ld-ov"); if (!ov) return;
+  var P = PLANETS[LD.planet], html;
+  if (!result) html = '<div class="t">'+P.emoji+' Land on '+P.name+'</div><div class="ld-sub">Gravity here: '+({moon:"weak 🪶",mars:"medium",earth:"strong 💪"})[LD.planet]+'</div><button class="start" id="ld-go">Launch!</button>';
+  else if (result.ok) html = '<div class="t">✅ Perfect landing! +'+result.pts+'</div><div class="ld-sub">'+result.note+'</div><div class="ld-fact">🔭 '+P.fact+'</div><button class="start" id="ld-go">Next landing →</button>';
+  else html = '<div class="t">💥 '+result.why+'</div><div class="ld-sub">Score: '+LD.score+'</div><div class="ld-fact">💡 '+result.tip+'</div><button class="start" id="ld-go">Try again</button>';
+  ov.innerHTML = '<div class="game-overlay">'+html+'</div>';
+  el("ld-go").onclick = function(){ if (result && !result.ok){ LD.level = 1; LD.score = 0; } landerStart(); };
+}
+
+/* engine rumble: filtered noise that plays while thrusting */
+function landerEngine(on){
+  if (on && !G.muted){
+    if (LD.engine) return;
+    var a = SFX.ctx && SFX.ctx(); if (!a) return;
+    var n = a.sampleRate, buf = a.createBuffer(1, n, n), d = buf.getChannelData(0);
+    for (var i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+    var src = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
+    src.buffer = buf; src.loop = true; f.type = "lowpass"; f.frequency.value = 380; g.gain.value = 0.22;
+    src.connect(f); f.connect(g); g.connect(a.destination); src.start(); LD.engine = src;
+  } else if (!on && LD.engine){ try { LD.engine.stop(); } catch(e){} LD.engine = null; }
+}
+
+function landerLoop(now){
+  if (!LD.cv || !document.body.contains(LD.cv)){ LD.raf = 0; landerEngine(false); return; }
+  var dt = Math.min(0.033, (now - LD.last) / 1000); LD.last = now; LD.t += dt;
+  if (LD.state === "fly") landerUpdate(dt); else landerEngine(false);
+  for (var i = LD.parts.length - 1; i >= 0; i--){ var p = LD.parts[i]; p.x += p.vx*dt; p.y += p.vy*dt; p.vy += (p.g||0)*dt; p.life -= dt * (p.fade || 1.8); if (p.life <= 0) LD.parts.splice(i, 1); }
+  landerDraw();
+  LD.raf = requestAnimationFrame(landerLoop);
+}
+
+function landerUpdate(dt){
+  var P = PLANETS[LD.planet], k = LD.keys, b = LD.btn;
+  var up = (k.ArrowUp || k[" "] || k.w || b.up) && LD.fuel > 0;
+  var lf = (k.ArrowLeft || k.a || b.left) && LD.fuel > 0, rt = (k.ArrowRight || k.d || b.right) && LD.fuel > 0;
+  var ay = P.g, ax = 0;
+  if (up){ ay -= LANDER.thrust; LD.fuel -= LANDER.burn * dt; }
+  if (lf){ ax -= LANDER.side; LD.fuel -= LANDER.sideBurn * dt; }
+  if (rt){ ax += LANDER.side; LD.fuel -= LANDER.sideBurn * dt; }
+  LD.fuel = Math.max(0, LD.fuel);
+  LD.vx += ax * dt; LD.vy += ay * dt; LD.x += LD.vx * dt; LD.y += LD.vy * dt;
+  if (LD.x < 14){ LD.x = 14; LD.vx = Math.abs(LD.vx) * 0.3; } if (LD.x > LD.w - 14){ LD.x = LD.w - 14; LD.vx = -Math.abs(LD.vx) * 0.3; }
+  if (LD.y < 16){ LD.y = 16; LD.vy = Math.max(0, LD.vy); }
+  landerEngine(up);
+  // flame particles
+  if (up) for (var i = 0; i < 3; i++) LD.parts.push({ x:LD.x + (Math.random()-0.5)*6, y:LD.y + 16, vx:(Math.random()-0.5)*30 + LD.vx, vy:80 + Math.random()*60 + LD.vy, life:0.5, fade:2.5, c:Math.random()<0.5?"#fde047":"#f97316", r:3 });
+  if (lf) LD.parts.push({ x:LD.x + 14, y:LD.y, vx:60, vy:0, life:0.3, fade:4, c:"#e0f2fe", r:2 });
+  if (rt) LD.parts.push({ x:LD.x - 14, y:LD.y, vx:-60, vy:0, life:0.3, fade:4, c:"#e0f2fe", r:2 });
+  // touchdown? check both feet
+  var fl = LD.x - 12, fr = LD.x + 12, feet = LD.y + 16;
+  if (feet >= Math.min(groundAt(fl), groundAt(fr))){
+    var onPad = fl >= LD.pad.x - 2 && fr <= LD.pad.x + LD.pad.w + 2;
+    var soft = LD.vy <= LANDER.safeVy && Math.abs(LD.vx) <= LANDER.safeVx;
+    landerEngine(false);
+    if (onPad && soft){
+      LD.y = LD.pad.y - 16; LD.state = "landed";
+      var pts = 100 + Math.round(LD.fuel * 2) + (LD.planet === "mars" ? 50 : LD.planet === "earth" ? 120 : 0);
+      LD.score += pts; LD.level++; LD.landings++;
+      if (LD.score > (LD.best[LD.planet] || 0)) LD.best[LD.planet] = LD.score;
+      landerSave(); landerHud(); SFX.fanfare(); award(1, "Safe landing on " + P.name + "!");
+      for (var c = 0; c < 40; c++) LD.parts.push({ x:LD.x, y:LD.y, vx:(Math.random()-0.5)*220, vy:-Math.random()*220, g:300, life:1.2, fade:0.9, c:["#facc15","#22c55e","#38bdf8","#f472b6"][c%4], r:3 });
+      var note = LD.vy < 15 ? "Feather-soft touchdown! 🪶" : "Touchdown speed " + Math.round(LD.vy) + " — nice and gentle.";
+      landerOverlay({ ok:true, pts:pts, note:note + " Fuel left: " + Math.round(LD.fuel) + "%" });
+    } else {
+      LD.state = "crashed"; SFX.brick();
+      for (var e = 0; e < 50; e++) LD.parts.push({ x:LD.x, y:LD.y, vx:(Math.random()-0.5)*260, vy:-Math.random()*240, g:260, life:1.4, fade:0.8, c:["#f97316","#facc15","#6b7280","#ef4444"][e%4], r:2 + Math.random()*3 });
+      var why, tip;
+      if (!onPad && soft){ why = "Missed the pad!"; tip = "Use ◀ ▶ early to drift over the pad, then come straight down."; }
+      else if (LD.vy > LANDER.safeVy){ why = "Too fast — crash!"; tip = LD.fuel <= 0 ? "You ran out of fuel. Wait longer before firing, then use short bursts." : "Fire the engine earlier to slow down. Gravity keeps pulling you faster and faster."; }
+      else { why = "Sliding sideways — crash!"; tip = "Stop drifting before you touch down: tap the opposite arrow to cancel sideways speed."; }
+      landerOverlay({ ok:false, why:why, tip:tip });
+    }
+  }
+}
+
+function landerDraw(){
+  var c = LD.cx, w = LD.w, h = LD.h, P = PLANETS[LD.planet];
+  var g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, P.sky[0]); g.addColorStop(1, P.sky[1]);
+  c.fillStyle = g; c.fillRect(0, 0, w, h);
+  LD.stars.forEach(function(s){ c.globalAlpha = (LD.planet === "earth" ? 0.25 : 0.6) + 0.3*Math.sin(LD.t*2 + s.p); c.fillStyle = "#fff"; c.beginPath(); c.arc(s.x*w, s.y*h, s.r, 0, 6.28); c.fill(); });
+  c.globalAlpha = 1;
+  // a planet in the sky
+  if (LD.planet === "moon"){ c.fillStyle = "#38bdf8"; c.beginPath(); c.arc(w*0.82, h*0.14, 18, 0, 6.28); c.fill(); c.fillStyle = "#22c55e"; c.beginPath(); c.arc(w*0.82 - 5, h*0.14 - 3, 7, 0, 6.28); c.fill(); }
+  if (LD.planet === "earth"){ c.fillStyle = "rgba(255,255,255,.8)"; [[0.2,0.15],[0.65,0.1]].forEach(function(cl){ var cx2 = ((cl[0]*w + LD.t*8) % (w+80)) - 40; c.beginPath(); c.arc(cx2, cl[1]*h, 14, 0, 6.28); c.arc(cx2+16, cl[1]*h+3, 11, 0, 6.28); c.arc(cx2-14, cl[1]*h+4, 10, 0, 6.28); c.fill(); }); }
+  // terrain
+  if (LD.terrain.length){
+    c.beginPath(); c.moveTo(0, h); LD.terrain.forEach(function(p){ c.lineTo(p.x, p.y); }); c.lineTo(w, h); c.closePath();
+    c.fillStyle = P.ground; c.fill(); c.strokeStyle = P.rock; c.lineWidth = 3; c.stroke();
+    // pad with flashing lights
+    var pd = LD.pad; c.fillStyle = "#e5e7eb"; c.fillRect(pd.x, pd.y - 4, pd.w, 6);
+    c.fillStyle = "#f59e0b"; for (var s = 0; s < pd.w; s += 14) c.fillRect(pd.x + s, pd.y - 4, 7, 6);
+    var blink = Math.sin(LD.t * 6) > 0;
+    c.fillStyle = blink ? "#22c55e" : "#14532d"; c.beginPath(); c.arc(pd.x, pd.y - 7, 3.5, 0, 6.28); c.arc(pd.x + pd.w, pd.y - 7, 3.5, 0, 6.28); c.fill();
+  }
+  // lander
+  if (LD.state !== "crashed" && LD.state !== "menu") drawLanderShip(c, LD.x, LD.y);
+  if (LD.state === "menu"){ drawLanderShip(c, w/2, h*0.35 + Math.sin(LD.t*2)*6); }
+  LD.parts.forEach(function(p){ c.globalAlpha = Math.max(0, Math.min(1, p.life)); c.fillStyle = p.c; c.beginPath(); c.arc(p.x, p.y, p.r, 0, 6.28); c.fill(); });
+  c.globalAlpha = 1;
+  // HUD: fuel bar + speed meter
+  if (LD.state === "fly" || LD.state === "landed"){
+    var P2 = PLANETS[LD.planet], fpct = LD.fuel / P2.fuel;
+    c.fillStyle = "rgba(0,0,0,.45)"; rr(c, 10, 10, 128, 54, 10); c.fill();
+    c.fillStyle = "#fff"; c.font = "800 11px Poppins, Arial"; c.textAlign = "left"; c.fillText("⛽ FUEL", 18, 26);
+    c.fillStyle = "#374151"; rr(c, 18, 31, 110, 8, 4); c.fill();
+    c.fillStyle = fpct > 0.3 ? "#22c55e" : (fpct > 0.12 ? "#f59e0b" : "#ef4444"); rr(c, 18, 31, Math.max(0, 110 * fpct), 8, 4); c.fill();
+    var safe = LD.vy <= LANDER.safeVy && Math.abs(LD.vx) <= LANDER.safeVx;
+    c.fillStyle = safe ? "#86efac" : "#fca5a5"; c.fillText((safe ? "✅ SAFE speed " : "⚠️ TOO FAST ") + Math.max(0, Math.round(LD.vy)), 18, 56);
+    // altitude arrow to pad
+    var alt = Math.max(0, Math.round(LD.pad.y - (LD.y + 16)));
+    c.fillStyle = "rgba(0,0,0,.45)"; rr(c, w - 106, 10, 96, 30, 10); c.fill();
+    c.fillStyle = "#fff"; c.textAlign = "center"; c.fillText("📏 height " + alt, w - 58, 30);
+  }
+}
+function drawLanderShip(c, x, y){
+  c.save(); c.translate(x, y);
+  // legs
+  c.strokeStyle = "#cbd5e1"; c.lineWidth = 2.5; c.beginPath(); c.moveTo(-8, 6); c.lineTo(-13, 16); c.moveTo(8, 6); c.lineTo(13, 16); c.stroke();
+  c.fillStyle = "#cbd5e1"; c.fillRect(-16, 15, 7, 2.5); c.fillRect(9, 15, 7, 2.5);
+  // body (gold foil like the real lunar module)
+  c.fillStyle = "#facc15"; rr(c, -12, -2, 24, 11, 3); c.fill(); c.strokeStyle = "#a16207"; c.lineWidth = 1.5; c.stroke();
+  // cabin with a little robot face
+  c.fillStyle = "#e5e7eb"; c.beginPath(); c.arc(0, -6, 10, Math.PI, 0); c.lineTo(10, -2); c.lineTo(-10, -2); c.closePath(); c.fill(); c.strokeStyle = "#64748b"; c.stroke();
+  c.fillStyle = "#0f172a"; rr(c, -6, -12, 12, 7, 3); c.fill();
+  c.fillStyle = "#38bdf8"; c.beginPath(); c.arc(-2.5, -8.5, 1.6, 0, 6.28); c.arc(2.5, -8.5, 1.6, 0, 6.28); c.fill();
+  // antenna
+  c.strokeStyle = "#94a3b8"; c.lineWidth = 1.5; c.beginPath(); c.moveTo(5, -14); c.lineTo(8, -21); c.stroke();
+  c.fillStyle = "#ef4444"; c.beginPath(); c.arc(8, -22, 2, 0, 6.28); c.fill();
+  // nozzle
+  c.fillStyle = "#475569"; c.beginPath(); c.moveTo(-4, 9); c.lineTo(4, 9); c.lineTo(6, 14); c.lineTo(-6, 14); c.closePath(); c.fill();
+  c.restore();
+}
+
+/* ================= BINARY BOTS (based on CS Unplugged's binary cards) ================= */
+/* Robots roll along a conveyor carrying a number. Flip the dot cards (1, 2, 4, 8, 16...) so the
+   dots add up to the front robot's number before it reaches the door. Each card is a bit:
+   face up = 1 (LED on), face down = 0 (LED off). */
+
+var BMODES = [
+  { id:3, name:"🐣 Starter", sub:"3 cards · 1–7" },
+  { id:4, name:"🤖 Robot",   sub:"4 cards · 1–15" },
+  { id:5, name:"🚀 Expert",  sub:"5 cards · 1–31" },
+  { id:6, name:"🧠 Genius",  sub:"6 cards · 1–63" }
+];
+var BB = { mode:4, state:"menu", bits:[], bots:[], score:0, lives:3, spawnIn:0, speed:28, hint:true,
+           cv:null, cx:null, w:0, h:0, raf:0, last:0, t:0, parts:[], zaps:[], best:{}, msg:"" };
+try { var _bb = JSON.parse(localStorage.getItem("miniMakersBinary")); if (_bb){ BB.best = _bb.best || {}; BB.hint = _bb.hint !== false; } } catch(e){}
+function binSave(){ try { localStorage.setItem("miniMakersBinary", JSON.stringify({ best:BB.best, hint:BB.hint })); } catch(e){} }
+
+function binValues(){ var v = []; for (var i = BB.mode - 1; i >= 0; i--) v.push(1 << i); return v; }   // e.g. [8,4,2,1]
+function binTotal(){ var v = binValues(), s = 0; BB.bits.forEach(function(b, i){ if (b) s += v[i]; }); return s; }
+function binTarget(){ var front = null; BB.bots.forEach(function(b){ if (!b.done && (!front || b.x > front.x)) front = b; }); return front; }
+
+function renderBinary(){
+  var modes = BMODES.map(function(m){ return '<button class="pl-chip'+(BB.mode===m.id?" on":"")+'" data-bm="'+m.id+'">'+m.name+' <small>'+m.sub+'</small></button>'; }).join("");
+  el("app").innerHTML = '<div class="page"><h2 class="page-title">🔢 Binary Bots</h2>'
+    + '<p class="page-sub">Each robot needs its number made in <b>binary</b>. Flip the dot cards so the dots add up to the number on the front robot — before it reaches the door!</p>'
+    + '<div class="pl-row">'+modes+'</div>'
+    + '<div class="game-stats"><span id="bb-score">🏆 '+BB.score+'</span><span id="bb-lives">'+binLives()+'</span><span id="bb-best">🥇 Best '+(BB.best[BB.mode]||0)+'</span>'
+    + '<label class="bb-hint"><input type="checkbox" id="bb-hint"'+(BB.hint?" checked":"")+'> 💡 Hints</label>'
+    + '<span id="bb-mute" style="cursor:pointer;margin-left:auto">'+(G.muted?"🔇":"🔊")+'</span></div>'
+    + '<div id="bb-area"><canvas id="bb-canvas" style="display:block;width:100%;height:100%"></canvas><div id="bb-ov"></div></div>'
+    + '<div class="bb-sum" id="bb-sum"></div>'
+    + '<div class="bb-cards" id="bb-cards"></div>'
+    + '<p class="tiny-tip">Tip: start with the BIGGEST card. If it isn\'t bigger than the number, flip it up, then move to the next one.</p></div>';
+  BB.cv = el("bb-canvas"); BB.cx = BB.cv.getContext("2d"); binSize();
+  document.querySelectorAll("[data-bm]").forEach(function(b){ b.onclick = function(){ if (BB.state === "play") return; BB.mode = +b.getAttribute("data-bm"); BB.state = "menu"; BB.score = 0; render(); }; });
+  el("bb-hint").onchange = function(){ BB.hint = this.checked; binSave(); binCards(); };
+  el("bb-mute").onclick = function(){ G.muted = !G.muted; this.textContent = G.muted ? "🔇" : "🔊"; };
+  if (BB.bits.length !== BB.mode) BB.bits = new Array(BB.mode).fill(0);
+  binCards(); if (BB.state !== "play") binOverlay();
+  if (!BB.raf){ BB.last = performance.now(); BB.raf = requestAnimationFrame(binLoop); }
+}
+function binLives(){ return "🔋".repeat(Math.max(0, BB.lives)) + "🪫".repeat(Math.max(0, 3 - BB.lives)); }
+function binSize(){
+  var r = BB.cv.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+  BB.w = r.width; BB.h = r.height; BB.cv.width = Math.round(r.width*dpr); BB.cv.height = Math.round(r.height*dpr); BB.cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener("resize", function(){ if (S.tab === "binary" && BB.cv) binSize(); });
+window.addEventListener("keydown", function(e){
+  if (S.tab !== "binary" || BB.state !== "play") return;
+  var n = parseInt(e.key, 10); if (n >= 1 && n <= BB.mode){ binFlip(n - 1); e.preventDefault(); }
+});
+
+/* which card would the hint suggest next? (greedy: biggest first) */
+function binHintIdx(){
+  var t = binTarget(); if (!t) return -1;
+  var v = binValues(), rest = t.n;
+  for (var i = 0; i < v.length; i++){ var want = rest >= v[i] ? 1 : 0; if (want) rest -= v[i]; if (BB.bits[i] !== want) return i; }
+  return -1;
+}
+function binCards(){
+  var box = el("bb-cards"); if (!box) return;
+  var v = binValues(), hi = (BB.hint && BB.state === "play") ? binHintIdx() : -1;
+  box.style.gridTemplateColumns = "repeat(" + BB.mode + ", 1fr)";
+  box.innerHTML = v.map(function(val, i){
+    var dots = ""; var cols = val >= 16 ? 8 : (val >= 4 ? 4 : val), ds = BB.mode >= 6 ? 4 : (BB.mode === 5 ? 5 : 8);
+    for (var d = 0; d < val; d++) dots += '<i style="width:'+ds+'px;height:'+ds+'px"></i>';
+    return '<button class="bcard'+(BB.bits[i]?" up":"")+(i===hi?" hint":"")+'" data-bc="'+i+'">'
+      + '<span class="bled'+(BB.bits[i]?" on":"")+'"></span>'
+      + '<span class="bdots" style="grid-template-columns:repeat('+Math.min(cols,8)+','+ds+'px);gap:'+(ds>6?3:2)+'px">'+(BB.bits[i]?dots:"")+'</span>'
+      + '<span class="bval">'+val+'</span><span class="bbit">'+(BB.bits[i]?1:0)+'</span></button>';
+  }).join("");
+  document.querySelectorAll("[data-bc]").forEach(function(b){ b.onclick = function(){ binFlip(+b.getAttribute("data-bc")); }; });
+  var t = binTarget(), sum = binTotal();
+  el("bb-sum").innerHTML = '<span class="bs-bin">'+BB.bits.join("")+'</span><span class="bs-eq">= '+sum+'</span>'
+    + (t ? '<span class="bs-need">robot needs <b>'+t.n+'</b></span>' : '');
+}
+function binFlip(i){
+  if (BB.state !== "play") return;
+  BB.bits[i] = BB.bits[i] ? 0 : 1;
+  var a = SFX.ctx && SFX.ctx();
+  if (a){ var o = a.createOscillator(), g = a.createGain(), tt = a.currentTime; o.type = "square"; o.frequency.setValueAtTime(BB.bits[i] ? 660 + i*40 : 330, tt);
+    g.gain.setValueAtTime(0.05, tt); g.gain.exponentialRampToValueAtTime(0.0001, tt + 0.07); o.connect(g); g.connect(a.destination); o.start(tt); o.stop(tt + 0.08); }
+  binCheck(); binCards();
+}
+function binCheck(){
+  var t = binTarget(); if (!t) return;
+  if (binTotal() === t.n){
+    t.done = true; t.zap = 0.6; BB.score++; SFX.star();
+    BB.zaps.push({ x:t.x, y:t.y, life:0.5 });
+    for (var k = 0; k < 24; k++) BB.parts.push({ x:t.x, y:t.y - 20, vx:(Math.random()-0.5)*220, vy:-Math.random()*200, g:320, life:1, c:["#facc15","#22d3ee","#a3e635"][k%3], r:3 });
+    if (BB.score > (BB.best[BB.mode] || 0)){ BB.best[BB.mode] = BB.score; binSave(); }
+    if (BB.score % 10 === 0){ SFX.fanfare(); award(2, "10 robots powered up! ⚡"); }
+    var s = el("bb-score"), b = el("bb-best"); if (s) s.textContent = "🏆 " + BB.score; if (b) b.textContent = "🥇 Best " + (BB.best[BB.mode] || 0);
+    setTimeout(function(){ BB.bits = BB.bits.map(function(){ return 0; }); binCards(); }, 250);
+  }
+}
+function binNewNumber(){
+  var max = (1 << BB.mode) - 1, n, last = BB.bots.length ? BB.bots[BB.bots.length-1].n : -1;
+  do { n = 1 + Math.floor(Math.random() * max); } while (n === last);
+  return n;
+}
+function binStart(){
+  BB.state = "play"; BB.score = 0; BB.lives = 3; BB.bots = []; BB.parts = []; BB.zaps = [];
+  BB.speed = 22 + BB.mode * 2; BB.spawnIn = 0; BB.bits = new Array(BB.mode).fill(0);
+  var ov = el("bb-ov"); if (ov) ov.innerHTML = "";
+  var l = el("bb-lives"); if (l) l.textContent = binLives(); var s = el("bb-score"); if (s) s.textContent = "🏆 0";
+  SFX.start(); binCards();
+}
+function binOverlay(over){
+  var ov = el("bb-ov"); if (!ov) return;
+  var m = BMODES.filter(function(x){ return x.id === BB.mode; })[0];
+  var body = over
+    ? '<div class="t">🏭 Factory closed! You powered '+BB.score+' robots.</div><div class="ld-fact">💡 Computers store EVERYTHING — numbers, letters, pictures, music — as 1s and 0s like your cards. Each card is one <b>bit</b>. 8 bits make a <b>byte</b>!</div><button class="start" id="bb-go">Play again</button>'
+    : '<div class="t">🔢 Binary Bots — '+m.name+'</div><div class="ld-sub">Cards: '+binValues().join(" · ")+'</div><button class="start" id="bb-go">Start!</button>';
+  ov.innerHTML = '<div class="game-overlay">'+body+'</div>';
+  el("bb-go").onclick = binStart;
+}
+
+function binLoop(now){
+  if (!BB.cv || !document.body.contains(BB.cv)){ BB.raf = 0; return; }
+  var dt = Math.min(0.05, (now - BB.last) / 1000); BB.last = now; BB.t += dt;
+  if (BB.state === "play") binUpdate(dt);
+  for (var i = BB.parts.length - 1; i >= 0; i--){ var p = BB.parts[i]; p.x += p.vx*dt; p.y += p.vy*dt; p.vy += p.g*dt; p.life -= dt*1.5; if (p.life <= 0) BB.parts.splice(i, 1); }
+  for (var z = BB.zaps.length - 1; z >= 0; z--){ BB.zaps[z].life -= dt; if (BB.zaps[z].life <= 0) BB.zaps.splice(z, 1); }
+  binDraw();
+  BB.raf = requestAnimationFrame(binLoop);
+}
+function binUpdate(dt){
+  var door = BB.w - 46, gap = 92;
+  // time for a robot to reach the door: more cards = more thinking time; gets faster as you score
+  var travel = Math.max(6, (7 + BB.mode * 1.8) - BB.score * 0.3);
+  BB.speed = (door + 30) / travel;
+  BB.spawnIn -= dt;
+  var lastX = BB.bots.length ? Math.min.apply(null, BB.bots.map(function(b){ return b.x; })) : 999;
+  if (BB.spawnIn <= 0 && lastX > gap - 20){
+    BB.bots.push({ n:binNewNumber(), x:-30, y:0, done:false, zap:0, hue:Math.floor(Math.random()*6), wob:Math.random()*6 });
+    BB.spawnIn = Math.max(1.8, travel * 0.33);
+  }
+  var hadTarget = binTarget();
+  for (var i = BB.bots.length - 1; i >= 0; i--){
+    var b = BB.bots[i];
+    if (b.done){ b.zap -= dt; b.x += 220 * dt; if (b.x > BB.w + 40) BB.bots.splice(i, 1); continue; }
+    b.x += BB.speed * dt;
+    if (b.x >= door){
+      BB.bots.splice(i, 1); BB.lives--; SFX.miss();
+      for (var k = 0; k < 14; k++) BB.parts.push({ x:door, y:BB.h*0.55, vx:(Math.random()-0.5)*140, vy:-Math.random()*140, g:300, life:1, c:"#94a3b8", r:3 });
+      var l = el("bb-lives"); if (l) l.textContent = binLives();
+      BB.bits = BB.bits.map(function(){ return 0; });
+      if (BB.lives <= 0){ BB.state = "over"; SFX.over(); binOverlay(true); binCards(); return; }
+    }
+  }
+  if (binTarget() !== hadTarget) binCards();
+}
+
+var BOT_COLORS = ["#f97316","#22c55e","#3b82f6","#a855f7","#ec4899","#14b8a6"];
+function binDraw(){
+  var c = BB.cx, w = BB.w, h = BB.h, beltY = h * 0.72, door = w - 46;
+  var g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, "#e0f2fe"); g.addColorStop(1, "#f1f5f9");
+  c.fillStyle = g; c.fillRect(0, 0, w, h);
+  // factory wall pipes
+  c.strokeStyle = "#cbd5e1"; c.lineWidth = 8; c.beginPath(); c.moveTo(0, 26); c.lineTo(w, 26); c.stroke();
+  c.lineWidth = 5; c.beginPath(); c.moveTo(0, 40); c.lineTo(w*0.6, 40); c.stroke();
+  // conveyor belt
+  c.fillStyle = "#334155"; rr(c, 0, beltY, w, 18, 9); c.fill();
+  c.fillStyle = "#64748b"; var off = (BB.t * (BB.state === "play" ? BB.speed : 10)) % 24;
+  for (var x = -24 + off; x < w; x += 24){ c.fillRect(x, beltY + 7, 12, 4); }
+  for (var r = 0; r < w; r += 48){ c.fillStyle = "#1e293b"; c.beginPath(); c.arc(r + 12, beltY + 9, 6, 0, 6.28); c.fill(); }
+  // door (charging station)
+  c.fillStyle = "#1e293b"; rr(c, door, beltY - 92, 44, 110, 8); c.fill();
+  c.fillStyle = BB.lives > 0 ? "#22c55e" : "#ef4444"; c.beginPath(); c.arc(door + 22, beltY - 76, 6, 0, 6.28); c.fill();
+  c.fillStyle = "#facc15"; c.font = "900 18px Arial"; c.textAlign = "center"; c.fillText("⚡", door + 22, beltY - 40);
+  // robots
+  BB.bots.forEach(function(b){ drawBinBot(c, b, beltY, b === binTarget()); });
+  BB.zaps.forEach(function(z){
+    c.strokeStyle = "rgba(250,204,21," + (z.life*2) + ")"; c.lineWidth = 3; c.beginPath();
+    var yy = 0; c.moveTo(z.x, 0); for (var s = 1; s <= 6; s++){ yy = (beltY - 40) * s / 6; c.lineTo(z.x + (Math.random()-0.5)*18, yy); } c.stroke();
+  });
+  BB.parts.forEach(function(p){ c.globalAlpha = Math.max(0, p.life); c.fillStyle = p.c; c.beginPath(); c.arc(p.x, p.y, p.r, 0, 6.28); c.fill(); });
+  c.globalAlpha = 1;
+  if (BB.state === "menu"){ drawBinBot(c, { n:binValues().reduce(function(a, b){ return a + b; }, 0), x:w*0.5, done:false, zap:0, hue:0, wob:0 }, beltY, true); }
+}
+function drawBinBot(c, b, beltY, isTarget){
+  var x = b.x, y = beltY, bob = Math.sin(BB.t * 8 + b.wob) * 1.5, col = BOT_COLORS[b.hue];
+  c.save(); c.translate(x, y + bob);
+  if (isTarget && !b.done){ c.fillStyle = "rgba(250,204,21,.28)"; c.beginPath(); c.ellipse(0, -30, 34, 44, 0, 0, 6.28); c.fill(); }
+  // wheels
+  c.fillStyle = "#111827"; c.beginPath(); c.arc(-11, -3, 6, 0, 6.28); c.arc(11, -3, 6, 0, 6.28); c.fill();
+  // body
+  c.fillStyle = b.done ? "#facc15" : col; rr(c, -18, -34, 36, 28, 6); c.fill();
+  // screen showing the number
+  c.fillStyle = "#0f172a"; rr(c, -14, -30, 28, 18, 4); c.fill();
+  c.fillStyle = b.done ? "#a3e635" : "#22d3ee"; c.font = "900 " + (b.n > 9 ? 13 : 15) + "px Consolas, monospace"; c.textAlign = "center"; c.textBaseline = "middle";
+  c.fillText(b.done ? "✓" : b.n, 0, -21); c.textBaseline = "alphabetic";
+  // head
+  c.fillStyle = "#e2e8f0"; rr(c, -12, -54, 24, 18, 6); c.fill();
+  var happy = b.done;
+  c.fillStyle = "#0f172a"; c.beginPath(); c.arc(-5, -46, 2.4, 0, 6.28); c.arc(5, -46, 2.4, 0, 6.28); c.fill();
+  c.strokeStyle = "#0f172a"; c.lineWidth = 1.6; c.beginPath();
+  if (happy) c.arc(0, -43, 4, 0.2, Math.PI - 0.2); else { c.moveTo(-3, -40); c.lineTo(3, -40); }
+  c.stroke();
+  // antenna
+  c.strokeStyle = "#64748b"; c.lineWidth = 2; c.beginPath(); c.moveTo(0, -54); c.lineTo(0, -62); c.stroke();
+  c.fillStyle = happy ? "#facc15" : (isTarget ? "#ef4444" : "#94a3b8"); c.beginPath(); c.arc(0, -64, 3.2, 0, 6.28); c.fill();
+  c.restore();
+}
+
 /* ================= ROUTER ================= */
 function render(){
   renderTabs();
@@ -2207,6 +2677,8 @@ function render(){
   else if (S.tab==="coder") renderCoder();
   else if (S.tab==="lab") renderLab();
   else if (S.tab==="game") renderGame();
+  else if (S.tab==="lander") renderLander();
+  else if (S.tab==="binary") renderBinary();
   else if (S.tab==="leds") renderLeds();
 }
 load();
@@ -2215,6 +2687,8 @@ if (location.hash === "#lab") S.tab = "lab";
 if (location.hash === "#sim"){ S.tab = "lab"; L.view = "sim"; }
 if (location.hash === "#guide"){ S.tab = "lab"; L.view = "guide"; }
 if (location.hash === "#leds") S.tab = "leds";
+if (location.hash === "#lander") S.tab = "lander";
+if (location.hash === "#binary") S.tab = "binary";
 render();
 </script>
 </body>
